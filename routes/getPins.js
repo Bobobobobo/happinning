@@ -3,26 +3,27 @@
  */
 
 function getPins(res, latitude, longitude, maxDistance, mongodb) {
-
-	mongodb.collection('pins').ensureIndex({coordinates:'2dsphere'});
 	mongodb.collection('pins').find(
-			{ coordinates :
+			{ location :
 				{ $near : 
-					{ $geometry :
-						{ type : "Point",
-						coordinates : [longitude, latitude]
-						},
-					$maxDistance : maxDistance
-					}
+					{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
 				}
 			}).toArray(function(err, records) {
 				if (err) {
-					throw err;
+//					throw err;
+					console.log("Error "+err);
 				}
 //				console.log("Record get as "+records[0]._id);
 				res.send(records);
 			});
 
+//	mongodb.collection('pins').find().toArray(function(err, records) {
+//		if (err) {
+//			throw err;
+//		}
+////		console.log("Record get as "+records[0]._id);
+//		res.send(records);
+//	});
 }
 
 module.exports = {

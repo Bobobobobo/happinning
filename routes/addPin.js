@@ -3,7 +3,13 @@
  */
 
 function addPin(res, mongodb, jsPin) {
-	mongodb.collection('pins').insert(JSON.parse(jsPin), function(err, records) {
+	var pins = mongodb.collection('pins');
+	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
+		if (err) {
+			throw err;
+		}	
+	});
+	pins.insert(JSON.parse(jsPin), function(err, records) {
 		if (err) {
 			throw err;
 		}
