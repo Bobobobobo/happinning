@@ -8,6 +8,10 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var pins = require('./routes/getPins');
 var addPin = require('./routes/addPin');
+// var comments = require('./routes/getComments');
+// var addComment = require('./routes/addComment');
+// var deleteComment = require('./routes/deleteComment');
+// var reportComment = require('./routes/reportComment');
 var http = require('http');
 var path = require('path');
 
@@ -45,6 +49,27 @@ app.post('/addPin', function(req, res){
 	}
 	addPin.initialize(res, mongodb, data);
 });
+
+// app.get('/addComment', function(req, res){
+// 	var data = req.param('data', null);
+// 	if (data.length > 1e6) { // ??
+// 		req.connection.destroy();
+// 		return;
+// 	}
+// 	addComment.initialize(res, pinID, mongodb, data);
+// });
+
+// app.get('/getComments', function(req, res) {
+// 	comments.initialize(res, req.query.pinID, req.query.page, mongodb);
+// });
+
+// app.get('/deleteComment', function(req, res){
+// 	deleteComment.initialize(res, req.query.commentID, mongodb);
+// });
+
+// app.get('/reportComment', function(req, res){
+// 	reportComment.initialize(res, req.query.commentID, mongodb);
+// });
 
 MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 	if (err) {
