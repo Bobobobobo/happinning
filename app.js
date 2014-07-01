@@ -12,6 +12,7 @@ var addPin = require('./routes/addPin');
 // var addComment = require('./routes/addComment');
 // var deleteComment = require('./routes/deleteComment');
 // var reportComment = require('./routes/reportComment');
+var login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 
@@ -49,9 +50,11 @@ app.post('/addPin', function(req, res){
 	}
 	addPin.initialize(res, mongodb, data);
 });
-// app.get('/login', function(req, res){
-// 	login.initialize(res, req.query.name, req.query.udid, mongodb);
-// });
+
+app.get('/login', function(req, res){
+	login.initialize(res, req.query.name, req.query.udid, mongodb);
+});
+
 // app.get('/addComment', function(req, res){
 // 	var data = req.param('data', null);
 // 	if (data.length > 1e6) { // ??

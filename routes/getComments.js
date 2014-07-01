@@ -6,10 +6,8 @@ function getComments(res, pinID, page, mongodb) {
 	// NYI
 	console.log("Error : Not yet implemented");
 	// mongodb.collection('comments').find(
-	// 		{ pinID :
-	// 			{ $near : 
-	// 				{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
-	// 			}
+	// 		{ 
+	// 			
 	// 		}).toArray(function(err, records) {
 	// 			if (err) {
 	// 				console.log("Error "+err);
