@@ -2,23 +2,26 @@
  * login user and returns a unique id back to response
  */
 
- var shortid = requires('../shortid');
+var shortId = require('shortid');
 
 function login(res, user, udid, mongodb) {
 	// NYI
-	console.log("Error : Not yet implemented");
-	// pins.ensureIndex({user: 1}, function(err, records) {
-	// 	if (err) {
-	// 		throw err;
-	// 	}	
-	// });
-	// pins.insert(JSON.parse(jsPin), function(err, records) {
-	// 	if (err) {
-	// 		throw err;
-	// 	}
-	// 	console.log("Record added as "+records[0]._id);
-	// 	res.send(records[0]);
-	// });
+	// console.log("Error : Not yet implemented");
+	pins.ensureIndex({user: 1}, function(err, records) {
+		if (err) {
+			throw err;
+		}	
+	});
+	var id = shortId.generate();
+	var document = {name: user, udid: udid, code: id};
+
+	pins.insert(document, function(err, records) {
+		if (err) {
+			throw err;
+		}
+		console.log("Record added as "+records[0]._id);
+		res.send(id);
+	});
 }
 
 module.exports = {
