@@ -7,7 +7,8 @@ var shortId = require('shortid');
 function login(res, user, udid, mongodb) {
 	// NYI
 	// console.log("Error : Not yet implemented");
-	pins.ensureIndex({user: 1}, function(err, records) {
+	var logins = mongodb.collection('users');
+	logins.ensureIndex({user: 1}, function(err, records) {
 		if (err) {
 			throw err;
 		}	
@@ -15,7 +16,7 @@ function login(res, user, udid, mongodb) {
 	var id = shortId.generate();
 	var document = {name: user, udid: udid, code: id};
 
-	pins.insert(document, function(err, records) {
+	logins.insert(document, function(err, records) {
 		if (err) {
 			throw err;
 		}
