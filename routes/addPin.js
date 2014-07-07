@@ -7,7 +7,7 @@ function addPin(res, mongodb, jsPin) {
 	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
 		if (err) {
 			throw err;
-		}	
+		}
 	});
 	pins.insert(JSON.parse(jsPin), function(err, records) {
 		if (err) {
