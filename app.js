@@ -32,6 +32,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: "/Users/Llvve/mongodb/content" }));
 
 // development only
 if ('development' === app.get('env')) {
@@ -52,9 +53,42 @@ app.post('/addPin', function(req, res){
 		req.connection.destroy();
 		return;
 	}
+	console.log(req.body);
+    console.log(req.files);
+    
+    var thumbnail = request.files.thumbnail;
+	var videoCover = request.files.videocover;
+	var content = request.files.content;
+	
+	console.log("thumbnail size "+thumbnail.size);
+	console.log("thumbnail path "+thumbnail.path);
+	console.log("thumbnail name "+thumbnail.name);
+	console.log("thumbnail type "+thumbnail.type);
+	
+	console.log("videoCover size "+videoCover.size);
+	console.log("videoCover path "+videoCover.path);
+	console.log("videoCover name "+videoCover.name);
+	console.log("videoCover type "+videoCover.type);
+	
+	console.log("content size "+content.size);
+	console.log("content path "+content.path);
+	console.log("content name "+content.name);
+	console.log("content type "+content.type);
+	
+    console.log(req.files);
+    
 	addPin.initialize(res, mongodb, data);
 });
+app.post("/upload", function (request, response) {
+    // request.files will contain the uploaded file(s),
+    // keyed by the input name (in this case, "file")
 
+    // show the uploaded file name
+    
+    
+
+    response.end("upload complete");
+});
 app.get('/login', function(req, res){
 	login.initialize(res, req.query.name, req.query.udid, mongodb);
 });
