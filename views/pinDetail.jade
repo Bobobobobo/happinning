@@ -2,38 +2,65 @@ extends layout
 
 block content
   nav.navbar-default(role="navigation")
-    .navbar-header
-      button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href="#") Home
+    div.container
+      .navbar-header
+        button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href="/") Home
 
-    // Collect the nav links, forms, and other content for toggling
-    .collapse.navbar-collapse.navbar-ex1-collapse
-      ul.nav.navbar-nav
-        li.active
-          a(href="#") Pins
-        li
-          a(href="#") Maps
-      ul.nav.navbar-nav.navbar-right
-        li.dropdown
-          a.dropdown-toggle(href="#" data-toggle="dropdown") My Profile 
-            span(class="caret")
-            ul.dropdown-menu
-              li
-                a(href="#") My Profile
-              li
-                a(href="#") My Pins
-              li
-                a(href="#") My Comments
-        li
-          a(href="#") Logout 
-            span(class="glyphicon glyphicon-off")
+      // Collect the nav links, forms, and other content for toggling
+      .collapse.navbar-collapse.navbar-ex1-collapse
+        ul.nav.navbar-nav
+          li.active
+            a(href="") Pins
+          li
+            a(href="#") Maps
+        ul.nav.navbar-nav.navbar-right
+          li.dropdown
+            a.dropdown-toggle(href="#" data-toggle="dropdown") My Profile 
+              span(class="caret")
+              ul.dropdown-menu
+                li
+                  a(href="#") My Profile
+                li
+                  a(href="#") My Pins
+                li
+                  a(href="#") My Comments
+          li
+            a(href="#") Logout 
+              span(class="glyphicon glyphicon-off")
   div(class="container")
     h1= title
-    p
-      | PinDetails 
-      = pinID
-      a hello
+    div.panel
+      .panel-default
+      .panel-primary
+        div.panel-heading
+          div.container
+            div.row
+              div.col-md-6
+                h3.panel-title= pin.pinTitle
+              div.col-md-6
+                div(id="pinTitle-info")
+                  div
+                    | by 
+                    = pin.owner
+                  div 
+                    | on 
+                    = pin.timestamp
+
+        div.panel-body
+          div.container
+            div.row
+              div.col-md-3 img placeholder
+              div.col-md-9
+                div= pin.content
+                div
+                  | location lat: 
+                  = pin.location.lattitude
+                  |  long: 
+                  = pin.location.longitude
+            div(style="text-align: center;") google map placeholder
+
