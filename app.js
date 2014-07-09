@@ -16,11 +16,12 @@ var pinDetail = require('./routes/pinDetail');
 var login = require('./routes/login');
 var http = require('http');
 var path = require('path');
+var util = require('util')
 
 var MongoClient = require('mongodb').MongoClient;
 var mongodb;
 var app = express();
-var multer  = require('multer');
+var multiparty = require("multiparty");
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -33,7 +34,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(multer());
+app.use(multiparty);
 
 // development only
 if ('development' === app.get('env')) {
@@ -54,29 +55,16 @@ app.post('/addPin', function(req, res){
 //		req.connection.destroy();
 //		return;
 //	}
-	console.log(req.body);
-    console.log(req.files);
-    
-//    var thumbnail = req.files.thumbnail;
-//	var videoCover = req.files.videocover;
-//	var content = req.files.content;
-//	
-//	console.log("thumbnail size "+thumbnail.size);
-//	console.log("thumbnail path "+thumbnail.path);
-//	console.log("thumbnail name "+thumbnail.name);
-//	console.log("thumbnail type "+thumbnail.type);
-//	
-//	console.log("videoCover size "+videoCover.size);
-//	console.log("videoCover path "+videoCover.path);
-//	console.log("videoCover name "+videoCover.name);
-//	console.log("videoCover type "+videoCover.type);
-//	
-//	console.log("content size "+content.size);
-//	console.log("content path "+content.path);
-//	console.log("content name "+content.name);
-//	console.log("content type "+content.type);
 	
-//	addPin.initialize(res, mongodb, data);
+	var form = new multiparty.Form();
+
+    form.parse(req, function(err, fields, files) {
+    	res.writeHead(200, {'content-type': 'text/plain'});
+    	res.write('received upload:\n\n');
+    	console.log(JSON.stringify(files));
+    	res.end(util.inspect({fields: fields, files: files}));
+    });
+    
 });
 
 app.get('/login', function(req, res){
