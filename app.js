@@ -7,6 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var pins = require('./routes/getPins');
+var pin = require('./routes/getPin');
 var addPin = require('./routes/addPin');
 var pinDetail = require('./routes/pinDetail');
 // var comments = require('./routes/getComments');
@@ -43,11 +44,14 @@ if ('development' === app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pinDetail', function(req, res){
-	pinDetail.initialize(res, mongodb, req.query.pinID, req.query.userID);
+	pinDetail.initialize(res, mongodb, req.query.pinID);
 });
 app.get('/users', user.list);
 app.get('/getPins',  function(req, res){
 	pins.initialize(res, req.query.latitude, req.query.longitude, req.query.maxdistance, mongodb);
+});
+app.get('/getPin', function(req, res){
+	pin.initialize(res, mongodb, req.query.pinID, req.query.userID);
 });
 app.post('/addPin', function(req, res){
 //	var data = req.param('data', null);

@@ -3,7 +3,7 @@
  * GET pin detail page.
  */
 
-function pinDetail(res, mongodb, pinID, userID) {
+function pinDetail(res, mongodb, pinID) {
 	res.render('pinDetail', { title: 'Happinning', 
                             pin  : { pinID: pinID, 
                                      pinTitle: 'pin title', 
@@ -27,7 +27,7 @@ function pinDetail(res, mongodb, pinID, userID) {
 }
 
 module.exports = {
-	initialize: function(res, mongodb, pinID, userID) {
-		pinDetail(res, mongodb, pinID, userID);
+	initialize: function(res, mongodb, pinID) {
+		pinDetail(res, mongodb, pinID);
 	}
 };
