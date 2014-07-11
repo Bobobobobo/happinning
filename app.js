@@ -43,7 +43,7 @@ if ('development' === app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/pinDetail', function(req, res){
-	pinDetail.initialize(res, mongodb, req.query.pinID);
+	pinDetail.initialize(res, mongodb, req.query.pinID, req.query.userID);
 });
 app.get('/users', user.list);
 app.get('/getPins',  function(req, res){
@@ -70,6 +70,7 @@ app.post('/addPin', function(req, res){
 app.get('/login', function(req, res){
 	login.initialize(res, req.query.name, req.query.udid, mongodb);
 });
+
 
 // app.get('/addComment', function(req, res){
 // 	var data = req.param('data', null);

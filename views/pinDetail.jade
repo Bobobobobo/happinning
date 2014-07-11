@@ -34,6 +34,11 @@ block content
               span(class="glyphicon glyphicon-off")
   div(class="container")
     h1= title
+    //- div.container
+    //-   div.row
+    //-     div.col-md-3
+    //-       div(style="text-align: center;") google map placeholder 
+    //-     div.col-md-6
     div.panel
       .panel-default
       .panel-primary
@@ -53,14 +58,37 @@ block content
 
         div.panel-body
           div.container
-            div.row
-              div.col-md-3 img placeholder
+            div.row 
+              div.col-md-3 
+                div img/google maps placeholder
               div.col-md-9
-                div= pin.content
-                div
-                  | location lat: 
-                  = pin.location.lattitude
-                  |  long: 
-                  = pin.location.longitude
-            div(style="text-align: center;") google map placeholder
+                div(style="border-bottom: 1px solid #000;")
+                  div= pin.content
+                  div
+                    | location lat: 
+                    = pin.location.lattitude
+                    |  long: 
+                    = pin.location.longitude
+                div.comments
+                  div.comment
+                    div.row
+                      div.col-md-2 img placeholder
+                      div.col-md-10
+                        div
+                          span.commentName commenter 
+                          span.commentContent blah blah blah blah blah
+                        div.commentInfo
+                          | timestamp
+                  div.comment
+                    div.row
+                      div.col-md-2 img placeholder
+                      div.col-md-10
+                        div
+                          span.commentName commenter 
+                          span.commentContent blah blah blah blah blah
+                        div.commentInfo
+                          | timestamp
+
+  footer
+    div(style="text-align: center;") Happinning&copy; 2014
 
