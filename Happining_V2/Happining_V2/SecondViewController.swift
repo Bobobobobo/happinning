@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  FindPinsViewController.swift
 //  Happining_V2
 //
 //  Created by Kan Boonprakub on 7/8/2557 BE.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class FindPinsViewController: UIViewController {
                             
     override func viewDidLoad() {
         super.viewDidLoad()
