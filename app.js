@@ -18,11 +18,13 @@ var login = require('./routes/login');
 var http = require('http');
 var path = require('path');
 var util = require('util')
+var multiparty = require("multiparty");
+var fs = require('fs');
 
 var MongoClient = require('mongodb').MongoClient;
 var mongodb;
 var app = express();
-var multiparty = require("multiparty");
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -54,21 +56,8 @@ app.get('/getPin', function(req, res){
 	pin.initialize(res, mongodb, req.query.pinID, req.query.userID);
 });
 app.post('/addPin', function(req, res){
-//	var data = req.param('data', null);
-//	if (data.length > 1e6) {
-//		req.connection.destroy();
-//		return;
-//	}
-	
-	var form = new multiparty.Form();
-
-    form.parse(req, function(err, fields, files) {
-    	res.writeHead(200, {'content-type': 'text/plain'});
-    	res.write('received upload:\n\n');
-    	console.log(JSON.stringify(files));
-    	res.end(util.inspect({fields: fields, files: files}));
-    });
-    
+	var form = new multiparty.Form();	
+	addPin.initialize(req, res, form, fs, mongodb);
 });
 
 app.get('/login', function(req, res){
