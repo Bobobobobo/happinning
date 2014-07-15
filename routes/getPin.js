@@ -11,7 +11,8 @@ function getPin(res, mongodb, pinID, userID) {
           console.log("Error "+err);
         }
 //        console.log("Record get as "+records[0]._id);
-        // check if pin is voted by userID
+        // TODO: check if pin is voted by userID
+        // TODO: query media gallery and add to record
         res.send(records);
       });
 }
