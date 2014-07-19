@@ -22,6 +22,7 @@ var multiparty = require("multiparty");
 var fs = require('fs');
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 var mongodb;
 var app = express();
 
@@ -57,11 +58,20 @@ app.get('/getPin', function(req, res){
 });
 app.post('/addPin', function(req, res){
 	var form = new multiparty.Form();	
-	addPin.initialize(req, res, form, fs, mongodb);
+	addPin.initialize(req, res, form, fs, mongodb, ObjectID);
 });
 
 app.get('/login', function(req, res){
 	login.initialize(res, req.query.name, req.query.udid, mongodb);
+});
+
+app.get('/content/:id/:name', function(req, res){
+	fs.readFile(require('./dir').dir + req.params.id + '/' + req.params.name, function (err, data) {
+	if (err) {
+		return res.end('Error loading index.html');
+	}
+    res.end(data);
+  });
 });
 
 

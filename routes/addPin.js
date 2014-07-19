@@ -1,12 +1,16 @@
 /**
- * New node file
+ * add Pin
  */
 
 var __dir = require('../dir').dir;
+var __urlPrefixContent = require('../dir').urlPrefixContent;
 
-function addPin(req, res, form, fs, mongodb) {
+var shortId = require('shortid');
+
+function addPin(req, res, form, fs, mongodb, ObjectID) {
 	
 	var id;
+	var sId = shortId.generate();
 	var record;
 	
 	form.on('part', function(part){
@@ -18,9 +22,9 @@ function addPin(req, res, form, fs, mongodb) {
 	    console.log('tmpPath: '+file.path);
 	    console.log('fileSize: '+ (size / 1024));
 	    if (name === 'thumb_image') {
-	    	fileName = id + '_thumb_image.jpg';
+	    	fileName = sId + '_thumb_image.jpg';
 	    }else if (name === 'image') {
-	    	fileName = id + '_image.jpg';
+	    	fileName = sId + '_image.jpg';
 	    }
 	    var tmp_path = file.path;
 	    var target_path =  __dir + id + '/' + fileName;
@@ -50,13 +54,19 @@ function addPin(req, res, form, fs, mongodb) {
 				}
 			});
 			
-			pins.insert(JSON.parse(value), function(err, records) {
+			id = ObjectID.createPk();
+			var jsValue = JSON.parse(value);
+			jsValue._id = id;
+			jsValue.image = __urlPrefixContent + id + '/' + sId + '_image.jpg';
+			jsValue.thumb = __urlPrefixContent + id + '/' + sId + '_thumb_image.jpg';
+			
+			pins.insert(jsValue, function(err, records) {
 				if (err) {
 					throw err;
 				}
-				id = records[0]._id;
+//				id = records[0]._id;
 				record = records[0];
-//				console.log("Record added as "+id);
+				console.log("Record added as "+record);
 				
 				if(!fs.existsSync(__dir + id)){
 					fs.mkdir(__dir + id, 0777, function(err){
@@ -74,7 +84,7 @@ function addPin(req, res, form, fs, mongodb) {
 }
 
 module.exports = {
-	initialize: function(req, res, form, fs, mongodb) {
-		addPin(req, res, form, fs, mongodb);
+	initialize: function(req, res, form, fs, mongodb, ObjectID) {
+		addPin(req, res, form, fs, mongodb, ObjectID);
 	}
 };

@@ -10,8 +10,8 @@ function getPins(res, latitude, longitude, maxDistance, mongodb) {
 				}
 			}).toArray(function(err, records) {
 				if (err) {
-//					throw err;
 					console.log("Error "+err);
+					throw err;
 				}
 //				console.log("Record get as "+records[0]._id);
 				res.send(records);
