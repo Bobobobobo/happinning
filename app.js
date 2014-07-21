@@ -57,8 +57,17 @@ app.get('/getPin', function(req, res){
 	pin.initialize(res, mongodb, req.query.pinID, req.query.userID);
 });
 app.post('/addPin', function(req, res){
-	var form = new multiparty.Form();	
-	addPin.initialize(req, res, form, fs, mongodb, ObjectID);
+	var data = req.param('data', null);
+	if (data !== null && 'undefined') {
+		if (data.length > 1e6) {
+			//TODO send message for error 'spam'
+			return;
+		}
+		addPin.addPin(res, data, mongodb, ObjectID);
+	}else {
+		var form = new multiparty.Form();
+		addPin.addPinMultipart(req, res, form, fs, mongodb, ObjectID);
+	}
 });
 
 app.get('/login', function(req, res){
