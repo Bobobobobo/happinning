@@ -12,6 +12,9 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	var id = ObjectID.createPk();
 	var sId = shortId.generate();
 	
+	var hasImage = false;
+	var hasVideo = false;
+	
 	form.on('part', function(part){
 //		console.log('part: ' + part.name);
 	    if(!part.filename) return;
@@ -19,12 +22,12 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	});
 	
 	form.on('file', function(name, file){
-//	    console.log('tmpPath: '+file.path);
 //	    console.log('fileSize: '+ (size / 1024));
 		if(!fs.existsSync(__dir + id)){
 			fs.mkdir(__dir + id, 0777, function(err){
-				if(err){ 
-					console.error(err);
+				if(err){
+					throw err;
+					//TODO send message for error 'cannot mkdir'
 				}
 			});
 		}
@@ -33,15 +36,19 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	    	fileName = sId + '_thumb.jpg';
 	    }else if (name === 'image') {
 	    	fileName = sId + '_image.jpg';
+	    	hasImage = true;
+	    }else if (name === 'video') {
+	    	fileName = sId + '_video.mp4';
+	    	hasVideo = true;
 	    }
 	    
-	    var tmp_path = file.path;
-	    var target_path =  __dir + id + '/' + fileName;
+//	    console.log('tmpPath: '+file.path);
+//	    console.log('target_path: '+ __dir + id + '/' + fileName);
 	    
-//	    console.log('target_path: ' + target_path);
-	    
-	    fs.renameSync(tmp_path, target_path, function(err) {
-	        console.error(err)
+	    fs.rename(file.path, __dir + id + '/' + fileName, function(err) {
+	    	 if (err) throw err;
+			//TODO send message for error 'cannot rename'
+	    	 console.log('renamed complete');
 	    });
 	    
 	});
@@ -66,8 +73,15 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 				
 				var jsValue = JSON.parse(value);
 				jsValue._id = id;
-				jsValue.image = __urlPrefixContent + id + '/' + sId + '_image.jpg';
 				jsValue.thumb = __urlPrefixContent + id + '/' + sId + '_thumb.jpg';
+				if (hasImage) {
+					jsValue.image = __urlPrefixContent + id + '/' + sId + '_image.jpg';
+					jsValue.video = '';
+				}else if (hasVideo) {
+					jsValue.image = '';
+					jsValue.video = __urlPrefixContent + id + '/' + sId + '_video.mp4';	
+				}
+				
 				
 				pins.insert(jsValue, function(err, records) {
 					if (err) {
