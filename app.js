@@ -74,13 +74,38 @@ app.get('/login', function(req, res){
 	login.initialize(res, req.query.name, req.query.udid, mongodb);
 });
 
-app.get('/content/:id/:name', function(req, res){
+app.get('/image/:id/:name', function(req, res){
 	fs.readFile(require('./dir').dir + req.params.id + '/' + req.params.name, function (err, data) {
-	if (err) {
-		return res.end('Error loading index.html');
+		if (err) {
+			return res.end('Error loading index.html');
+		}
+		res.end(data);
+	});
+});
+
+app.get('/video/:id/:name', function(req, res){
+	var path = require('./dir').dir + req.params.id + '/' + req.params.name;
+	var stat = fs.statSync(path);
+	var total = stat.size;
+	if (req.headers['range']) {
+		var range = req.headers.range;
+	    var parts = range.replace(/bytes=/, "").split("-");
+	    var partialstart = parts[0];
+	    var partialend = parts[1];
+	 
+	    var start = parseInt(partialstart, 10);
+	    var end = partialend ? parseInt(partialend, 10) : total-1;
+	    var chunksize = (end-start)+1;
+	    console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+	 
+	    var file = fs.createReadStream(path, {start: start, end: end});
+	    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+	    file.pipe(res);
+	}else {
+		console.log('ALL: ' + total);
+	    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
+	    fs.createReadStream(path).pipe(res);
 	}
-    res.end(data);
-  });
 });
 
 

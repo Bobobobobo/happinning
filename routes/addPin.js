@@ -3,7 +3,8 @@
  */
 
 var __dir = require('../dir').dir;
-var __urlPrefixContent = require('../dir').urlPrefixContent;
+var __urlPrefixImage = require('../dir').urlPrefixImage;
+var __urlPrefixVideo = require('../dir').urlPrefixVideo;
 
 var shortId = require('shortid');
 
@@ -48,7 +49,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	    fs.rename(file.path, __dir + id + '/' + fileName, function(err) {
 	    	 if (err) throw err;
 			//TODO send message for error 'cannot rename'
-	    	 console.log('renamed complete');
+//	    	 console.log('renamed complete');
 	    });
 	    
 	});
@@ -73,15 +74,14 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 				
 				var jsValue = JSON.parse(value);
 				jsValue._id = id;
-				jsValue.thumb = __urlPrefixContent + id + '/' + sId + '_thumb.jpg';
+				jsValue.thumb = __urlPrefixImage + id + '/' + sId + '_thumb.jpg';
 				if (hasImage) {
-					jsValue.image = __urlPrefixContent + id + '/' + sId + '_image.jpg';
+					jsValue.image = __urlPrefixImage + id + '/' + sId + '_image.jpg';
 					jsValue.video = '';
 				}else if (hasVideo) {
 					jsValue.image = '';
-					jsValue.video = __urlPrefixContent + id + '/' + sId + '_video.mp4';	
+					jsValue.video = __urlPrefixVideo + id + '/' + sId + '_video.mp4';	
 				}
-				
 				
 				pins.insert(jsValue, function(err, records) {
 					if (err) {
