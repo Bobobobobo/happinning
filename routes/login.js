@@ -7,16 +7,24 @@ var shortId = require('shortid');
 function login(res, username, udid, mongodb) {
 	// NYI
 	// console.log("Error : Not yet implemented");
-	var logins = mongodb.collection('usernames');
-	logins.ensureIndex({username: 1}, function(err, records) {
+	if (username === null || username === 'undefined') {
+		// TODO send message no username
+		return;
+	}else if (udid === null || udid === 'undefined') {
+		// TODO send message no udid
+		return;		
+	}
+	
+	var users = mongodb.collection('users');
+	users.ensureIndex({username: 1}, function(err, records) {
 		if (err) {
 			throw err;
 		}	
 	});
 	var id = shortId.generate();
-	var document = {name: username, udid: udid, code: id};
+	var document = {username: username, udid: udid, code: id};
 	
-	logins.insert(document, function(err, records) {
+	users.insert(document, function(err, records) {
 		if (err) {
 			console.log("error in login " + err);
 			throw err;

@@ -58,7 +58,7 @@ app.get('/getPin', function(req, res){
 });
 app.post('/addPin', function(req, res){
 	var data = req.param('data', null);
-	if (data !== null && 'undefined') {
+	if (data !== null && data !== 'undefined') {
 		if (data.length > 1e6) {
 			//TODO send message for error 'spam'
 			return;
@@ -70,8 +70,8 @@ app.post('/addPin', function(req, res){
 	}
 });
 
-app.get('/login', function(req, res){
-	login.initialize(res, req.query.name, req.query.udid, mongodb);
+app.post('/login', function(req, res){
+	login.initialize(res, req.param('username', null), req.param('udid', null), mongodb);
 });
 
 app.get('/image/:id/:name', function(req, res){
