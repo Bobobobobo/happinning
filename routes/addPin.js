@@ -122,6 +122,11 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 	});
 }
 
+//function addPinViaUser(userId, pinId, mongodb) {
+//	var usersPin = mongodb.collection('userspin');
+//	usersPin.update(query);
+//}
+
 module.exports = {
 	addPinMultipart: function(req, res, form, fs, mongodb, ObjectID) {
 		addPinMultipart(req, res, form, fs, mongodb, ObjectID);

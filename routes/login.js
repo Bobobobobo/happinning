@@ -5,8 +5,6 @@
 var shortId = require('shortid');
 
 function login(res, username, udid, mongodb) {
-	// NYI
-	// console.log("Error : Not yet implemented");
 	if (username === null || username === 'undefined') {
 		// TODO send message no username
 		return;
@@ -21,16 +19,37 @@ function login(res, username, udid, mongodb) {
 			throw err;
 		}	
 	});
-	var id = shortId.generate();
-	var document = {username: username, udid: udid, code: id};
 	
-	users.insert(document, function(err, records) {
+	var query = { username: username};
+	users.findOne(query, function (err, result) {
 		if (err) {
-			console.log("error in login " + err);
-			throw err;
+			// TODO send message error try again
+			return;
 		}
-		console.log("Record added as "+records[0]._id+" username: "+username+" udid: "+udid+" hID: "+id);
-		res.send(id);
+		
+		if (result.username !== null && result.username !== 'undefined') {
+			if (result.udid !== udid) {
+				res.status(404);
+				res.send('error');
+				// TODO send message udid not equals and also email for sending short id
+				return;
+			}
+			res.send(result);
+			return;
+		}
+		
+		var id = shortId.generate();
+		var document = {username: username, udid: udid, code: id};
+		
+		users.insert(document, function(err, records) {
+			if (err) {
+				// TODO send message error try again
+				console.log("error in login " + err);
+				throw err;
+			}
+			console.log("Record added as "+records[0]._id+" username: "+username+" udid: "+udid+" hID: "+id);
+			res.send(records[0]);
+		});
 	});
 }
 
