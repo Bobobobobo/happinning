@@ -21,9 +21,11 @@ class APIController: NSObject {
         self.delegate = delegate
     }
     
-    func getPins(lat: Double!, long: Double!) {
+    func getPins(latitude: Double, longitude: Double) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
+        getTest()
+        
         
     }
     
@@ -31,6 +33,26 @@ class APIController: NSObject {
         
         //Parse ID to get specific pin
         //With Pin Detail information
+        
+    }
+    
+    func getTest() ->Pin[] {
+        
+        var pins :Pin[] = []
+        
+        var pin1 = Pin(pinId: "Test1", title: "Test1", owner: "KanB", content: "Test1 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
+        pins.append(pin1)
+        
+        var pin2 = Pin(pinId: "Test2", title: "Test2", owner: "KanB", content: "Test2 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
+        pins.append(pin2)
+        
+        var pin3 = Pin(pinId: "Test3", title: "Test3", owner: "KanB", content: "Test3 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
+        pins.append(pin3)
+        
+        var pin4 = Pin(pinId: "Test4", title: "Test4", owner: "KanB", content: "Test4 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
+        pins.append(pin4)
+        
+        return pins
         
     }
     
