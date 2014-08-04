@@ -94,6 +94,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 							jsValue.video = __urlPrefixVideo + id + '/' + sId + '_video.mp4';	
 						}
 						jsValue.username = result.username;
+						jsValue.userImage = 'http://identicon.org/?t='+result.username+'&s=256';
 						
 						pins.insert(jsValue, function(err, records) {
 							if (err) {
@@ -108,7 +109,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 				});
 			}
 		  });
-		  if(hasData) {
+		  if(!hasData) {
 			  res.send(messageBuilder.buildError('param data is required'));
 		  }
 	});
@@ -140,6 +141,7 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 			jsValue.thumb = '';
 			jsValue.video = '';
 			jsValue.username = result.username;
+			jsValue.userImage = 'http://identicon.org/?t='+result.username+'&s=256';
 			
 			pins.insert(jsValue, function(err, records) {
 				if (err) {

@@ -2,6 +2,7 @@
  * login user and returns a unique id back to response
  */
 
+//var identicon = require('identicon');
 var shortId = require('shortid');
 var messageBuilder = require('../happining_modules/messageBuilder');
 
