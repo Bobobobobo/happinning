@@ -7,6 +7,8 @@ var __urlPrefixImage = require('../dir').urlPrefixImage;
 var __urlPrefixVideo = require('../dir').urlPrefixVideo;
 
 var shortId = require('shortid');
+var date = new Date();
+var messageBuilder = require('../happining_modules/messageBuilder');
 
 function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	
@@ -28,7 +30,6 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 			fs.mkdir(__dir + id, 0777, function(err){
 				if(err){
 					throw err;
-					//TODO send message for error 'cannot mkdir'
 				}
 			});
 		}
@@ -48,8 +49,6 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	    
 	    fs.rename(file.path, __dir + id + '/' + fileName, function(err) {
 	    	 if (err) throw err;
-			//TODO send message for error 'cannot rename'
-//	    	 console.log('renamed complete');
 	    });
 	    
 	});
@@ -61,70 +60,103 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 				var value = fields.data;
 				hasData = true;
 				if (value.length > 1e6) {
-					//TODO send message for error 'spam'
+					res.send(messageBuilder.buildError('length unacceptable'));
 					return;
 				}
-					
+				
 				var pins = mongodb.collection('pins');
-				pins.ensureIndex({location:'2dsphere'}, function(err, records) {
-					if (err) {
-						throw err;
-					}
-				});
+				var users = mongodb.collection('users');
+//				pins.ensureIndex({location:'2dsphere'}, function(err, records) {
+//					if (err) {
+//						throw err;
+//					}
+//				});
 				
 				var jsValue = JSON.parse(value);
-				jsValue._id = id;
-				jsValue.thumb = __urlPrefixImage + id + '/' + sId + '_thumb.jpg';
-				if (hasImage) {
-					jsValue.image = __urlPrefixImage + id + '/' + sId + '_image.jpg';
-					jsValue.video = '';
-				}else if (hasVideo) {
-					jsValue.image = '';
-					jsValue.video = __urlPrefixVideo + id + '/' + sId + '_video.mp4';	
-				}
 				
-				pins.insert(jsValue, function(err, records) {
+				var query = {_id: new ObjectID(jsValue.userId)};
+				
+				users.findOne(query, function (err, result) {
 					if (err) {
-						// TODO send message insert error
-						throw err;
+						res.send(messageBuilder.buildError(err));
+						return;
 					}
-					console.log("Record added as "+records[0]._id);
-					res.send(records[0]);
+					
+					if (result !== null && result !== 'undefined') {
+						jsValue._id = id;
+						jsValue.thumb = __urlPrefixImage + id + '/' + sId + '_thumb.jpg';
+						jsValue.uploadDate = date.getTime();
+						if (hasImage) {
+							jsValue.image = __urlPrefixImage + id + '/' + sId + '_image.jpg';
+							jsValue.video = '';
+						}else if (hasVideo) {
+							jsValue.image = '';
+							jsValue.video = __urlPrefixVideo + id + '/' + sId + '_video.mp4';	
+						}
+						jsValue.username = result.username;
+						
+						pins.insert(jsValue, function(err, records) {
+							if (err) {
+								throw err;
+							}
+							console.log("Record added as "+records[0]._id);
+							res.send(records[0]);
+						});
+					}else {
+						res.send(messageBuilder.buildError('no user connect with this post'));
+					}
 				});
 			}
 		  });
 		  if(hasData) {
-			  //TODO send message for no parameters 'data'
+			  res.send(messageBuilder.buildError('param data is required'));
 		  }
 	});
 }
 
 function addPin(res, jsPin, mongodb, ObjectID) {
 	var pins = mongodb.collection('pins');
-	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
-		if (err) {
-			throw err;
-		}
-	});
+	var users = mongodb.collection('users');
+//	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
+//		if (err) {
+//			throw err;
+//		}
+//	});
 	
 	var jsValue = JSON.parse(jsPin);
-	jsValue._id = ObjectID.createPk();
-	jsValue.image = '';
-	jsValue.thumb = '';
 	
-	pins.insert(jsValue, function(err, records) {
+	var query = {_id: new ObjectID(jsValue.userId)};
+	
+	users.findOne(query, function (err, result) {
 		if (err) {
-			// TODO send message insert error
-			throw err;
+			res.send(messageBuilder.buildError(err));
+			return;
 		}
-		console.log("Record added as "+records[0]._id);
-		res.send(records[0]);
+		
+		if (result !== null && result !== 'undefined') {
+			jsValue._id = ObjectID.createPk();
+			jsValue.uploadDate = date.getTime();
+			jsValue.image = '';
+			jsValue.thumb = '';
+			jsValue.video = '';
+			jsValue.username = result.username;
+			
+			pins.insert(jsValue, function(err, records) {
+				if (err) {
+					throw err;
+				}
+				console.log("Record added as "+records[0]._id);
+				res.send(messageBuilder.buildComplete(records[0]));
+			});	
+		}else {
+			res.send(messageBuilder.buildError('no user connect with this post'));
+		}
 	});
 }
 
-//function addPinViaUser(userId, pinId, mongodb) {
+//function addUserPin(userId, pinId, mongodb) {
 //	var usersPin = mongodb.collection('userspin');
-//	usersPin.update(query);
+//	usersPin.update();
 //}
 
 module.exports = {

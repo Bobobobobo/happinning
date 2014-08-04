@@ -3,52 +3,46 @@
  */
 
 var shortId = require('shortid');
+var messageBuilder = require('../happining_modules/messageBuilder');
 
 function login(res, username, udid, mongodb) {
 	if (username === null || username === 'undefined') {
-		// TODO send message no username
+		res.send(messageBuilder.buildError('no username'));
 		return;
 	}else if (udid === null || udid === 'undefined') {
-		// TODO send message no udid
+		res.send(messageBuilder.buildError('no udid'));
 		return;		
 	}
 	
-	var users = mongodb.collection('users');
-	users.ensureIndex({username: 1}, function(err, records) {
-		if (err) {
-			throw err;
-		}	
-	});
+	var query = {username: username};
 	
-	var query = { username: username};
+	var users = mongodb.collection('users');
 	users.findOne(query, function (err, result) {
 		if (err) {
-			// TODO send message error try again
+			res.send(messageBuilder.buildError(err));
 			return;
 		}
 		
-		if (result.username !== null && result.username !== 'undefined') {
+		if (result !== null && result !== 'undefined') {
 			if (result.udid !== udid) {
-				res.status(404);
-				res.send('error');
-				// TODO send message udid not equals and also email for sending short id
+				res.send(messageBuilder.buildError('udid not match'));
+				// TODO send message udid not match and also send email for sending code to reset
 				return;
 			}
-			res.send(result);
+			res.send(messageBuilder.buildComplete(result));
 			return;
 		}
 		
-		var id = shortId.generate();
-		var document = {username: username, udid: udid, code: id};
+		var code = shortId.generate();
+		var document = {username: username, udid: udid, code: code};
 		
 		users.insert(document, function(err, records) {
 			if (err) {
-				// TODO send message error try again
-				console.log("error in login " + err);
+				res.send(messageBuilder.buildError(error));
 				throw err;
 			}
-			console.log("Record added as "+records[0]._id+" username: "+username+" udid: "+udid+" hID: "+id);
-			res.send(records[0]);
+			console.log("Record added as "+records[0]._id+" username: "+username+" udid: "+udid+" code: "+code);
+			res.send(messageBuilder.buildComplete(records[0]));
 		});
 	});
 }
