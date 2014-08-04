@@ -10,17 +10,17 @@ import UIKit
 
 class Pin {
     
-    var pinId: String?
-    var title: String?
-    var owner: String?
-    var content: String?
-    var timestamp: String?
-    var pinLat: Double?
-    var pinLong: Double?
-    var imgGalleryURL: String?
-    var videoGalleryURL: String?
+    var pinId: String
+    var title: String
+    var owner: String
+    var content: String
+    var timestamp: String
+    var pinLat: Double
+    var pinLong: Double
+    var imgGalleryURL: String
+    var videoGalleryURL: String
     
-    init(pinId: String!, title: String!, owner: String!, content: String, timestamp: String!, pinLat: Double!, pinLong: Double!, imgGalleryURL: String?, videoGalleryURL: String?) {
+    init(pinId: String, title: String, owner: String, content: String, timestamp: String, pinLat: Double, pinLong: Double, imgGalleryURL: String, videoGalleryURL: String) {
         
         self.pinId = pinId
         self.title = title

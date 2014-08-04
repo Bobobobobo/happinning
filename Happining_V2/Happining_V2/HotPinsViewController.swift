@@ -12,19 +12,25 @@ class HotPinsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet var pinsTableView : UITableView
     
+    var pins:Pin[] = []
+    
     @lazy var api : APIController = APIController(delegate:self)
                             
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.api.delegate = self
+        
+        self.api.getPins(100.0, longitude: 100.0)
+        
+        self.pins = api.getTest()
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        self.api.delegate = self
-        
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
     }
     
     
@@ -32,14 +38,23 @@ class HotPinsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         
         //Return number of row for pins
-        return 0;
+        return pins.count;
         
     }
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         
         //Process result cell in the tableView
-        return nil
+        
+        let kCellIdentifier = "HotPinCell"
+        var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as UITableViewCell
+        
+        let test = self.pins[indexPath.row]
+        
+        cell.text = test.title
+        cell.detailTextLabel.text = "test"
+        
+        return cell
         
     }
     
