@@ -103,6 +103,8 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 							console.log("Record added as "+records[0]._id);
 							res.send(records[0]);
 						});
+						
+						addUserPin(query, jsValue._id, mongodb);
 					}else {
 						res.send(messageBuilder.buildError('no user connect with this post'));
 					}
@@ -149,17 +151,26 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 				}
 				console.log("Record added as "+records[0]._id);
 				res.send(messageBuilder.buildComplete(records[0]));
-			});	
+			});
+			
+			addUserPin(query, jsValue._id, mongodb);
 		}else {
 			res.send(messageBuilder.buildError('no user connect with this post'));
 		}
 	});
 }
 
-//function addUserPin(userId, pinId, mongodb) {
-//	var usersPin = mongodb.collection('userspin');
-//	usersPin.update();
-//}
+function addUserPin(query, pinId, mongodb) {
+	var usersPin = mongodb.collection('userpins');
+	usersPin.update(query,
+			{$push:  {'pinIds' : pinId} },
+			{ upsert: true },
+	function(err, records) {
+		if (err) {
+			throw err;
+		}
+	});
+}
 
 module.exports = {
 	addPinMultipart: function(req, res, form, fs, mongodb, ObjectID) {
