@@ -54,11 +54,11 @@ app.get('/getPins',  function(req, res){
 	pins.initialize(res, req.query.latitude, req.query.longitude, req.query.maxdistance, mongodb);
 });
 app.get('/getPin', function(req, res){
-	pin.initialize(res, mongodb, req.query.pinID, req.query.userID);
+	pin.initialize(res, mongodb, req.query.pinID, req.query.userID, ObjectID);
 });
 app.post('/addPin', function(req, res){
 	var data = req.param('data', null);
-	if (data !== null && data !== 'undefined') {
+	if (data !== null && data !== undefined) {
 		if (data.length > 1e6) {
 			//TODO send message for error 'spam'
 			return;

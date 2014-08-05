@@ -7,10 +7,10 @@ var shortId = require('shortid');
 var messageBuilder = require('../happining_modules/messageBuilder');
 
 function login(res, username, udid, mongodb) {
-	if (username === null || username === 'undefined') {
+	if (username === null || username === undefined) {
 		res.send(messageBuilder.buildError('no username'));
 		return;
-	}else if (udid === null || udid === 'undefined') {
+	}else if (udid === null || udid === undefined) {
 		res.send(messageBuilder.buildError('no udid'));
 		return;		
 	}
@@ -24,7 +24,7 @@ function login(res, username, udid, mongodb) {
 			return;
 		}
 		
-		if (result !== null && result !== 'undefined') {
+		if (result !== null && result !== undefined) {
 			if (result.udid !== udid) {
 				res.send(messageBuilder.buildError('udid not match'));
 				// TODO send message udid not match and also send email for sending code to reset
