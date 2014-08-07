@@ -2,20 +2,32 @@
  * Retrieve pins from lat, lng
  */
 
-function getPins(res, latitude, longitude, maxDistance, mongodb) {
-	mongodb.collection('pins').find(
-			{ location :
-				{ $near : 
-					{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
-				}
-			}).toArray(function(err, records) {
-				if (err) {
-					console.log("Error "+err);
-					throw err;
-				}
-//				console.log("Record get as "+records[0]._id);
-				res.send(records);
-			});
+var messageBuilder = require('../happining_modules/messageBuilder');
+
+function getPins(res, latitude, longitude, maxDistance, page, mongodb) {
+	if (page === null || page === undefined) {
+		page = 1;
+	}
+	
+	var query = { location :
+	{ $near : 
+		{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
+	}};
+	
+	var callback = function(err, records) {
+		if (err) {
+			console.log("Error "+err);
+			throw err;
+		}
+		console.log("Record get as "+records);
+		res.send(messageBuilder.buildComplete(records));
+	};
+	
+	if (page > 1) {
+		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);	
+	}else {
+		mongodb.collection('pins').find(query).limit( 20 ).toArray(callback);
+	}
 
 //	mongodb.collection('pins').find().toArray(function(err, records) {
 //		if (err) {
@@ -27,7 +39,7 @@ function getPins(res, latitude, longitude, maxDistance, mongodb) {
 }
 
 module.exports = {
-	initialize: function(res, latitude, longitude, maxDistance, mongodb) {
-		getPins(res, latitude, longitude, maxDistance, mongodb);
+	initialize: function(res, latitude, longitude, maxDistance, page, mongodb) {
+		getPins(res, latitude, longitude, maxDistance, page, mongodb);
 	}
 };
