@@ -35,7 +35,7 @@ function login(res, username, udid, mongodb) {
 		}
 		
 		var code = shortId.generate();
-		var document = {username: username, udid: udid, code: code};
+		var document = {username: username, udid: udid, code: code, userImage: 'http://identicon.org/?t='+username+'&s=256'};
 		
 		users.insert(document, function(err, records) {
 			if (err) {
