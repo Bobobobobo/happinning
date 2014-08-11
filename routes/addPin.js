@@ -9,6 +9,7 @@ var __urlPrefixVideo = require('../dir').urlPrefixVideo;
 var shortId = require('shortid');
 var date = new Date();
 var messageBuilder = require('../happining_modules/messageBuilder');
+var async = require('async');
 
 function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	
@@ -18,43 +19,52 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 	var hasImage = false;
 	var hasVideo = false;
 	
-	form.on('part', function(part){
+//	form.on('part', function(part){
 //		console.log('part: ' + part.name);
-	    if(!part.filename) return;
-	    size = part.byteCount;
-	});
+//	    if(!part.filename) return;
+//	    size = part.byteCount;
+//	});
 	
 	form.on('file', function(name, file){
 //	    console.log('fileSize: '+ (size / 1024));
-		if(!fs.existsSync(__dir + id)){
-			fs.mkdir(__dir + id, 0777, function(err){
-				if(err){
-					throw err;
-				}
-			});
-		}
-		
-	    if (name === 'thumb') {
-	    	fileName = sId + '_thumb.jpg';
-	    }else if (name === 'image') {
-	    	fileName = sId + '_image.jpg';
-	    	hasImage = true;
-	    }else if (name === 'video') {
-	    	fileName = sId + '_video.mp4';
-	    	hasVideo = true;
-	    }
-	    
-//	    console.log('tmpPath: '+file.path);
-//	    console.log('target_path: '+ __dir + id + '/' + fileName);
-	    
-	    fs.rename(file.path, __dir + id + '/' + fileName, function(err) {
-	    	 if (err) throw err;
-	    });
-	    
+		var fileName;
+  	  	if (name === 'thumb') {
+  		  fileName = sId + '_thumb.jpg';
+  	  	}else if (name === 'image') {
+  		  fileName = sId + '_image.jpg';
+  		  hasImage = true;
+  	  	}else if (name === 'video') {
+  		  fileName = sId + '_video.mp4';
+  		  hasVideo = true;
+  	  	}
+//  	console.log(id+' '+name);
+		async.series([
+		      //Create folder first
+		      function(callback) {
+		    	  if(!fs.existsSync(__dir + id)) {
+		    		  fs.mkdir(__dir + id, 0777, function(err){
+		    			  if (err) return callback(err);
+		    			  callback();
+		    		  });
+		    	  }else {
+		    		  callback();
+		    	  }
+		      },
+		      //Rename and move file from tmp to folder
+		      function(callback) {
+//		    	  console.log(id+' '+fileName);
+		    	  fs.rename(file.path, __dir + id + '/' + fileName, function(err) {
+		    		  if (err) return callback(err);
+		    	  });
+		      }
+		      ],
+		      function(err) { //This function gets called after the two tasks have called their "task callbacks"
+				if (err) return next(err);
+		});
 	});
 	
 	form.parse(req, function(err, fields) {
-		var hasData = false;
+		var hasData = false;			  
 		Object.keys(fields).forEach(function(name) {
 			if (name === 'data') {
 				var value = fields.data;
