@@ -7,7 +7,7 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Happening_V2_1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Happining_V2_1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -91,6 +91,7 @@
                         <viewControllerLayoutGuide type="bottom" id="c4d-OL-3Wk"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dTO-GU-fSa">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="RdZ-FI-Nbb">
@@ -121,7 +122,7 @@
         <!--Pin Detail View Controller-->
         <scene sceneID="uRc-GI-9vD">
             <objects>
-                <viewController storyboardIdentifier="PinDetailViewController" id="y6m-yY-YkF" customClass="PinDetailViewController" customModule="Happening_V2_1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PinDetailViewController" id="y6m-yY-YkF" customClass="PinDetailViewController" customModule="Happining_V2_1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="u6O-yL-O6O"/>
                         <viewControllerLayoutGuide type="bottom" id="c6c-M1-y4q"/>
