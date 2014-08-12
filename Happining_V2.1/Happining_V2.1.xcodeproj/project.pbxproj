@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E02F489A199A54C70036E426 /* NavigateContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F4899199A54C70036E426 /* NavigateContentController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
-		E04215E9199A1C3100551C1D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* ViewController.swift */; };
+		E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* PinListViewController.swift */; };
 		E04215EC199A1C3100551C1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E04215EA199A1C3100551C1D /* Main.storyboard */; };
 		E04215EE199A1C3100551C1D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E04215ED199A1C3100551C1D /* Images.xcassets */; };
 		E04215FA199A1C3100551C1D /* Happening_V2_1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215F9199A1C3100551C1D /* Happening_V2_1Tests.swift */; };
@@ -29,10 +30,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E02F4899199A54C70036E426 /* NavigateContentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigateContentController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E04215E6199A1C3100551C1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E04215E8199A1C3100551C1D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E04215E8199A1C3100551C1D /* PinListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinListViewController.swift; sourceTree = "<group>"; };
 		E04215EB199A1C3100551C1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E04215ED199A1C3100551C1D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E04215F3199A1C3100551C1D /* Happining_V2.1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Happining_V2.1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,11 +89,12 @@
 				E0421607199A1FB500551C1D /* PinDetailViewController.swift */,
 				E0421603199A1D6200551C1D /* APIController.swift */,
 				E04215E6199A1C3100551C1D /* AppDelegate.swift */,
-				E04215E8199A1C3100551C1D /* ViewController.swift */,
+				E04215E8199A1C3100551C1D /* PinListViewController.swift */,
+				E0F2DAD7199A26C600132CDD /* MapViewController.swift */,
 				E04215EA199A1C3100551C1D /* Main.storyboard */,
 				E04215ED199A1C3100551C1D /* Images.xcassets */,
 				E04215E4199A1C3100551C1D /* Supporting Files */,
-				E0F2DAD7199A26C600132CDD /* MapViewController.swift */,
+				E02F4899199A54C70036E426 /* NavigateContentController.swift */,
 			);
 			name = Happining_V2.1;
 			path = Happening_V2.1;
@@ -222,7 +225,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E04215E9199A1C3100551C1D /* ViewController.swift in Sources */,
+				E02F489A199A54C70036E426 /* NavigateContentController.swift in Sources */,
+				E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */,
 				E0421604199A1D6200551C1D /* APIController.swift in Sources */,

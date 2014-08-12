@@ -5,9 +5,27 @@
     </dependencies>
     <scenes>
         <!--View Controller-->
+        <scene sceneID="eH7-zg-gH8">
+            <objects>
+                <viewController id="ohx-Jw-ghC" customClass="ViewController" customModule="Happining_V2_1" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="G1N-9n-RNh"/>
+                        <viewControllerLayoutGuide type="bottom" id="bY5-5g-RHa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="9cl-ta-9bR">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2ZC-NA-9CR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-75" y="91"/>
+        </scene>
+        <!--Pin List View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Happining_V2_1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PinListViewController" id="vXZ-lx-hvc" customClass="PinListViewController" customModule="Happining_V2_1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>

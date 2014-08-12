@@ -24,7 +24,6 @@ class APIController: NSObject {
     func getPins(latitude: Double, longitude: Double) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
-        getTest()
         
         
     }

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PinListViewController.swift
 //  Happening_V2.1
 //
 //  Created by Kan Boonprakub on 8/12/2557 BE.
@@ -8,19 +8,22 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource,  APIControllerProtocol {
+class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource,  APIControllerProtocol {
                             
     @IBOutlet var pinsTableView : UITableView
     
     var pins:Pin[] = []
+    let pageIndex : Int = 1
     
     @lazy var api : APIController = APIController(delegate:self)
+    //@lazy var navi : NavigateContentController = NavigateContentController(delegate:self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         self.api.delegate = self
+        //self.navi.delegate = self
         
         self.pins = api.getTest()
         
@@ -61,6 +64,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //Process the jsonresult parse from API Controller
         
     }
+    
+//    func getPageIndex() -> Int {
+//        return  self.pageIndex
+//    }
 
 
 

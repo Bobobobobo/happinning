@@ -10,6 +10,8 @@ import UIKit
 
 class MapViewController: UIViewController {
 
+    
+    var pageIndex : Int = 2
 
     override func viewDidLoad() {
         super.viewDidLoad()
