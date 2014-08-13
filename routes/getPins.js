@@ -33,8 +33,9 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 	        res.send(messageBuilder.buildComplete(records));
 	    });
 	};
+
+	mongodb.collection('pins').ensureIndex({coordinates:'2dsphere'});
 	
-	mongodb.collection('pins').ensureIndex({coordinates:'2d'});
 	var query = { location :
 	{ $near : 
 		{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
