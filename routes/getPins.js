@@ -14,13 +14,13 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 	
 	var callback = function(err, records) {
 		if (err) {
-			res.send(messageBuilder.buildError('kuy1 '+err));
+			res.send(messageBuilder.buildError(err));
 			return;
 		}
 		async.forEach(records, function (record, callback) {
 			users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
 				if (err) {
-					callback('kuy2 '+err);
+					callback(err);
 				}
 				record.username = result.username;
 				record.userImage = result.userImage;
