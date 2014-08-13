@@ -34,7 +34,9 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 	    });
 	};
 
-	mongodb.collection('pins').ensureIndex({coordinates:'2dsphere'});
+	mongodb.collection('pins').ensureIndex({coordinates:'2dsphere'}, function(err) {
+		if(err) return next(err);
+	});
 	
 	var query = { location :
 	{ $near : 
