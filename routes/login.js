@@ -6,16 +6,19 @@
 var shortId = require('shortid');
 var messageBuilder = require('../happining_modules/messageBuilder');
 
-function login(res, username, udid, mongodb) {
-	if (username === null || username === undefined) {
+function login(res, email, password, username, mongodb) {
+	if (email === null || email === undefined) {
+		res.send(messageBuilder.buildError('no email'));
+		return;
+	}else if (password === null || password === undefined) {
+		res.send(messageBuilder.buildError('no password'));
+		return;
+	}else if (username === null || username === undefined) {
 		res.send(messageBuilder.buildError('no username'));
 		return;
-	}else if (udid === null || udid === undefined) {
-		res.send(messageBuilder.buildError('no udid'));
-		return;		
 	}
 	
-	var query = {username: username};
+	var query = {email: email};
 	
 	var users = mongodb.collection('users');
 	users.findOne(query, function (err, result) {
@@ -25,9 +28,9 @@ function login(res, username, udid, mongodb) {
 		}
 		
 		if (result !== null && result !== undefined) {
-			if (result.udid !== udid) {
-				res.send(messageBuilder.buildError('udid not match'));
-				// TODO send message udid not match and also send email for sending code to reset
+			if (result.password !== password) {
+				res.send(messageBuilder.buildError('password not match'));
+				// TODO send message password not match and also send email for sending code to reset
 				return;
 			}
 			res.send(messageBuilder.buildComplete(result));
@@ -35,21 +38,21 @@ function login(res, username, udid, mongodb) {
 		}
 		
 		var code = shortId.generate();
-		var document = {username: username, udid: udid, code: code, userImage: 'http://identicon.org/?t='+username+'&s=256'};
+		var document = {email: email, password: password, code: code, username: username, userImage: 'http://identicon.org/?t='+username+'&s=256'};
 		
 		users.insert(document, function(err, records) {
 			if (err) {
 				res.send(messageBuilder.buildError(error));
 				throw err;
 			}
-			console.log("Record added as "+records[0]._id+" username: "+username+" udid: "+udid+" code: "+code);
-			res.send(messageBuilder.buildComplete(records[0]));
+			console.log("Record added as "+records[0]._id);
+			res.send(messageBuilder.buildComplete({_id: records[0]._id, username: records[0].username, userImage: records[0].userImage}));
 		});
 	});
 }
 
 module.exports = {
-	initialize: function(res, username, udid, mongodb) {
-		login(res, username, udid, mongodb);
+	initialize: function(res, email, password, username, mongodb) {
+		login(res, email, password, username, mongodb);
 	}
 };

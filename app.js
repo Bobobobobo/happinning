@@ -71,7 +71,7 @@ app.post('/addPin', function(req, res){
 });
 
 app.post('/login', function(req, res){
-	login.initialize(res, req.param('username', null), req.param('udid', null), mongodb);
+	login.initialize(res, req.param('email', null), req.param('password', null), req.param('username', null), mongodb);
 });
 
 app.get('/image/:id/:name', function(req, res){
