@@ -135,7 +135,11 @@ MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 		throw err;
 	}
 	mongodb = db;
-	mongodb.collection('pins').ensureIndex({coordinates:'2d'});
+	mongodb.collection('pins').ensureIndex({coordinates:'2d'}, function(err){
+		if(err) {
+			throw err;
+		}
+	});
 	console.log("Connected to Database ");
 });
 
