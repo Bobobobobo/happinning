@@ -76,11 +76,11 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 				
 				var pins = mongodb.collection('pins');
 				var users = mongodb.collection('users');
-				pins.ensureIndex({location:'2dsphere'}, function(err, records) {
-					if (err) {
-						throw err;
-					}
-				});
+//				pins.ensureIndex({location:'2dsphere'}, function(err, records) {
+//					if (err) {
+//						throw err;
+//					}
+//				});
 				try {
 					var jsValue = JSON.parse(value);
 					var query = {_id: new ObjectID(jsValue.userId)};
@@ -130,11 +130,11 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 function addPin(res, jsPin, mongodb, ObjectID) {
 	var pins = mongodb.collection('pins');
 	var users = mongodb.collection('users');
-	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
-		if (err) {
-			throw err;
-		}
-	});
+//	pins.ensureIndex({location:'2dsphere'}, function(err, records) {
+//		if (err) {
+//			throw err;
+//		}
+//	});
 	
 	try {
 		var jsValue = JSON.parse(jsPin);
