@@ -34,9 +34,10 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 	    });
 	};
 
-	mongodb.collection('pins').ensureIndex({coordinates:'2dsphere'}, function(err) {
-		if(err) return next(err);
-		console.log('err ' + err);
+	mongodb.collection('pins').ensureIndex({location:'2dsphere'}, function(err, records) {
+		if (err) {
+			throw err;
+		}
 	});
 	
 	var query = { location :
@@ -45,7 +46,7 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 	}};
 	
 	if (page > 1) {
-		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);	
+		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
 	}else {
 		mongodb.collection('pins').find(query).limit( 20 ).toArray(callback);
 	}
