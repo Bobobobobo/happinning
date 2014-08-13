@@ -33,7 +33,7 @@ function login(res, email, password, username, mongodb) {
 				// TODO send message password not match and also send email for sending code to reset
 				return;
 			}
-			res.send(messageBuilder.buildComplete(result));
+			res.send(messageBuilder.buildComplete({_id: result._id, username: result.username, userImage: result.userImage}));
 			return;
 		}
 		
