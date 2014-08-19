@@ -38,7 +38,9 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 		}, function(err) {
 	        if (err) messageBuilder.buildError(err);
 //	        console.log('all finish '+records);
-	        res.send(messageBuilder.buildComplete(records));
+	        var pins = new Object();
+	        pins.pins = records;
+	        res.send(messageBuilder.buildComplete(pins));
 	    });
 	};
 
