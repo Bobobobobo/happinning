@@ -4,7 +4,7 @@
 
 function complete(message) {
 	message.status = 200;
-	message.messsage = 'success';
+	message.message = 'success';
 	return message; 
 }
 
