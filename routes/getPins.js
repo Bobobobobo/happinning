@@ -6,6 +6,13 @@ var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
 function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID) {
+	if (latitude == null || latitude === undefined || longitude === null || longitude === undefined) {
+		res.send(messageBuilder.buildError('no latitude, longitude'));
+		return;
+	}
+	if (maxDistance === null || maxDistance === undefined) {
+		maxDistance = 10000;
+	}
 	if (page === null || page === undefined) {
 		page = 1;
 	}
