@@ -6,7 +6,8 @@ var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
 function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID) {
-	if (latitude == null || latitude === undefined || longitude === null || longitude === undefined) {
+	if (latitude == null || latitude === undefined || latitude === ''||
+		longitude === null || longitude === undefined || longitude === '') {
 		res.send(messageBuilder.buildError('no latitude, longitude'));
 		return;
 	}
