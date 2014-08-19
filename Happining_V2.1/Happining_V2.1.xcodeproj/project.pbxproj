@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E02F489A199A54C70036E426 /* NavigateContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02F4899199A54C70036E426 /* NavigateContentController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
 		E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* PinListViewController.swift */; };
 		E04215EC199A1C3100551C1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E04215EA199A1C3100551C1D /* Main.storyboard */; };
@@ -16,6 +15,7 @@
 		E0421604199A1D6200551C1D /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0421603199A1D6200551C1D /* APIController.swift */; };
 		E0421606199A1E0700551C1D /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0421605199A1E0700551C1D /* Pin.swift */; };
 		E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0421607199A1FB500551C1D /* PinDetailViewController.swift */; };
+		E068315919A3CE8D002A678A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E068315819A3CE8D002A678A /* MenuViewController.swift */; };
 		E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E09CB5B2199F97D6009B449E /* SWRevealViewController.m */; };
 		E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F2DAD7199A26C600132CDD /* MapViewController.swift */; };
 /* End PBXBuildFile section */
@@ -31,7 +31,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E02F4899199A54C70036E426 /* NavigateContentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigateContentController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E04215E6199A1C3100551C1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +43,7 @@
 		E0421603199A1D6200551C1D /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		E0421605199A1E0700551C1D /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		E0421607199A1FB500551C1D /* PinDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDetailViewController.swift; sourceTree = "<group>"; };
+		E068315819A3CE8D002A678A /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		E09CB5B2199F97D6009B449E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		E09CB5B3199F97D6009B449E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		E09CB5B5199F9868009B449E /* <Happining_V2.1>-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "<Happining_V2.1>-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -95,11 +95,11 @@
 				E0421603199A1D6200551C1D /* APIController.swift */,
 				E04215E6199A1C3100551C1D /* AppDelegate.swift */,
 				E04215E8199A1C3100551C1D /* PinListViewController.swift */,
-				E02F4899199A54C70036E426 /* NavigateContentController.swift */,
 				E0F2DAD7199A26C600132CDD /* MapViewController.swift */,
 				E04215EA199A1C3100551C1D /* Main.storyboard */,
 				E04215ED199A1C3100551C1D /* Images.xcassets */,
 				E04215E4199A1C3100551C1D /* Supporting Files */,
+				E068315819A3CE8D002A678A /* MenuViewController.swift */,
 			);
 			name = Happining_V2.1;
 			path = Happening_V2.1;
@@ -240,7 +240,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E02F489A199A54C70036E426 /* NavigateContentController.swift in Sources */,
 				E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
@@ -248,6 +247,7 @@
 				E0421604199A1D6200551C1D /* APIController.swift in Sources */,
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,
 				E0421606199A1E0700551C1D /* Pin.swift in Sources */,
+				E068315919A3CE8D002A678A /* MenuViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

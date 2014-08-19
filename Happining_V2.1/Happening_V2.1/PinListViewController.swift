@@ -10,17 +10,21 @@ import UIKit
 
 class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource,  APIControllerProtocol {
                             
-    @IBOutlet var pinsTableView : UITableView
+    @IBOutlet var pinsTableView : UITableView?
+    @IBOutlet var sidebarButton : UIBarButtonItem!
     
-    var pins:Pin[] = []
-    let pageIndex : Int = 1
+    var pins:[Pin] = []
     
-    @lazy var api : APIController = APIController(delegate:self)
-    //@lazy var navi : NavigateContentController = NavigateContentController(delegate:self)
+    lazy var api : APIController = APIController(delegate:self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+
+        sidebarButton.target = self.revealViewController()
+        sidebarButton.action = Selector("revealToggle:")
+
+        self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
         self.api.delegate = self
         //self.navi.delegate = self
@@ -34,7 +38,11 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         // Dispose of any resources that can be recreated.
     }
     
-    
+    func testTapped(sender: UIBarButtonItem!) {
+        self.revealViewController().revealToggle(sender)
+    }
+
+
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         
         
@@ -52,7 +60,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         let test = self.pins[indexPath.row]
         
-        cell.text = test.title
+        cell.textLabel.text = test.title
         cell.detailTextLabel.text = "test"
         
         return cell
