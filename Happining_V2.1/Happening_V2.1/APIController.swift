@@ -35,9 +35,9 @@ class APIController: NSObject {
         
     }
     
-    func getTest() ->Pin[] {
+    func getTest() ->[Pin] {
         
-        var pins :Pin[] = []
+        var pins :[Pin] = []
         
         var pin1 = Pin(pinId: "Test1", title: "Test1", owner: "KanB", content: "Test1 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
         pins.append(pin1)
@@ -68,9 +68,10 @@ class APIController: NSObject {
             }
             var err: NSError?
             var jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
-            if(err?) {
+            
+            if let actualError = error {
                 // If there is an error parsing JSON, print it to the console
-                println("JSON Error \(err!.localizedDescription)")
+                println("JSON Error \(actualError.localizedDescription)")
             }
             var results = jsonResult["results"] as NSArray
             // Now send the JSON result to our delegate object
