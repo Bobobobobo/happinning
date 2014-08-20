@@ -10,12 +10,17 @@ import UIKit
 
 class MapViewController: UIViewController {
 
-    
-    var pageIndex : Int = 2
+    //@IBOutlet var mapView
+    @IBOutlet var sidebarButton : UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        sidebarButton.target = self.revealViewController()
+        sidebarButton.action = Selector("revealToggle:")
+        
+        self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        
         // Do any additional setup after loading the view.
     }
 
