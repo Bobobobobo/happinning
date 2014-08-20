@@ -7,7 +7,6 @@ var __urlPrefixImage = require('../dir').urlPrefixImage;
 var __urlPrefixVideo = require('../dir').urlPrefixVideo;
 
 var shortId = require('shortid');
-var date = new Date();
 var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
@@ -93,7 +92,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 						if (result !== null && result !== undefined) {
 							jsValue._id = id;
 							jsValue.thumb = __urlPrefixImage + id + '/' + sId + '_thumb.jpg';
-							jsValue.uploadDate = date.getTime();
+							jsValue.uploadDate = new Date().getTime();
 							if (hasImage) {
 								jsValue.image = __urlPrefixImage + id + '/' + sId + '_image.jpg';
 								jsValue.video = '';
@@ -147,7 +146,7 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 			
 			if (result !== null && result !== undefined) {
 				jsValue._id = ObjectID.createPk();
-				jsValue.uploadDate = date.getTime();
+				jsValue.uploadDate = new Date().getTime();
 				jsValue.image = '';
 				jsValue.thumb = '';
 				jsValue.video = '';
