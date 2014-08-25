@@ -11,9 +11,10 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 		return;
 	}
 	
-	var pins = mongodb.collection('pins'); 
+	var pins = mongodb.collection('pins');
+	var users = mongodb.collection('users');
 	if (userID !== null && userID !== undefined) {
-		mongodb.collection('users').findOne(query, function (err, result) {
+		users.findOne(query, function (err, result) {
 			if (err) {
 				// do nothing
 				return;
@@ -26,6 +27,7 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 						{ upsert: true },
 				function(err, records) {
 					if (err) {
+						res.send(messageBuilder.buildError(err));
 						return;
 					}
 					pins.update(
@@ -33,6 +35,7 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 							{$set:  {'ratio' : 0.1} },
 					function(err, records) {
 						if (err) {
+							res.send(messageBuilder.buildError(err));
 							return;
 						}
 					});
@@ -51,7 +54,15 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 						res.send(messageBuilder.buildError('no pin found'));
 						return;
 					}
-					res.send(messageBuilder.buildComplete(result));
+					users.findOne({_id: new ObjectID(result.userId)}, function (err, resultUser) {
+						if (err) {
+							res.send(messageBuilder.buildError(err));
+							return;
+						}
+						result.username = resultUser.username;
+						result.userImage = resultUser.userImage;
+						res.send(messageBuilder.buildComplete(result));
+					});
 				});
 	}catch (err) {
 		res.send(messageBuilder.buildError('no pin found'));
