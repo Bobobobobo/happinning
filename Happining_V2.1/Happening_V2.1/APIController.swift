@@ -67,15 +67,28 @@ class APIController: NSObject {
                 println(error.localizedDescription)
             }
             var err: NSError?
-            var jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
+            //var jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
             
-            if let actualError = error {
-                // If there is an error parsing JSON, print it to the console
-                println("JSON Error \(actualError.localizedDescription)")
+            if let jsonResult: AnyObject = NSJSONSerialization.JSONObjectWithData(data,options:nil,error: &err) {
+                if jsonResult is NSDictionary {
+                    var myDict: NSDictionary = jsonResult as NSDictionary
+                    //println("myDict:\(myDict)")
+                    self.delegate?.didReceiveAPIResults(myDict)
+                }
+                else if jsonResult is NSArray {
+                    var myArray: NSArray = jsonResult as NSArray
+                    println("myArray:\(myArray)")
+                    
+                }
             }
-            var results = jsonResult["results"] as NSArray
+            
+            if(err?) {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+            }
+            //var results = jsonResult["results"] as NSArray
             // Now send the JSON result to our delegate object
-            self.delegate?.didReceiveAPIResults(jsonResult)
+            //self.delegate?.didReceiveAPIResults(jsonResult)
             })
         task.resume()
     }
