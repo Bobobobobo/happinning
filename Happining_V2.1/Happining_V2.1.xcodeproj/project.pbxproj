@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Happening_V2.1-Bridging-Header.h"; sourceTree = "<group>"; };
 		E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -46,7 +47,6 @@
 		E0421607199A1FB500551C1D /* PinDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDetailViewController.swift; sourceTree = "<group>"; };
 		E09CB5B2199F97D6009B449E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		E09CB5B3199F97D6009B449E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
-		E09CB5B5199F9868009B449E /* <Happining_V2.1>-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "<Happining_V2.1>-Bridging-Header.h"; sourceTree = "<group>"; };
 		E0F2DAD7199A26C600132CDD /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,6 +71,7 @@
 		E04215D8199A1C3100551C1D = {
 			isa = PBXGroup;
 			children = (
+				098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */,
 				E04215E3199A1C3100551C1D /* Happining_V2.1 */,
 				E04215F6199A1C3100551C1D /* Happining_V2.1Tests */,
 				E04215E2199A1C3100551C1D /* Products */,
@@ -136,7 +137,6 @@
 			children = (
 				E09CB5B2199F97D6009B449E /* SWRevealViewController.m */,
 				E09CB5B3199F97D6009B449E /* SWRevealViewController.h */,
-				E09CB5B5199F9868009B449E /* <Happining_V2.1>-Bridging-Header.h */,
 			);
 			name = SWRevealViewController;
 			sourceTree = "<group>";
@@ -366,7 +366,7 @@
 				INFOPLIST_FILE = Happening_V2.1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Happining_V2.1;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Boonprakubk/Desktop/happinning/Happining_V2.1/Happening_V2.1/<Happining_V2.1>-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Happening_V2.1-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -378,7 +378,7 @@
 				INFOPLIST_FILE = Happening_V2.1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Happining_V2.1;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Boonprakubk/Desktop/happinning/Happining_V2.1/Happening_V2.1/<Happining_V2.1>-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Happening_V2.1-Bridging-Header.h";
 			};
 			name = Release;
 		};
