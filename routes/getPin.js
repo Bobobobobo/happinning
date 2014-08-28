@@ -13,32 +13,35 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 	
 	var pins = mongodb.collection('pins');
 	var users = mongodb.collection('users');
+	var pinviews = mongodb.collection('pinviews');
+	
 	if (userID !== null && userID !== undefined) {
-		users.findOne(query, function (err, result) {
+		users.findOne({_id: new ObjectID(userID)}, function (err, result) {
 			if (err) {
-				// do nothing
 				return;
 			}
 			
 			if (result !== null && result !== undefined) {
-				mongodb.collection('pinviews').update(
+				pinviews.update(
 						{_id: new ObjectID(pinID)},
-						{$push:  {'usersId' : userID} },
-						{ upsert: true },
-				function(err, records) {
+						{$addToSet:  {'usersId' : userID} },
+						{ upsert: true},
+				function(err, result, detail) {
 					if (err) {
-						res.send(messageBuilder.buildError(err));
 						return;
 					}
-					pins.update(
-							{_id: new ObjectID(pinID)},
-							{$set:  {'ratio' : 0.1} },
-					function(err, records) {
-						if (err) {
-							res.send(messageBuilder.buildError(err));
-							return;
-						}
-					});
+					
+					if (detail.updatedExisting === false) {
+						pins.update(
+								{_id: new ObjectID(pinID)},
+								{$inc:  {'ratio' : 0.1} },
+							function(err, records) {
+								if (err) {
+									return;
+								}
+						});	
+					}
+					
 				});
 			}
 		});

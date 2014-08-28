@@ -10,8 +10,8 @@ var pins = require('./routes/getPins');
 var pin = require('./routes/getPin');
 var addPin = require('./routes/addPin');
 var pinDetail = require('./routes/pinDetail');
-// var comments = require('./routes/getComments');
-// var addComment = require('./routes/addComment');
+var comments = require('./routes/getComments');
+var addComment = require('./routes/addComment');
 // var deleteComment = require('./routes/deleteComment');
 // var reportComment = require('./routes/reportComment');
 var login = require('./routes/login');
@@ -69,11 +69,9 @@ app.post('/addPin', function(req, res){
 		addPin.addPinMultipart(req, res, form, fs, mongodb, ObjectID);
 	}
 });
-
 app.post('/login', function(req, res){
 	login.initialize(res, req.param('email', null), req.param('password', null), req.param('username', null), mongodb);
 });
-
 app.get('/image/:id/:name', function(req, res){
 	fs.readFile(require('./dir').dir + req.params.id + '/' + req.params.name, function (err, data) {
 		if (err) {
@@ -82,7 +80,6 @@ app.get('/image/:id/:name', function(req, res){
 		res.end(data);
 	});
 });
-
 app.get('/video/:id/:name', function(req, res){
 	var path = require('./dir').dir + req.params.id + '/' + req.params.name;
 	var stat = fs.statSync(path);
@@ -107,20 +104,18 @@ app.get('/video/:id/:name', function(req, res){
 	    fs.createReadStream(path).pipe(res);
 	}
 });
-
-
-// app.get('/addComment', function(req, res){
-// 	var data = req.param('data', null);
-// 	if (data.length > 1e6) { // ??
-// 		req.connection.destroy();
-// 		return;
-// 	}
-// 	addComment.initialize(res, pinID, mongodb, data);
-// });
-
-// app.get('/getComments', function(req, res) {
-// 	comments.initialize(res, req.query.pinID, req.query.page, mongodb);
-// });
+app.post('/addComment', function(req, res){
+ 	var data = req.param('data', null);
+ 	var pinID = req.param('pinID', null);
+ 	if (data.length > 1e6) { // ??
+ 		req.connection.destroy();
+ 		return;
+ 	}
+ 	addComment.initialize(res, pinID, mongodb, data, ObjectID);
+});
+app.get('/getComments', function(req, res) {
+ 	comments.initialize(res, req.query.pinID, req.query.page, mongodb, ObjectID);
+});
 
 // app.get('/deleteComment', function(req, res){
 // 	deleteComment.initialize(res, req.query.commentID, mongodb);

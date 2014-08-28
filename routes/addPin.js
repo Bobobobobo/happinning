@@ -104,10 +104,11 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 							
 							pins.insert(jsValue, function(err, records) {
 								if (err) {
-									throw err;
+									res.send(messageBuilder.buildError(err));
+									return;
 								}
 								console.log("Record added as "+records[0]._id);
-								res.send(records[0]);
+								res.send(messageBuilder.buildComplete(records[0]));
 							});
 							
 							addUserPin(query, jsValue._id, mongodb);
@@ -154,7 +155,8 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 				
 				pins.insert(jsValue, function(err, records) {
 					if (err) {
-						throw err;
+						res.send(messageBuilder.buildError(err));
+						return;
 					}
 					console.log("Record added as "+records[0]._id);
 					res.send(messageBuilder.buildComplete(records[0]));
@@ -176,7 +178,7 @@ function addUserPin(query, pinId, mongodb) {
 			{ upsert: true },
 	function(err, records) {
 		if (err) {
-			throw err;
+			console.error('addPin.js - addUserPin'+err);
 		}
 	});
 }
