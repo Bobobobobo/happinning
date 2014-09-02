@@ -11,6 +11,7 @@ function addComment(res, pinID, mongodb, comment, ObjectID) {
  	}
 	
 	var jsComment = JSON.parse(comment);
+	jsComment._id = ObjectID.createPk();
 	jsComment.commentDate = new Date().getTime();
 	
 	var pins = mongodb.collection('pins');
