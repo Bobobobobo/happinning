@@ -24,6 +24,12 @@ function getComments(res, pinID, page, mongodb, ObjectID) {
 						res.send(messageBuilder.buildComplete({ _id : pinID, comments : [] }));
 						return;
 					}
+					
+					if ((page - 1) * 20 > result.comments.length) {
+						result.comments.length = 0;
+					}else {
+						result.comments = result.comments.slice((page - 1) * 20, (page * 20));	
+					}
 					async.forEach(result.comments, function (record, callback) {
 						users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
 							if (err) {
