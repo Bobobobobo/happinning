@@ -20,7 +20,10 @@ function addComment(res, pinID, mongodb, comment, ObjectID) {
 	
 	mongodb.collection('comments').update(
 			{ _id: pinID },
-			{$push:  {'comments' : jsComment}},
+			{
+				$push:  {'comments' : jsComment},
+				$inc: {'commentsNum': 1 }
+			},
 			{ upsert: true },
 		function(err, records) {
 			if (err) {

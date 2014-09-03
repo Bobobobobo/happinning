@@ -18,15 +18,24 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 		page = 1;
 	}
 	
-	var users = mongodb.collection('users');
-	
 	var callback = function(err, records) {
 		if (err) {
 			res.send(messageBuilder.buildError(err));
 			return;
 		}
 		async.forEach(records, function (record, callback) {
-			users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
+			mongodb.collection('comments').findOne(
+						{_id: ''+record._id},
+						{_id: 0, 'commentsNum': 1}
+				    ,
+					function(err, result) {
+						if (err || result === null || result == undefined) {
+							record.commentsNum = 0; 
+							return;
+						}
+						record.commentsNum = result.commentsNum;
+					});
+			mongodb.collection('users').findOne({_id: new ObjectID(record.userId)}, function (err, result) {
 				if (err) {
 					callback(err);
 				}
