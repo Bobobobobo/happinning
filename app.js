@@ -12,6 +12,7 @@ var addPin = require('./routes/addPin');
 var pinDetail = require('./routes/pinDetail');
 var comments = require('./routes/getComments');
 var addComment = require('./routes/addComment');
+var like = require('./routes/like');
 // var deleteComment = require('./routes/deleteComment');
 // var reportComment = require('./routes/reportComment');
 var login = require('./routes/login');
@@ -115,6 +116,15 @@ app.post('/addComment', function(req, res){
 });
 app.get('/getComments', function(req, res) {
  	comments.initialize(res, req.query.pinID, req.query.page, mongodb, ObjectID);
+});
+app.post('/like', function(req, res){
+ 	var data = req.param('data', null);
+ 	var pinID = req.param('pinID', null);
+ 	if (data.length > 1e6) { // ??
+ 		req.connection.destroy();
+ 		return;
+ 	}
+ 	like.initialize(res, pinID, mongodb, data, ObjectID);
 });
 
 // app.get('/deleteComment', function(req, res){

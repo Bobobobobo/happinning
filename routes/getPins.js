@@ -23,13 +23,25 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 			res.send(messageBuilder.buildError(err));
 			return;
 		}
-		async.forEach(records, function (record, callback) {
+		async.forEachSeries(records, function (record, callback) {
+			mongodb.collection('likes').findOne(
+					{_id: ''+record._id},
+					{_id: 0, 'likesNum': 1}
+			    ,
+				function(err, result) {
+			    	console.log(result);
+					if (err || result === null || result === undefined) {
+						record.likesNum = 0; 
+						return;
+					}
+					record.likesNum = result.likesNum;
+				});
 			mongodb.collection('comments').findOne(
 						{_id: ''+record._id},
 						{_id: 0, 'commentsNum': 1}
 				    ,
 					function(err, result) {
-						if (err || result === null || result == undefined) {
+						if (err || result === null || result === undefined) {
 							record.commentsNum = 0; 
 							return;
 						}
