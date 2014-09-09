@@ -5,7 +5,7 @@
 var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
-function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID) {
+function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID) {
 	if (latitude == null || latitude === undefined || latitude === ''||
 		longitude === null || longitude === undefined || longitude === '') {
 		res.send(messageBuilder.buildError('no latitude, longitude'));
@@ -23,20 +23,39 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 			res.send(messageBuilder.buildError(err));
 			return;
 		}
+		
+		var likes = mongodb.collection('likes');
+		var comments = mongodb.collection('comments');
+		var users = mongodb.collection('users');
+		
 		async.forEachSeries(records, function (record, callback) {
-			mongodb.collection('likes').findOne(
+			if (userId === null || userId === undefined) {
+				record.isLike = false;
+			}else {
+				likes.findOne(
+						{_id: ''+record._id, 'likes.userId': userId},
+						{_id: 0, 'likes.userId': 1}
+				    ,
+					function(err, result) {
+						if (err || result === null || result === undefined) {
+							record.isLike = false; 
+							return;
+						}
+						record.isLike = true;
+					});	
+			}
+			likes.findOne(
 					{_id: ''+record._id},
 					{_id: 0, 'likesNum': 1}
 			    ,
 				function(err, result) {
-			    	console.log(result);
 					if (err || result === null || result === undefined) {
 						record.likesNum = 0; 
 						return;
 					}
 					record.likesNum = result.likesNum;
 				});
-			mongodb.collection('comments').findOne(
+			comments.findOne(
 						{_id: ''+record._id},
 						{_id: 0, 'commentsNum': 1}
 				    ,
@@ -47,7 +66,7 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 						}
 						record.commentsNum = result.commentsNum;
 					});
-			mongodb.collection('users').findOne({_id: new ObjectID(record.userId)}, function (err, result) {
+			users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
 				if (err) {
 					callback(err);
 				}
@@ -86,7 +105,7 @@ function getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID)
 }
 
 module.exports = {
-	initialize: function(res, latitude, longitude, maxDistance, page, mongodb, ObjectID) {
-		getPins(res, latitude, longitude, maxDistance, page, mongodb, ObjectID);
+	initialize: function(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID) {
+		getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID);
 	}
 };
