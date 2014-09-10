@@ -76,7 +76,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 				callback();
 			});
 		}, function(err) {
-	        if (err) messageBuilder.buildError(err);
+			if (err) res.send(messageBuilder.buildError(err));
 //	        console.log('all finish '+records);
 	        var pins = new Object();
 	        pins.pins = records;

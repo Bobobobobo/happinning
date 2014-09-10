@@ -45,7 +45,7 @@ function getComments(res, pinID, page, mongodb, ObjectID) {
 							callback();
 						});
 					}, function(err) {
-				        if (err) messageBuilder.buildError(err);
+				        if (err) res.send(messageBuilder.buildError(err));
 				        res.send(messageBuilder.buildComplete(result));
 				    });
 				});

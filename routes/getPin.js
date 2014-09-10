@@ -48,7 +48,7 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 	}
 	
 	try {
-		pins.findOne({ _id : new ObjectID(pinID) },
+		pins.findOne({ _id : new ObjectID(pinID)},
 				function(err, result) {
 					if (err) {
 						res.send(messageBuilder.buildError(err));
