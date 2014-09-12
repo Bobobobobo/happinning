@@ -24,8 +24,8 @@ class APIController: NSObject {
     func getPins(latitude: Double, longitude: Double) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
-        
-        
+        var url = "http://54.179.16.196:3000/getPins?latitude=13.8353822&longitude=100.5701188&maxdistance=100000"
+        get(url);
     }
     
     func getPin(pinId: String!) {
@@ -39,7 +39,7 @@ class APIController: NSObject {
         
         var pins :[Pin] = []
         
-        var pin1 = Pin(pinId: "Test1", title: "Test1", owner: "KanB", content: "Test1 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
+        /*var pin1 = Pin(pinId: "Test1", title: "Test1", owner: "KanB", content: "Test1 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
         pins.append(pin1)
         
         var pin2 = Pin(pinId: "Test2", title: "Test2", owner: "KanB", content: "Test2 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
@@ -49,7 +49,7 @@ class APIController: NSObject {
         pins.append(pin3)
         
         var pin4 = Pin(pinId: "Test4", title: "Test4", owner: "KanB", content: "Test4 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
-        pins.append(pin4)
+        pins.append(pin4)*/
         
         return pins
         
@@ -82,7 +82,7 @@ class APIController: NSObject {
                 }
             }
             
-            if(err?) {
+            if err != nil {
                 // If there is an error parsing JSON, print it to the console
                 println("JSON Error \(err!.localizedDescription)")
             }

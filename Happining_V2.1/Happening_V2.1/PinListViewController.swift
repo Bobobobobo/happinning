@@ -29,8 +29,8 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         self.api.delegate = self
         //self.navi.delegate = self
         
-        self.pins = api.getTest()
-        
+        //self.pins = api.getTest()
+        api.getPins(0, longitude: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -60,17 +60,26 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         let test = self.pins[indexPath.row]
         
-        cell.textLabel.text = test.title
+        cell.textLabel.text = test.text
         cell.detailTextLabel.text = "test"
         
         return cell
         
     }
-    
+
     func didReceiveAPIResults(results: NSDictionary) {
-        
         //Process the jsonresult parse from API Controller
-        
+        var pinfromResult: NSArray = results["pins"] as NSArray
+        //println(pinfromResult)
+        var pinList: [Pin] = [];
+        for pinDict in pinfromResult {
+            //println(_stdlib_getTypeName(pinDict))
+            if pinDict is NSDictionary {
+                pinList.append(Pin(pinDict: pinDict as NSDictionary))
+            }
+        }
+        pins = pinList
+        self.pinsTableView?.reloadData()
     }
     
 //    func getPageIndex() -> Int {

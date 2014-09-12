@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA10FA19AF56AA0086D4DF /* Location.swift */; };
 		E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
 		E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* PinListViewController.swift */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Happening_V2.1-Bridging-Header.h"; sourceTree = "<group>"; };
+		09EA10FA19AF56AA0086D4DF /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -43,7 +45,7 @@
 		E04215F8199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E04215F9199A1C3100551C1D /* Happening_V2_1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Happening_V2_1Tests.swift; sourceTree = "<group>"; };
 		E0421603199A1D6200551C1D /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
-		E0421605199A1E0700551C1D /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		E0421605199A1E0700551C1D /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pin.swift; path = ../Pin.swift; sourceTree = "<group>"; };
 		E0421607199A1FB500551C1D /* PinDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDetailViewController.swift; sourceTree = "<group>"; };
 		E09CB5B2199F97D6009B449E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		E09CB5B3199F97D6009B449E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
@@ -68,6 +70,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		09EA10F919AF56800086D4DF /* model */ = {
+			isa = PBXGroup;
+			children = (
+				E0421605199A1E0700551C1D /* Pin.swift */,
+				09EA10FA19AF56AA0086D4DF /* Location.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		E04215D8199A1C3100551C1D = {
 			isa = PBXGroup;
 			children = (
@@ -90,8 +101,8 @@
 		E04215E3199A1C3100551C1D /* Happining_V2.1 */ = {
 			isa = PBXGroup;
 			children = (
+				09EA10F919AF56800086D4DF /* model */,
 				E09CB5A7199F9168009B449E /* SWRevealViewController */,
-				E0421605199A1E0700551C1D /* Pin.swift */,
 				E0421607199A1FB500551C1D /* PinDetailViewController.swift */,
 				E0421603199A1D6200551C1D /* APIController.swift */,
 				E04215E6199A1C3100551C1D /* AppDelegate.swift */,
@@ -244,6 +255,7 @@
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
 				E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */,
+				09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */,
 				E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */,
 				E0421604199A1D6200551C1D /* APIController.swift in Sources */,
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,
