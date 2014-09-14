@@ -6,28 +6,22 @@
 //  Copyright (c) 2557 Kan Boonprakub. All rights reserved.
 //
 
-protocol APIControllerProtocol {
-    func didReceiveAPIResults(results: NSDictionary)
-}
-
 import UIKit
 
 class APIController: NSObject {
-    
-    var delegate: APIControllerProtocol
-    
-    init(delegate: APIControllerProtocol) {
-        self.delegate = delegate
+
+    override init() {
+        super.init()
     }
     
-    func getPins(latitude: Double, longitude: Double) {
+    func getPins(latitude: Double, longitude: Double, callback: (NSDictionary) -> Void) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
         var url = "http://54.179.16.196:3000/getPins?latitude=13.8353822&longitude=100.5701188&maxdistance=100000"
-        get(url);
+        get(url, callback);
     }
     
-    func getPin(pinId: String!) {
+    func getPin(pinId: String) {
         
         //Parse ID to get specific pin
         //With Pin Detail information
@@ -54,7 +48,7 @@ class APIController: NSObject {
         
     }
     
-    func get(path: String) {
+    func get(path: String, callback: (NSDictionary) -> Void) {
         let url = NSURL(string: path)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url, completionHandler: {data, response, error -> Void in
@@ -70,7 +64,7 @@ class APIController: NSObject {
                 if jsonResult is NSDictionary {
                     var myDict: NSDictionary = jsonResult as NSDictionary
                     //println("myDict:\(myDict)")
-                    self.delegate.didReceiveAPIResults(myDict)
+                    callback(myDict)
                 }
                 else if jsonResult is NSArray {
                     var myArray: NSArray = jsonResult as NSArray

@@ -45,7 +45,9 @@ class Pin {
     }
     
     init(pinDict: NSDictionary) {
-        self.pinId = pinDict["_id"] as String
+        if let tempPinId = pinDict["_id"] as? String {
+            self.pinId = tempPinId
+        }
         self.pinType = pinDict["pinType"] as Int
         self.text = pinDict["text"] as String
         var tempUploadDate: Int = pinDict["uploadDate"] as Int

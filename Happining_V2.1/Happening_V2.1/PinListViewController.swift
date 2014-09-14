@@ -8,14 +8,14 @@
 
 import UIKit
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, APIControllerProtocol {
+class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     
     var pins:[Pin] = []
     
-    var api : APIController?
+    lazy var api : APIController = APIController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +25,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         sidebarButton.action = Selector("revealToggle:")
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        
-        self.api? = APIController(delegate: self)
-        self.api?.getPins(0, longitude: 0)
+        self.api.getPins(0, longitude: 0, loadPins)
     }
     
     override func didReceiveMemoryWarning() {
@@ -52,11 +50,12 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         let test = self.pins[indexPath.row]
         
         cell.textLabel?.text = test.text
+        cell.detailTextLabel?.text = "\(test.uploadDate)"
         
         return cell
     }
 
-    func didReceiveAPIResults(results: NSDictionary) {
+    func loadPins(results: NSDictionary) {
         //Process the jsonresult parse from API Controller
         var pinfromResult: NSArray = results["pins"] as NSArray
         //println(pinfromResult)
