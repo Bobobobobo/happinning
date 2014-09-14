@@ -8,15 +8,15 @@
 
 import UIKit
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource,  APIControllerProtocol {
+class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, APIControllerProtocol {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     
     var pins:[Pin] = []
     
-    lazy var api : APIController = APIController(delegate:self)
-    
+    var api : APIController?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -26,11 +26,8 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
-        self.api.delegate = self
-        //self.navi.delegate = self
-        
-        //self.pins = api.getTest()
-        api.getPins(0, longitude: 0)
+        self.api? = APIController(delegate: self)
+        self.api?.getPins(0, longitude: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -42,19 +39,13 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         self.revealViewController().revealToggle(sender)
     }
 
-
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        
         //Return number of row for pins
         return pins.count;
-        
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell {
-        
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //Process result cell in the tableView
-        
         let kCellIdentifier = "PinCell"
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as UITableViewCell
         
@@ -63,7 +54,6 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         cell.textLabel?.text = test.text
         
         return cell
-        
     }
 
     func didReceiveAPIResults(results: NSDictionary) {

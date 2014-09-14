@@ -13,11 +13,10 @@ protocol APIControllerProtocol {
 import UIKit
 
 class APIController: NSObject {
-   
     
-    var delegate: APIControllerProtocol?
+    var delegate: APIControllerProtocol
     
-    init(delegate: APIControllerProtocol?) {
+    init(delegate: APIControllerProtocol) {
         self.delegate = delegate
     }
     
@@ -55,8 +54,6 @@ class APIController: NSObject {
         
     }
     
-    
-    
     func get(path: String) {
         let url = NSURL(string: path)
         let session = NSURLSession.sharedSession()
@@ -73,7 +70,7 @@ class APIController: NSObject {
                 if jsonResult is NSDictionary {
                     var myDict: NSDictionary = jsonResult as NSDictionary
                     //println("myDict:\(myDict)")
-                    self.delegate?.didReceiveAPIResults(myDict)
+                    self.delegate.didReceiveAPIResults(myDict)
                 }
                 else if jsonResult is NSArray {
                     var myArray: NSArray = jsonResult as NSArray
@@ -92,8 +89,5 @@ class APIController: NSObject {
             })
         task.resume()
     }
-    
-    
-    
-    
+        
 }
