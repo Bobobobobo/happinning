@@ -10,7 +10,7 @@ import UIKit
 
 class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource,  APIControllerProtocol {
                             
-    @IBOutlet var pinsTableView : UITableView?
+    @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     
     var pins:[Pin] = []
@@ -43,7 +43,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
     }
 
 
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         
         //Return number of row for pins
@@ -51,7 +51,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
     }
     
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell {
         
         //Process result cell in the tableView
         
@@ -60,8 +60,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         let test = self.pins[indexPath.row]
         
-        cell.textLabel.text = test.text
-        cell.detailTextLabel.text = "test"
+        cell.textLabel?.text = test.text
         
         return cell
         
