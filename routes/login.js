@@ -34,7 +34,12 @@ function login(res, email, password, username, mongodb) {
 				return;
 			}
 			if (result.username !== username) {
-				users.update({_id: result._id}, {'username': username, 'userImage': 'http://identicon.org/?t='+username+'&s=256'});
+				users.update({_id: result._id}, {'username': username, 'userImage': 'http://identicon.org/?t='+username+'&s=256'},
+						function(err, records) {
+						if (err) {
+							console.error('login.js - login'+err);
+						}
+					});
 			}
 			
 			res.send(messageBuilder.buildComplete({_id: result._id, username: result.username, userImage: result.userImage}));
