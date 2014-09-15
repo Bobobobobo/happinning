@@ -112,6 +112,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 							});
 							
 							addUserPin(query, jsValue._id, mongodb);
+							addKeywordLocation(jsValue.location, mongodb, ObjectID);
 						}else {
 							res.send(messageBuilder.buildError('no user connect with this post'));
 						}
@@ -163,6 +164,7 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 				});
 				
 				addUserPin(query, jsValue._id, mongodb);
+				addKeywordLocation(jsValue.location, mongodb, ObjectID);
 			}else {
 				res.send(messageBuilder.buildError('no user connect with this post'));
 			}
@@ -179,6 +181,31 @@ function addUserPin(query, pinId, mongodb) {
 	function(err, records) {
 		if (err) {
 			console.error('addPin.js - addUserPin'+err);
+		}
+	});
+}
+
+function addKeywordLocation(location, mongodb, ObjectID) {
+	if (location.subLocality === null || location.subLocality === undefined || location.subLocality === '') {
+		return;
+	}
+	
+	var objLocation = new Object();
+	objLocation._id = ObjectID.createPk();
+	objLocation.location = location;
+	
+	mongodb.collection('location').findOne({'location.subLocality': location.subLocality}, function (err, result) {
+		if (err) {
+			res.send(messageBuilder.buildError(err));
+			return;
+		}
+		if (result === null || result === undefined) {
+			mongodb.collection('location').insert(objLocation,
+			function(err, records) {
+				if (err) {
+					console.error('addPin.js - addKeywordLocation'+err);
+				}
+			});
 		}
 	});
 }

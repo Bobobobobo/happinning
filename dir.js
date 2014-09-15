@@ -1,6 +1,6 @@
-var __dir = '/home/ubuntu/content/';
-var __urlPrefixImage = 'http://54.179.16.196:3000/image/';
-var __urlPrefixVideo = 'http://54.179.16.196:3000/video/';
+var __dir = '/Users/Llvve/mongodb/content/';
+var __urlPrefixImage = '/image/';
+var __urlPrefixVideo = '/video/';
 
 exports.dir = __dir;
 exports.urlPrefixImage = __urlPrefixImage;

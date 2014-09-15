@@ -60,7 +60,7 @@ app.get('/getPin', function(req, res){
 	pin.initialize(res, mongodb, req.query.pinID, req.query.userId, ObjectID);
 });
 app.get('/getLocation',  function(req, res){
-	location.initialize(res, req.query.latitude, req.query.longitude, mongodb);
+	location.initialize(res, req.query.latitude, req.query.longitude, req.query.keyword, req.query.page, mongodb);
 });
 app.get('/getUserPins', function(req, res){
 	userPins.initialize(res, req.query.userId, req.query.page, mongodb, ObjectID);
@@ -149,6 +149,11 @@ MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 	}
 	mongodb = db;
 	mongodb.collection('pins').ensureIndex({location:'2dsphere'}, function(err, records) {
+		if (err) {
+			throw err;
+		}
+	});
+	mongodb.collection('location').ensureIndex({location:'2dsphere'}, function(err, records) {
 		if (err) {
 			throw err;
 		}
