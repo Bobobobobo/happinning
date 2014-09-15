@@ -1,4 +1,4 @@
-var __dir = '/Users/Llvve/mongodb/content/';
+var __dir = '/home/ubuntu/content/';
 var __urlPrefixImage = '/image/';
 var __urlPrefixVideo = '/video/';
 
