@@ -33,6 +33,10 @@ function login(res, email, password, username, mongodb) {
 				// TODO send message password not match and also send email for sending code to reset
 				return;
 			}
+			if (result.username !== username) {
+				users.update({_id: result._id}, {'username': username, 'userImage': 'http://identicon.org/?t='+username+'&s=256'});
+			}
+			
 			res.send(messageBuilder.buildComplete({_id: result._id, username: result.username, userImage: result.userImage}));
 			return;
 		}
