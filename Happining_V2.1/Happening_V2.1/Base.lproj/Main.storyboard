@@ -38,23 +38,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="276" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gr4-Nz-u2B">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="333" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gr4-Nz-u2B">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PinCell" rowHeight="276" id="UMB-um-tlj" customClass="PinTableViewCell" customModule="Happining_V2_1" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PinCell" rowHeight="333" id="UMB-um-tlj" customClass="PinTableViewCell" customModule="Happining_V2_1" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UMB-um-tlj" id="zOE-tX-hsx">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KqJ-OP-e3z">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KqJ-OP-e3z" userLabel="ProfileImage">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <variation key="widthClass=compact" fixedFrame="YES">
                                                         <rect key="frame" x="8" y="8" width="20" height="20"/>
                                                     </variation>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gj0-82-xRe">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gj0-82-xRe" userLabel="PinTypeImage">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <variation key="widthClass=compact" fixedFrame="YES">
                                                         <rect key="frame" x="372" y="8" width="20" height="20"/>
@@ -69,10 +69,37 @@
                                                         <rect key="frame" x="36" y="8" width="219" height="21"/>
                                                     </variation>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ADI-uR-BfS">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pin title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1og-Sn-gR7">
+                                                    <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="36" y="47" width="316" height="21"/>
+                                                    </variation>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zak-v5-CfJ">
+                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                    <state key="normal" title="Like">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="36" y="294" width="30" height="30"/>
+                                                    </variation>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mXy-9S-GDp">
+                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                    <state key="normal" title="Comment">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="302" y="294" width="68" height="30"/>
+                                                    </variation>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ADI-uR-BfS" userLabel="PinImage">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                                     <variation key="widthClass=compact" fixedFrame="YES">
-                                                        <rect key="frame" x="80" y="105" width="240" height="128"/>
+                                                        <rect key="frame" x="120" y="106" width="160" height="160"/>
                                                     </variation>
                                                 </imageView>
                                             </subviews>
@@ -81,6 +108,9 @@
                                                     <exclude reference="KqJ-OP-e3z"/>
                                                     <exclude reference="Gj0-82-xRe"/>
                                                     <exclude reference="XOa-rl-eJn"/>
+                                                    <exclude reference="1og-Sn-gR7"/>
+                                                    <exclude reference="zak-v5-CfJ"/>
+                                                    <exclude reference="mXy-9S-GDp"/>
                                                     <exclude reference="ADI-uR-BfS"/>
                                                 </mask>
                                             </variation>
@@ -89,11 +119,21 @@
                                                     <include reference="KqJ-OP-e3z"/>
                                                     <include reference="Gj0-82-xRe"/>
                                                     <include reference="XOa-rl-eJn"/>
+                                                    <include reference="1og-Sn-gR7"/>
+                                                    <include reference="zak-v5-CfJ"/>
+                                                    <include reference="mXy-9S-GDp"/>
                                                     <include reference="ADI-uR-BfS"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="commentButton" destination="mXy-9S-GDp" id="fUZ-Ln-Kh3"/>
+                                            <outlet property="likeButton" destination="zak-v5-CfJ" id="pgO-0Y-aRy"/>
+                                            <outlet property="pinImage" destination="ADI-uR-BfS" id="b7x-R1-zrE"/>
+                                            <outlet property="pinTitle" destination="1og-Sn-gR7" id="llG-Jl-FdO"/>
+                                            <outlet property="pintypeImage" destination="Gj0-82-xRe" id="eTS-C6-RyS"/>
+                                            <outlet property="profileImage" destination="KqJ-OP-e3z" id="qsA-d0-1bP"/>
+                                            <outlet property="userName" destination="XOa-rl-eJn" id="h2q-zm-dTj"/>
                                             <segue destination="xaX-Sw-1bY" kind="show" id="Zsc-hq-yjJ"/>
                                         </connections>
                                     </tableViewCell>
@@ -319,6 +359,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="tbA-Vp-4fr"/>
+        <segue reference="dXa-IE-fvs"/>
     </inferredMetricsTieBreakers>
 </document>

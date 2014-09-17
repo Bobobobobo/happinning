@@ -68,15 +68,16 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         return pins.count;
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> PinTableViewCell {
         //Process result cell in the tableView
         let kCellIdentifier = "PinCell"
-        var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
         
         let test = self.pins[indexPath.row]
         
-        cell.textLabel?.text = test.text
-        cell.detailTextLabel?.text = "\(test.uploadDate)"
+        cell.pinTitle?.text = test.text
+        var url = "http://54.179.16.196:3000/\(test.imageURL)"
+        cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: url)))
         
         return cell
     }
