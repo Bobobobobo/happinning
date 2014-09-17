@@ -93,7 +93,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
             }
         }
         pins = pinList
-        self.pinsTableView?.reloadData()
+        self.pinsTableView.reloadData()
     }
     
 //    func getPageIndex() -> Int {

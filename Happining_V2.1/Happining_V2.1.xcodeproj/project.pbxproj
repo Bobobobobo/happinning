@@ -18,6 +18,7 @@
 		E0421606199A1E0700551C1D /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0421605199A1E0700551C1D /* Pin.swift */; };
 		E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0421607199A1FB500551C1D /* PinDetailViewController.swift */; };
 		E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E09CB5B2199F97D6009B449E /* SWRevealViewController.m */; };
+		E0ACCB0319C9B0B200CD34F7 /* PinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */; };
 		E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F2DAD7199A26C600132CDD /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		E0421607199A1FB500551C1D /* PinDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDetailViewController.swift; sourceTree = "<group>"; };
 		E09CB5B2199F97D6009B449E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		E09CB5B3199F97D6009B449E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTableViewCell.swift; sourceTree = "<group>"; };
 		E0F2DAD7199A26C600132CDD /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +84,7 @@
 		E04215D8199A1C3100551C1D = {
 			isa = PBXGroup;
 			children = (
+				E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */,
 				098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */,
 				E04215E3199A1C3100551C1D /* Happining_V2.1 */,
 				E04215F6199A1C3100551C1D /* Happining_V2.1Tests */,
@@ -252,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */,
+				E0ACCB0319C9B0B200CD34F7 /* PinTableViewCell.swift in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
 				E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */,
