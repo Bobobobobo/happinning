@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import CoreLocation
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource {
+class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     
     var pins:[Pin] = []
     
-    lazy var api : APIController = APIController()
+    var api : APIController!
+    var locationManager: CLLocationManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,12 +27,36 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         sidebarButton.action = Selector("revealToggle:")
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        self.api.getPins(0, longitude: 0, loadPins)
+        
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
+        
+        self.api = APIController()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        //locationManager.stopUpdatingLocation()
+        if ((error) != nil) {
+            print(error)
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        locationManager.stopUpdatingLocation()
+        var locValue: CLLocationCoordinate2D = locationManager.location.coordinate
+        println("location = \(locValue.latitude) \(locValue.longitude)")
+        //for testing
+        var latitude: Double = 13.8353822
+        var longitude: Double = 100.5701188
+        self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
     }
     
     func testTapped(sender: UIBarButtonItem!) {
