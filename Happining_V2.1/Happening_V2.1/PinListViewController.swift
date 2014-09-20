@@ -28,13 +28,18 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
+        self.api = APIController()
+        
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         self.locationManager.requestAlwaysAuthorization()
-        self.locationManager.startUpdatingLocation()
+        //self.locationManager.startUpdatingLocation()
         
-        self.api = APIController()
+        //testing
+        var latitude: Double = 13.8353822
+        var longitude: Double = 100.5701188
+        self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
     }
     
     override func didReceiveMemoryWarning() {
@@ -53,7 +58,6 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         locationManager.stopUpdatingLocation()
         var locValue: CLLocationCoordinate2D = locationManager.location.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
-        //for testing
         var latitude: Double = 13.8353822
         var longitude: Double = 100.5701188
         self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
@@ -68,7 +72,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         return pins.count;
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> PinTableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //Process result cell in the tableView
         let kCellIdentifier = "PinCell"
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
