@@ -14,7 +14,7 @@ class APIController: NSObject {
         super.init()
     }
     
-    func getPins(latitude: Double, longitude: Double, distance: Int, callback: (NSDictionary) -> Void) {
+    func getPins(latitude: Double, longitude: Double, distance: Int, callback: (result: NSDictionary) -> Void) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
         var url = "http://54.179.16.196:3000/getPins?latitude=\(latitude)&longitude=\(longitude)&maxdistance=\(distance)"
@@ -28,27 +28,16 @@ class APIController: NSObject {
         
     }
     
-    func getTest() ->[Pin] {
-        
-        var pins :[Pin] = []
-        
-        /*var pin1 = Pin(pinId: "Test1", title: "Test1", owner: "KanB", content: "Test1 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
-        pins.append(pin1)
-        
-        var pin2 = Pin(pinId: "Test2", title: "Test2", owner: "KanB", content: "Test2 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
-        pins.append(pin2)
-        
-        var pin3 = Pin(pinId: "Test3", title: "Test3", owner: "KanB", content: "Test3 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
-        pins.append(pin3)
-        
-        var pin4 = Pin(pinId: "Test4", title: "Test4", owner: "KanB", content: "Test4 Content", timestamp: "2014-07-31", pinLat: 100.0, pinLong: 100.0, imgGalleryURL: "Test.happening.com/image", videoGalleryURL: "Test.happneing.com/video")
-        pins.append(pin4)*/
-        
-        return pins
-        
+    func login(email: String, username: String, password: String, postCompleted: (succeeded: Bool, msg: String, result: NSDictionary?) -> Void) {
+        var url: String = "http://54.179.16.196:3000/login"
+        var data: Dictionary<String, String> = Dictionary<String, String>()
+        data["email"] = email
+        data["username"] = username
+        data["password"] = password
+        post(data, url: url, postCompleted)
     }
     
-    func get(path: String, callback: (NSDictionary) -> Void) {
+    func get(path: String, callback: (result: NSDictionary) -> Void) {
         let url = NSURL(string: path)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url, completionHandler: {data, response, error -> Void in
@@ -64,7 +53,7 @@ class APIController: NSObject {
                 if jsonResult is NSDictionary {
                     var myDict: NSDictionary = jsonResult as NSDictionary
                     //println("myDict:\(myDict)")
-                    callback(myDict)
+                    callback(result: myDict)
                 }
                 else if jsonResult is NSArray {
                     var myArray: NSArray = jsonResult as NSArray
@@ -81,6 +70,55 @@ class APIController: NSObject {
             // Now send the JSON result to our delegate object
             //self.delegate?.didReceiveAPIResults(jsonResult)
             })
+        task.resume()
+    }
+    
+    func post(params : Dictionary<String, String>, url : String, postCompleted : (succeeded: Bool, msg: String, result: NSDictionary?) -> ()) {
+        var request = NSMutableURLRequest(URL: NSURL(string: url))
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            var msg = "No message"
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                postCompleted(succeeded: false, msg: "Error", result: nil)
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    // Okay, the parsedJSON is here, let's get the value for 'success' out of it
+                    if let success = parseJSON["success"] as? Bool {
+                        println("Succes: \(success)")
+                        postCompleted(succeeded: success, msg: "Logged in.", result: nil)
+                    }
+                    return
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: \(jsonStr)")
+                    postCompleted(succeeded: false, msg: "Error", result: nil)
+                }
+            }
+        })
+        
         task.resume()
     }
         
