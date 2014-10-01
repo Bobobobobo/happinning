@@ -29,51 +29,65 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 		var users = mongodb.collection('users');
 		
 		async.eachSeries(records, function (record, callback) {
-			if (userId === null || userId === undefined) {
-				record.isLike = false;
-			}else {
-				likes.findOne(
-						{_id: ''+record._id, 'likes.userId': userId},
-						{_id: 0, 'likes.userId': 1}
-				    ,
-					function(err, result) {
-						if (err || result === null || result === undefined) {
-							record.isLike = false; 
-							return;
-						}
-						record.isLike = true;
-					});	
-			}
-			likes.findOne(
-					{_id: ''+record._id},
-					{_id: 0, 'likesNum': 1}
-			    ,
-				function(err, result) {
-					if (err || result === null || result === undefined) {
-						record.likesNum = 0; 
-						return;
-					}
-					record.likesNum = result.likesNum;
+			async.parallel([
+			                function(callback){
+			                	if (userId === null || userId === undefined) {
+			        				record.isLike = false;
+			        			}else {
+			        				likes.findOne(
+			        						{_id: ''+record._id, 'likes.userId': userId},
+			        						{_id: 0, 'likes.userId': 1}
+			        				    ,
+			        					function(err, result) {
+			        						if (err || result === null || result === undefined) {
+			        							record.isLike = false;
+			        						}else {
+			        							record.isLike = true;	
+			        						}
+			        						callback();
+			        					});	
+			        			}
+			                },
+			                function(callback){
+			                	likes.findOne(
+			        					{_id: ''+record._id},
+			        					{_id: 0, 'likesNum': 1}
+			        			    ,
+			        				function(err, result) {
+			        					if (err || result === null || result === undefined) {
+			        						record.likesNum = 0; 
+			        					}else {
+			        						record.likesNum = result.likesNum;	
+			        					}
+			        					callback();
+			        				});
+			                },
+			                function(callback){
+			                	comments.findOne(
+			    						{_id: ''+record._id},
+			    						{_id: 0, 'commentsNum': 1}
+			    				    ,
+			    					function(err, result) {
+			    						if (err || result === null || result === undefined) {
+			    							record.commentsNum = 0; 
+			    						}else {
+			    							record.commentsNum = result.commentsNum;	
+			    						}
+			    						callback();
+			    					});
+			                }
+			            ],
+			            // optional callback
+			            function(err){
+							users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
+								if (err) {
+									callback(err);
+								}
+								record.username = result.username;
+								record.userImage = result.userImage;
+								callback();
+							});
 				});
-			comments.findOne(
-						{_id: ''+record._id},
-						{_id: 0, 'commentsNum': 1}
-				    ,
-					function(err, result) {
-						if (err || result === null || result === undefined) {
-							record.commentsNum = 0; 
-							return;
-						}
-						record.commentsNum = result.commentsNum;
-					});
-			users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
-				if (err) {
-					callback(err);
-				}
-				record.username = result.username;
-				record.userImage = result.userImage;
-				callback();
-			});
 		}, function(err) {
 			if (err) res.send(messageBuilder.buildError(err));
 	        var pins = new Object();
