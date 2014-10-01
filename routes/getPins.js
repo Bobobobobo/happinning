@@ -75,18 +75,22 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 			    						}
 			    						callback();
 			    					});
+			                },
+			                function(callback) {
+			                	users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
+									if (err) {
+										record.username = '';
+										record.userImage = '';	
+									}
+									record.username = result.username;
+									record.userImage = result.userImage;
+									callback();
+								});
 			                }
 			            ],
 			            // optional callback
 			            function(err){
-							users.findOne({_id: new ObjectID(record.userId)}, function (err, result) {
-								if (err) {
-									callback(err);
-								}
-								record.username = result.username;
-								record.userImage = result.userImage;
-								callback();
-							});
+							callback(err);
 				});
 		}, function(err) {
 			if (err) res.send(messageBuilder.buildError(err));
