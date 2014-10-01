@@ -28,7 +28,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 		var comments = mongodb.collection('comments');
 		var users = mongodb.collection('users');
 		
-		async.forEachSeries(records, function (record, callback) {
+		async.eachSeries(records, function (record, callback) {
 			if (userId === null || userId === undefined) {
 				record.isLike = false;
 			}else {
@@ -72,12 +72,10 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 				}
 				record.username = result.username;
 				record.userImage = result.userImage;
-//				console.log('fin once '+record);
 				callback();
 			});
 		}, function(err) {
 			if (err) res.send(messageBuilder.buildError(err));
-//	        console.log('all finish '+records);
 	        var pins = new Object();
 	        pins.pins = records;
 	        res.send(messageBuilder.buildComplete(pins));
