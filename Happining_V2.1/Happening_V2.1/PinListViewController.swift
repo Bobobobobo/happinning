@@ -81,15 +81,10 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         cell.pinTitle?.text = test.text
         var url = "http://54.179.16.196:3000\(test.imageURL)"
-//        var url = "http://www.identicon.org/?t=ยำย"
+
         cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: url)))
         
         cell.userName?.text = test.userName
-        
-//        url = test.userImageURL
-        cell.profileImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: url)))
-//
-//        cell.pintypeImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: url)))
         
         return cell
     }
