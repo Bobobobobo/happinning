@@ -38,6 +38,7 @@ class APIController: NSObject {
     }
     
     func get(path: String, callback: (result: NSDictionary) -> Void) {
+        println("GET URL: \(path)")
         let url = NSURL(string: path)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url, completionHandler: {data, response, error -> Void in
@@ -64,7 +65,7 @@ class APIController: NSObject {
             
             if err != nil {
                 // If there is an error parsing JSON, print it to the console
-                println("JSON Error \(err!.localizedDescription)")
+                println("JSON Error: \(err!.localizedDescription)")
             }
             //var results = jsonResult["results"] as NSArray
             // Now send the JSON result to our delegate object
