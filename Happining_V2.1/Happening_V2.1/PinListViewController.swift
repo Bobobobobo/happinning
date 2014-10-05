@@ -18,6 +18,8 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
     
     var api : APIController!
     var locationManager: CLLocationManager!
+    
+    var imageCache = [String : UIImage]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,14 +79,49 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         let kCellIdentifier = "PinCell"
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
         
-        let test = self.pins[indexPath.row]
+        let pin = self.pins[indexPath.row]
         
-        cell.pinTitle?.text = test.text
-        var url = "http://54.179.16.196:3000\(test.imageURL)"
+        cell.pinTitle?.text = pin.text
+        
+        var urlString = "http://54.179.16.196:3000\(pin.imageURL)"
+        
+        var image = self.imageCache[urlString]
 
-        cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: url)))
+//        cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: urlString)))
         
-        cell.userName?.text = test.userName
+        if( image == nil ) {
+            // If the image does not exist, we need to download it
+            var imgURL: NSURL = NSURL(string: urlString)
+            
+            // Download an NSData representation of the image at the URL
+            let request: NSURLRequest = NSURLRequest(URL: imgURL)
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                if error == nil {
+                    image = UIImage(data: data)
+                    
+                    // Store the image in to our cache
+                    self.imageCache[urlString] = image
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
+                            cellToUpdate.imageView?.image = image
+                        }
+                    })
+                }
+                else {
+                    println("Error: \(error.localizedDescription)")
+                }
+            })
+            
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
+                    cellToUpdate.imageView?.image = image
+                }
+            })
+        }
+        
+        cell.userName?.text = pin.userName
         
         return cell
     }
