@@ -17,6 +17,8 @@ class PinTableViewCell: UITableViewCell {
     @IBOutlet var pinImage: UIImageView?
     @IBOutlet var likeButton: UIButton?
     @IBOutlet var commentButton: UIButton?
+    @IBOutlet var likeView: UIView?
+    @IBOutlet var commentView: UIView?
     
 
 }

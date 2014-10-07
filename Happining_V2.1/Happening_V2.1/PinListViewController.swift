@@ -30,7 +30,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
-        self.performSegueWithIdentifier("signin", sender: self)
+        //self.performSegueWithIdentifier("signin", sender: self)
         
         self.api = APIController()
         
