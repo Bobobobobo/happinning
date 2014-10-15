@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		093CDF1419E91D7F00075BB0 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */; };
+		093CDF1619E91F0900075BB0 /* UsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093CDF1519E91F0900075BB0 /* UsernameViewController.swift */; };
+		0948E3F319E6CFB800751E09 /* EmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0948E3F219E6CFB800751E09 /* EmailViewController.swift */; };
 		094E63AC19E18D89008325CA /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09646FA719DE599D005A0F59 /* SigninViewController.swift */; };
 		094E63AE19E192D9008325CA /* SigninPageContentViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094E63AD19E192D9008325CA /* SigninPageContentViewcontroller.swift */; };
 		09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA10FA19AF56AA0086D4DF /* Location.swift */; };
+		09EA882B19EC2065004AB442 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EA882A19EC2065004AB442 /* KeychainWrapper.m */; };
+		09F9BE9719EE93D200C3BCA4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F9BE9619EE93D200C3BCA4 /* KeychainService.swift */; };
 		E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
 		E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* PinListViewController.swift */; };
@@ -35,10 +40,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		093CDF1519E91F0900075BB0 /* UsernameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
+		0948E3F219E6CFB800751E09 /* EmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailViewController.swift; sourceTree = "<group>"; };
 		094E63AD19E192D9008325CA /* SigninPageContentViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninPageContentViewcontroller.swift; sourceTree = "<group>"; };
 		09646FA719DE599D005A0F59 /* SigninViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Happening_V2.1-Bridging-Header.h"; sourceTree = "<group>"; };
 		09EA10FA19AF56AA0086D4DF /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		09EA882919EC2065004AB442 /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeychainWrapper.h; path = Happening_V2.1/KeychainWrapper.h; sourceTree = SOURCE_ROOT; };
+		09EA882A19EC2065004AB442 /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeychainWrapper.m; path = Happening_V2.1/KeychainWrapper.m; sourceTree = SOURCE_ROOT; };
+		09F9BE9619EE93D200C3BCA4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainService.swift; path = Happening_V2.1/KeychainService.swift; sourceTree = SOURCE_ROOT; };
 		E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,6 +87,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		09E29D8E19E986C50050FFB9 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				09F9BE9619EE93D200C3BCA4 /* KeychainService.swift */,
+				09EA882919EC2065004AB442 /* KeychainWrapper.h */,
+				09EA882A19EC2065004AB442 /* KeychainWrapper.m */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
 		09EA10F919AF56800086D4DF /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +128,7 @@
 		E04215E3199A1C3100551C1D /* Happining_V2.1 */ = {
 			isa = PBXGroup;
 			children = (
+				09E29D8E19E986C50050FFB9 /* util */,
 				09EA10F919AF56800086D4DF /* model */,
 				E09CB5A7199F9168009B449E /* SWRevealViewController */,
 				E0421607199A1FB500551C1D /* PinDetailViewController.swift */,
@@ -121,6 +143,9 @@
 				E04215EA199A1C3100551C1D /* Main.storyboard */,
 				E04215ED199A1C3100551C1D /* Images.xcassets */,
 				E04215E4199A1C3100551C1D /* Supporting Files */,
+				0948E3F219E6CFB800751E09 /* EmailViewController.swift */,
+				093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */,
+				093CDF1519E91F0900075BB0 /* UsernameViewController.swift */,
 			);
 			name = Happining_V2.1;
 			path = Happening_V2.1;
@@ -262,12 +287,17 @@
 			files = (
 				E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */,
 				E0ACCB0319C9B0B200CD34F7 /* PinTableViewCell.swift in Sources */,
+				09F9BE9719EE93D200C3BCA4 /* KeychainService.swift in Sources */,
 				094E63AC19E18D89008325CA /* SigninViewController.swift in Sources */,
+				093CDF1419E91D7F00075BB0 /* PasswordViewController.swift in Sources */,
+				09EA882B19EC2065004AB442 /* KeychainWrapper.m in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
 				E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */,
+				0948E3F319E6CFB800751E09 /* EmailViewController.swift in Sources */,
 				09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */,
 				094E63AE19E192D9008325CA /* SigninPageContentViewcontroller.swift in Sources */,
+				093CDF1619E91F0900075BB0 /* UsernameViewController.swift in Sources */,
 				E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */,
 				E0421604199A1D6200551C1D /* APIController.swift in Sources */,
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,
@@ -388,6 +418,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Happening_V2.1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Happining_V2.1;
 				SWIFT_OBJC_BRIDGING_HEADER = "Happening_V2.1-Bridging-Header.h";
@@ -400,6 +431,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Happening_V2.1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Happining_V2.1;
 				SWIFT_OBJC_BRIDGING_HEADER = "Happening_V2.1-Bridging-Header.h";

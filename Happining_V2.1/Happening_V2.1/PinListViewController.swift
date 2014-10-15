@@ -30,20 +30,30 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
-        //self.performSegueWithIdentifier("signin", sender: self)
-        
         self.api = APIController()
+    }
+    
+    var isLogin: Bool = false
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
         
-        self.locationManager = CLLocationManager()
-        self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-        self.locationManager.requestAlwaysAuthorization()
-        //self.locationManager.startUpdatingLocation()
-        
-        //testing
-        var latitude: Double = 13.8353822
-        var longitude: Double = 100.5701188
-        self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+        if !isLogin {
+            self.performSegueWithIdentifier("signin", sender: self)
+            isLogin = true
+        }
+        else {
+            self.locationManager = CLLocationManager()
+            self.locationManager.delegate = self
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+            self.locationManager.requestAlwaysAuthorization()
+            self.locationManager.startUpdatingLocation()
+            
+            //testing
+            var latitude: Double = 13.8353822
+            var longitude: Double = 100.5701188
+            self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+        }
     }
     
     override func didReceiveMemoryWarning() {
