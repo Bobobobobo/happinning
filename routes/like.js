@@ -85,7 +85,7 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 							return;
 						}
 						
-						colLike.find().toArray(function(err, result) {
+						colLike.findOne({ _id: pinID }, function(err, result) {
 							if (err) {
 								res.send(messageBuilder.buildError(err));
 								return;
