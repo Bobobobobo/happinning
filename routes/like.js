@@ -90,7 +90,7 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 								res.send(messageBuilder.buildError(err));
 								return;
 							}
-							like.likesNum = result.likesNum;
+							like.likesNum = result;
 							res.send(messageBuilder.buildComplete(like));
 						});
 					});
