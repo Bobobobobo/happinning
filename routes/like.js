@@ -85,17 +85,16 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 							return;
 						}
 						
-//						colLike.find({ _id: pinID }, function(err, result) {
-//							if (err) {
-//								res.send(messageBuilder.buildError(err));
-//								return;
-//							}
-//							like.pinID = pinID;
-//							like.likesNum = result;
-//							res.send(messageBuilder.buildComplete(like));
-//						});
-						like.pinID = pinID;
-						res.send(messageBuilder.buildComplete(like));
+						colLike.find({ _id: pinID }, function(err, result1, result2) {
+							if (err) {
+								res.send(messageBuilder.buildError(err));
+								return;
+							}
+							like.pinID = pinID;
+							like.result1 = result1;
+							like.result2 = result2;
+							res.send(messageBuilder.buildComplete(like));
+						});
 					});
 		});
 }
