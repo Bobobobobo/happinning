@@ -47,7 +47,7 @@ function like(res, pinID, mongodb, like, ObjectID) {
 					}else {
 						var like = new Object();
 						like.isLike = false;
-						like.likesNum = result.length;
+						like.likesNum = 0;
 						res.send(messageBuilder.buildComplete(like));
 					}
 				}
@@ -84,7 +84,7 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 							res.send(messageBuilder.buildError(err));
 							return;
 						}
-						like.likesNum = records.length;
+						like.likesNum = records;
 						res.send(messageBuilder.buildComplete(like));
 					});
 		});
