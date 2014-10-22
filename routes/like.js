@@ -85,14 +85,13 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 							return;
 						}
 						
-						colLike.find({ _id: pinID }, function(err, result1, result2) {
+						colLike.find().toArray(function(err, result) {
 							if (err) {
 								res.send(messageBuilder.buildError(err));
 								return;
 							}
 							like.pinID = pinID;
-							like.result1 = result1;
-							like.result2 = result2;
+							like.likesNum = result;
 							res.send(messageBuilder.buildComplete(like));
 						});
 					});
