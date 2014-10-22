@@ -54,12 +54,15 @@ function like(res, pinID, mongodb, like, ObjectID) {
 
 function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID) {
 	var ratio;
+	var like = new Object();
 	if (isLike) {
 		ratio = 0.3;
 		likesNum = 1;
+		like.isLike = true;
 	}else {
 		ratio = -0.3;
 		likesNum = -1;
+		like.isLike = false;
 	}
 	colLike.update(
 			{ _id: pinID },
@@ -80,7 +83,7 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 						}
 					});
 			
-			res.send(messageBuilder.buildComplete('like complete'));
+			res.send(messageBuilder.buildComplete(like));
 		});
 }
 
