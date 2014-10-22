@@ -24,7 +24,9 @@ function like(res, pinID, mongodb, like, ObjectID) {
 			function(err, result) {
 				if (result !== null && result !== undefined && result.length > 0) {
 					if (jsLike.like == 1) {
-						res.send(messageBuilder.buildComplete('like complete'));
+						var like = new Object();
+						like.isLike = true;
+						res.send(messageBuilder.buildComplete(like));
 					}else {
 						addLikeQuery = {
 							$pull: {'likes': {'userId': jsLike.userId}},
@@ -33,7 +35,6 @@ function like(res, pinID, mongodb, like, ObjectID) {
 						delete jsLike.like; // remove like from hash
 						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, false, ObjectID);
 					}
-									
 				}else {
 					if (jsLike.like == 1) {
 						addLikeQuery = {
@@ -43,7 +44,9 @@ function like(res, pinID, mongodb, like, ObjectID) {
 						delete jsLike.like; // remove like from hash
 						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, true, ObjectID);
 					}else {
-						res.send(messageBuilder.buildComplete('unlike complete'));
+						var like = new Object();
+						like.isLike = false;
+						res.send(messageBuilder.buildComplete(like));
 					}
 				}
 	});
@@ -53,8 +56,10 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 	var ratio;
 	if (isLike) {
 		ratio = 0.3;
+		likesNum = 1;
 	}else {
 		ratio = -0.3;
+		likesNum = -1;
 	}
 	colLike.update(
 			{ _id: pinID },
@@ -68,7 +73,7 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 	
 			pins.update(
 					{_id: new ObjectID(pinID)},
-					{$inc:  {'ratio' : ratio} },
+					{$inc:  {'ratio' : ratio, 'likesNum' : likesNum} },
 					function(err, records) {
 						if (err) {
 							return;
