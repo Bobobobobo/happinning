@@ -26,13 +26,14 @@ function like(res, pinID, mongodb, like, ObjectID) {
 					if (jsLike.like == 1) {
 						var like = new Object();
 						like.isLike = true;
+						like.likesNum = result.length;
 						res.send(messageBuilder.buildComplete(like));
 					}else {
 						addLikeQuery = {
 							$pull: {'likes': {'userId': jsLike.userId}},
 							$inc: {'likesNum': -1}
 						};
-						delete jsLike.like; // remove like from hash
+						delete jsLike.like; // remove like from object
 						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, false, ObjectID);
 					}
 				}else {
@@ -41,11 +42,12 @@ function like(res, pinID, mongodb, like, ObjectID) {
 							$addToSet: {'likes' : jsLike},
 							$inc: {'likesNum': jsLike.like}
 						};
-						delete jsLike.like; // remove like from hash
+						delete jsLike.like; // remove like from object
 						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, true, ObjectID);
 					}else {
 						var like = new Object();
 						like.isLike = false;
+						like.likesNum = result.length;
 						res.send(messageBuilder.buildComplete(like));
 					}
 				}
@@ -79,11 +81,12 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 					{$inc:  {'ratio' : ratio, 'likesNum' : likesNum} },
 					function(err, records) {
 						if (err) {
+							res.send(messageBuilder.buildError(err));
 							return;
 						}
+						like.likesNum = records.length;
+						res.send(messageBuilder.buildComplete(like));
 					});
-			
-			res.send(messageBuilder.buildComplete(like));
 		});
 }
 
