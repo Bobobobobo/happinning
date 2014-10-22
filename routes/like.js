@@ -34,7 +34,7 @@ function like(res, pinID, mongodb, like, ObjectID) {
 							$inc: {'likesNum': -1}
 						};
 						delete jsLike.like; // remove like from object
-						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, false, ObjectID, result);
+						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, false, ObjectID);
 					}
 				}else {
 					if (jsLike.like == 1) {
@@ -43,7 +43,7 @@ function like(res, pinID, mongodb, like, ObjectID) {
 							$inc: {'likesNum': jsLike.like}
 						};
 						delete jsLike.like; // remove like from object
-						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, true, ObjectID, result);
+						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, true, ObjectID);
 					}else {
 						var like = new Object();
 						like.isLike = false;
@@ -54,7 +54,7 @@ function like(res, pinID, mongodb, like, ObjectID) {
 	});
 }
 
-function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID, xxx) {
+function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID) {
 	var ratio;
 	var like = new Object();
 	if (isLike) {
@@ -84,8 +84,15 @@ function addRemoveLike(res, colLike, pinID, pins, addLikeQuery, isLike, ObjectID
 							res.send(messageBuilder.buildError(err));
 							return;
 						}
-						like.likesNum = xxx;
-						res.send(messageBuilder.buildComplete(like));
+						
+						colLike.find({ _id: pinID }, function(err, result) {
+							if (err) {
+								res.send(messageBuilder.buildError(err));
+								return;
+							}
+							like.likesNum = result.likesNum;
+							res.send(messageBuilder.buildComplete(like));
+						});
 					});
 		});
 }
