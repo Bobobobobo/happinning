@@ -30,7 +30,7 @@ function like(res, pinID, mongodb, like, ObjectID) {
 					}else {
 						addLikeQuery = {
 							$pull: {'likes': {'userId': jsLike.userId}},
-							$inc: {'likesNum': jsLike.like}
+							$inc: {'likesNum': -1}
 						};
 						delete jsLike.like; // remove like from hash
 						addRemoveLike(res, colLike, pinID, pins, addLikeQuery, false, ObjectID);
