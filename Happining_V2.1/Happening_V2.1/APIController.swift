@@ -39,7 +39,7 @@ class APIController: NSObject {
     
     func get(path: String, callback: (result: NSDictionary) -> Void) {
         println("GET URL: \(path)")
-        let url = NSURL(string: path)
+        let url = NSURL(string: path)!
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url, completionHandler: {data, response, error -> Void in
             println("Task completed")
@@ -75,7 +75,7 @@ class APIController: NSObject {
     }
     
     func post(params : Dictionary<String, String>, url : String, postCompleted : (succeeded: Bool, msg: String, result: NSDictionary?) -> ()) {
-        var request = NSMutableURLRequest(URL: NSURL(string: url))
+        var request = NSMutableURLRequest(URL: NSURL(string: url)!)
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         

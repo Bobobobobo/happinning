@@ -8,3 +8,4 @@
 
 #import "SWRevealViewController.h"
 #import "KeychainWrapper.h"
+#import "StyledPageControl.h"

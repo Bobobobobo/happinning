@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
+class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, LoginViewDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
@@ -103,7 +103,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         if( image == nil ) {
             // If the image does not exist, we need to download it
-            var imgURL: NSURL = NSURL(string: urlString)
+            var imgURL: NSURL = NSURL(string: urlString)!
             
             // Download an NSData representation of the image at the URL
             let request: NSURLRequest = NSURLRequest(URL: imgURL)
@@ -115,7 +115,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
                     self.imageCache[urlString] = image
                     dispatch_async(dispatch_get_main_queue(), {
                         if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                            cellToUpdate.imageView?.image = image
+                            cellToUpdate.imageView.image = image
                         }
                     })
                 }
@@ -128,7 +128,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         else {
             dispatch_async(dispatch_get_main_queue(), {
                 if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                    cellToUpdate.imageView?.image = image
+                    cellToUpdate.imageView.image = image
                 }
             })
         }
@@ -158,6 +158,34 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 //    }
 
 
+    /**********************************
+    *
+    *   Navigation
+    *
+    ***********************************/
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier != nil) {
+            var segueID = segue.identifier!
+            if (segueID == "signin") {
+                var navigationController:UINavigationController = segue.destinationViewController as UINavigationController
+                var loginController:LoginViewController = navigationController.viewControllers[0] as LoginViewController
+                loginController.delegate = self
+            }
+        }
+    }
+    
+    /**********************************
+    *
+    *   Login Delegate
+    *
+    ***********************************/
 
+    func loginViewDidFinishWithEmail(email: String, Password password: NSString, Username username: String) {
+        
+        // TODO: Finish login with these data
+        // <#code here#>
+        println("Login view did finish with \(email) \(password) \(username)")
+    }
 }
 
