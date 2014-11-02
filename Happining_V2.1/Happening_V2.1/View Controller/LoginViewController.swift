@@ -12,9 +12,13 @@ protocol LoginViewDelegate : NSObjectProtocol {
     func loginViewDidFinishWithEmail(email:String, Password password:NSString, Username username:String)
 }
 
-class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, UICollectionViewDataSource, UICollectionViewDelegate  {
+class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
 
     var delegate: LoginViewDelegate?
+    
+    enum LoginStep : Int {
+        case email, password, username
+    }
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var nextLabel: UILabel!
@@ -44,6 +48,12 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
         self.pagingView.addSubview(pageControl)
         
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.pageControl.frame = self.pagingView.bounds
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -51,32 +61,10 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     }
     
     @IBAction func nextPage(sender: AnyObject) {
-        self.collectionView.scrollEnabled = true
         var page:Int = Int(self.pageControl.currentPage)
-        
-        if (page < 2) {
-            var width = CGRectGetWidth(self.collectionView.frame)
-            var indexPath = NSIndexPath(forItem: page+1, inSection: 0)
-            self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredHorizontally, animated: true)
-            self.pageControl.currentPage = page+1
-            
-            if (page == 1) {
-                self.nextButton.setTitle("Done", forState: .Normal)
-                self.nextLabel.text = "Done"
-            }
-        } else {
-            // finish login
-            // TODO: Go to next page
-            self.dismissViewControllerAnimated(true, completion: nil)
-            
-            if self.delegate != nil {
-                var delegate = self.delegate!
-                if delegate.respondsToSelector(Selector("loginViewDidFinishWithEmail:Password:Username:")) {
-                    delegate.loginViewDidFinishWithEmail(self.email, Password: self.password, Username: self.username)
-                }
-            }
-        }
-        self.collectionView.scrollEnabled = false
+        var indexPath = NSIndexPath(forItem: page, inSection: 0)
+        var cell:LoginCollectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as LoginCollectionViewCell
+        self.validateTextInCell(cell)
     }
 
     /*
@@ -107,33 +95,130 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
         } else {
             cell.textField.returnKeyType = .Next
         }
-        return cell
-    }
-    
-    
-    // Login cell
-    
-    func loginCellDidResignTextField(cell: LoginCollectionViewCell) {
-        var indexPath = self.collectionView.indexPathForCell(cell)!
-        var text = cell.textField.text
         
-        switch (indexPath.item) {
-            case 0:
-                self.email = text
+        switch (LoginStep(rawValue:indexPath.item)!) {
+            case .email:
+                cell.textField.text = self.email
                 break
-            
-            case 1:
-                self.password = text
+                
+            case .password:
+                cell.textField.text = self.password
                 break
-            
-            case 2:
-                self.username = text
+                
+            case .username:
+                cell.textField.text = self.username
                 break
-            
+                
             default:
                 break
         }
+
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return CGSizeMake(CGRectGetWidth(collectionView.frame), 270)
+    }
+    
+    
+    /**********************************
+    *
+    *   Login Cell
+    *
+    ***********************************/
+    
+    func loginCellDidResignTextField(cell: LoginCollectionViewCell) {
+        self.validateTextInCell(cell);
+    }
+    
+    func validateTextInCell(cell:LoginCollectionViewCell) {
+        var indexPath = self.collectionView.indexPathForCell(cell)!
+        var text:String = cell.textField.text
         
-        self.nextPage(cell)
+        if strlen(text) > 0 {
+            switch (LoginStep(rawValue:indexPath.item)!) {
+                case .email:
+                    if self.validateEmail(text) {
+                        self.email = text
+                    } else {
+                        return
+                    }
+                    break
+                    
+                case .password:
+                    if self.validatePassword(text) {
+                        self.password = text
+                    } else {
+                        return
+                    }
+                    break
+                    
+                case .username:
+                    if self.validateUserName(text) {
+                        self.username = text
+                    } else {
+                        return
+                    }
+                    break
+                    
+                default:
+                    break
+            }
+            
+            self.gotoNextStep()
+        } else {
+            var alert = UIAlertView(title: "Warning", message: "Please enter text", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        }
+    }
+    
+    func gotoNextStep() {
+        self.collectionView.scrollEnabled = true
+        var page:Int = Int(self.pageControl.currentPage)
+        
+        if (page < 2) {
+            var width = CGRectGetWidth(self.collectionView.frame)
+            var indexPath = NSIndexPath(forItem: page+1, inSection: 0)
+            self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredHorizontally, animated: true)
+            self.pageControl.currentPage = page+1
+            
+            if (page == 1) {
+                self.nextButton.setTitle("Done", forState: .Normal)
+                self.nextLabel.text = "Done"
+            }
+        } else {
+            // finish login
+            // TODO: Go to next page
+            self.dismissViewControllerAnimated(true, completion: nil)
+            
+            if self.delegate != nil {
+                var delegate = self.delegate!
+                if delegate.respondsToSelector(Selector("loginViewDidFinishWithEmail:Password:Username:")) {
+                    delegate.loginViewDidFinishWithEmail(self.email, Password: self.password, Username: self.username)
+                }
+            }
+        }
+        self.collectionView.scrollEnabled = false
+    }
+    
+    func validateEmail(email:String) -> Bool {
+        var emailRegex = "(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+        "~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+        "x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+        "z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+        "]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+        "9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+        "-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+        
+        var predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)!
+        return predicate.evaluateWithObject(email)
+    }
+    
+    func validatePassword(password:String) -> Bool {
+        return strlen(password) >= 4 && strlen(password) <= 20
+    }
+    
+    func validateUserName(username:String) -> Bool {
+        return strlen(username) >= 4 && strlen(username) <= 20
     }
 }

@@ -185,7 +185,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         
         // TODO: Finish login with these data
         // <#code here#>
-        println("Login view did finish with \(email) \(password) \(username)")
+        println("Login view did finish with email: \(email) password: \(password) username: \(username)")
     }
 }
 

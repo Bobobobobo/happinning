@@ -84,21 +84,33 @@
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Happining" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDx-bw-1y9">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Happining" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDx-bw-1y9">
                                                     <rect key="frame" x="8" y="32" width="284" height="67"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="284" id="6Xs-nB-Yx4"/>
+                                                        <constraint firstAttribute="height" constant="67" id="8mh-Lk-MuU"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HiraKakuProN-W3" family="Hiragino Kaku Gothic ProN" pointSize="22"/>
                                                     <color key="textColor" red="0.76862745099999996" green="0.098039215690000001" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YV6-c7-5G9">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YV6-c7-5G9">
                                                     <rect key="frame" x="54" y="98" width="193" height="85"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="193" id="96L-NJ-SA8"/>
+                                                        <constraint firstAttribute="height" constant="85" id="Ih4-Fg-xGF"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HiraKakuProN-W3" family="Hiragino Kaku Gothic ProN" pointSize="13"/>
                                                     <color key="textColor" red="0.71372549019999998" green="0.71372549019999998" blue="0.71372549019999998" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QV4-cA-olg">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QV4-cA-olg">
                                                     <rect key="frame" x="63" y="187" width="174" height="30"/>
-                                                    <color key="textColor" red="0.71372549019607845" green="0.71372549019607845" blue="0.71372549019607845" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="174" id="Jjv-ao-hoH"/>
+                                                        <constraint firstAttribute="height" constant="30" id="LqZ-Hb-fga"/>
+                                                    </constraints>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="HiraKakuProN-W3" family="Hiragino Kaku Gothic ProN" pointSize="12"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
@@ -109,6 +121,14 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="centerX" secondItem="YV6-c7-5G9" secondAttribute="centerX" id="2kt-Sg-QY3"/>
+                                            <constraint firstAttribute="centerX" secondItem="qDx-bw-1y9" secondAttribute="centerX" id="Awe-za-oDb"/>
+                                            <constraint firstItem="QV4-cA-olg" firstAttribute="top" secondItem="YV6-c7-5G9" secondAttribute="bottom" constant="4" id="KZT-wA-NLL"/>
+                                            <constraint firstAttribute="centerX" secondItem="QV4-cA-olg" secondAttribute="centerX" id="dw1-0L-57E"/>
+                                            <constraint firstItem="qDx-bw-1y9" firstAttribute="top" secondItem="m2d-X5-oa7" secondAttribute="top" constant="32" id="ole-Pf-hBY"/>
+                                            <constraint firstItem="YV6-c7-5G9" firstAttribute="top" secondItem="m2d-X5-oa7" secondAttribute="top" constant="98" id="zzZ-kO-WUi"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="textField" destination="QV4-cA-olg" id="9Ci-8E-FK9"/>
                                             <outlet property="textLabel" destination="YV6-c7-5G9" id="twY-2H-ZDR"/>
