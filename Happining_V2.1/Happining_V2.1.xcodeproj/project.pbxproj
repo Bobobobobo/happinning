@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		093CDF1419E91D7F00075BB0 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */; };
-		093CDF1619E91F0900075BB0 /* UsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093CDF1519E91F0900075BB0 /* UsernameViewController.swift */; };
-		0948E3F319E6CFB800751E09 /* EmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0948E3F219E6CFB800751E09 /* EmailViewController.swift */; };
 		094E63AC19E18D89008325CA /* SigninViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09646FA719DE599D005A0F59 /* SigninViewController.swift */; };
 		094E63AE19E192D9008325CA /* SigninPageContentViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094E63AD19E192D9008325CA /* SigninPageContentViewcontroller.swift */; };
 		09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA10FA19AF56AA0086D4DF /* Location.swift */; };
@@ -45,9 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
-		093CDF1519E91F0900075BB0 /* UsernameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
-		0948E3F219E6CFB800751E09 /* EmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailViewController.swift; sourceTree = "<group>"; };
 		094E63AD19E192D9008325CA /* SigninPageContentViewcontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninPageContentViewcontroller.swift; sourceTree = "<group>"; };
 		09646FA719DE599D005A0F59 /* SigninViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SigninViewController.swift; sourceTree = "<group>"; };
 		098EE5F319ACED33009C7B3A /* Happening_V2.1-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Happening_V2.1-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -199,9 +193,6 @@
 				E04215EA199A1C3100551C1D /* Main.storyboard */,
 				E04215ED199A1C3100551C1D /* Images.xcassets */,
 				E04215E4199A1C3100551C1D /* Supporting Files */,
-				0948E3F219E6CFB800751E09 /* EmailViewController.swift */,
-				093CDF1319E91D7F00075BB0 /* PasswordViewController.swift */,
-				093CDF1519E91F0900075BB0 /* UsernameViewController.swift */,
 				3C6A90FA1A05D57C0075BA1A /* LaunchScreen.xib */,
 			);
 			name = Happining_V2.1;
@@ -348,7 +339,6 @@
 				09F9BE9719EE93D200C3BCA4 /* KeychainService.swift in Sources */,
 				094E63AC19E18D89008325CA /* SigninViewController.swift in Sources */,
 				3C6A91011A05D6720075BA1A /* LoginViewController.swift in Sources */,
-				093CDF1419E91D7F00075BB0 /* PasswordViewController.swift in Sources */,
 				3C6A90FF1A05D6500075BA1A /* BaseViewController.swift in Sources */,
 				09EA882B19EC2065004AB442 /* KeychainWrapper.m in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
@@ -356,10 +346,8 @@
 				3C6A91061A05E0F50075BA1A /* StyledPageControl.m in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
 				E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */,
-				0948E3F319E6CFB800751E09 /* EmailViewController.swift in Sources */,
 				09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */,
 				094E63AE19E192D9008325CA /* SigninPageContentViewcontroller.swift in Sources */,
-				093CDF1619E91F0900075BB0 /* UsernameViewController.swift in Sources */,
 				E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */,
 				E0421604199A1D6200551C1D /* APIController.swift in Sources */,
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,

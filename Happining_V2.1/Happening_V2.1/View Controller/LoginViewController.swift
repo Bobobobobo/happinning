@@ -139,8 +139,9 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
             switch (LoginStep(rawValue:indexPath.item)!) {
                 case .email:
                     if self.validateEmail(text) {
-                        self.email = text
+                        self.email = text.lowercaseString
                     } else {
+                        self.showAlert("Invalid email")
                         return
                     }
                     break
@@ -149,6 +150,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     if self.validatePassword(text) {
                         self.password = text
                     } else {
+                        self.showAlert("Password should be 4-20 characters")
                         return
                     }
                     break
@@ -157,6 +159,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     if self.validateUserName(text) {
                         self.username = text
                     } else {
+                        self.showAlert("Username should be 4-20 characters")
                         return
                     }
                     break
@@ -167,9 +170,13 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
             
             self.gotoNextStep()
         } else {
-            var alert = UIAlertView(title: "Warning", message: "Please enter text", delegate: nil, cancelButtonTitle: "OK")
-            alert.show()
+            self.showAlert("Please enter text")
         }
+    }
+    
+    func showAlert(message:String) {
+        var alert = UIAlertView(title: "Warning", message:message, delegate: nil, cancelButtonTitle: "OK")
+        alert.show()
     }
     
     func gotoNextStep() {
@@ -202,16 +209,10 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     }
     
     func validateEmail(email:String) -> Bool {
-        var emailRegex = "(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
-        "~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
-        "x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
-        "z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
-        "]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
-        "9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
-        "-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+        var emailRegex = "(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
         
-        var predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)!
-        return predicate.evaluateWithObject(email)
+        var predicate = NSPredicate(format:	"SELF MATCHES %@", emailRegex)!
+        return predicate.evaluateWithObject(email.lowercaseString)
     }
     
     func validatePassword(password:String) -> Bool {
