@@ -60,22 +60,16 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: Button Action
+    
     @IBAction func nextPage(sender: AnyObject) {
         var page:Int = Int(self.pageControl.currentPage)
         var indexPath = NSIndexPath(forItem: page, inSection: 0)
         var cell:LoginCollectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as LoginCollectionViewCell
         self.validateTextInCell(cell)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
+    // MARK: Collection view
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -123,13 +117,15 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     
     /**********************************
     *
-    *   Login Cell
+    // MARK:   Login Cell
     *
     ***********************************/
     
     func loginCellDidResignTextField(cell: LoginCollectionViewCell) {
         self.validateTextInCell(cell);
     }
+    
+    // MARK: Validate data
     
     func validateTextInCell(cell:LoginCollectionViewCell) {
         var indexPath = self.collectionView.indexPathForCell(cell)!
@@ -194,8 +190,6 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                 self.nextLabel.text = "Done"
             }
         } else {
-            // finish login
-            // TODO: Go to next page
             self.dismissViewControllerAnimated(true, completion: nil)
             
             if self.delegate != nil {
