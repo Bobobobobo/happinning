@@ -14,10 +14,10 @@ class APIController: NSObject {
         super.init()
     }
     
-    func getPins(latitude: Double, longitude: Double, distance: Int, callback: (result: NSDictionary) -> Void) {
+    func getPins(latitude: Double, longitude: Double, distance: Int, userId: String, callback: (result: NSDictionary) -> Void) {
         
         //Parse Latitude & Longitude of center map or map location and fetch pins around it
-        var url = "http://54.179.16.196:3000/getPins?latitude=\(latitude)&longitude=\(longitude)&maxdistance=\(distance)"
+        var url = "http://54.179.16.196:3000/getPins?latitude=\(latitude)&longitude=\(longitude)&maxdistance=\(distance)&userId=\(userId)"
         get(url, callback);
     }
     

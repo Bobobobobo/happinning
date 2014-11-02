@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, LoginViewDelegate {
+class PinListViewController: BaseViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, LoginViewDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
@@ -55,7 +55,8 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
             //testing
             var latitude: Double = 13.8353822
             var longitude: Double = 100.5701188
-            self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+            var userId = "543e72b9e7bc519606823385"
+            self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
         }
     }
     
@@ -75,18 +76,26 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         locationManager.stopUpdatingLocation()
         var locValue: CLLocationCoordinate2D = locationManager.location.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
+
         var latitude: Double = 13.8353822
         var longitude: Double = 100.5701188
-        self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+        var userId = "543e72b9e7bc519606823385"
+        self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
     }
     
     func testTapped(sender: UIBarButtonItem!) {
         self.revealViewController().revealToggle(sender)
     }
+    
+    // MARK: Table View
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1;
+    }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //Return number of row for pins
-        return pins.count;
+        return self.pins.count;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -94,52 +103,60 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         let kCellIdentifier = "PinCell"
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
         
-        let pin = self.pins[indexPath.row]
+        var pin = self.pins[indexPath.row]
         
         cell.pinTitle?.text = pin.text
         
-        var urlString = "http://54.179.16.196:3000\(pin.imageURL)"
+        var baseURL = "http://54.179.16.196:3000"
+        var urlString = "\(baseURL)\(pin.thumbURL)"
         
-        var image = self.imageCache[urlString]
+        //var image = self.imageCache[urlString]
+        cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
+        cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL))
 
 //        cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: urlString)))
-        
-        if( image == nil ) {
-            // If the image does not exist, we need to download it
-            var imgURL: NSURL = NSURL(string: urlString)!
-            
-            // Download an NSData representation of the image at the URL
-            let request: NSURLRequest = NSURLRequest(URL: imgURL)
-            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                if error == nil {
-                    image = UIImage(data: data)
-                    
-                    // Store the image in to our cache
-                    self.imageCache[urlString] = image
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                            cellToUpdate.imageView.image = image
-                        }
-                    })
-                }
-                else {
-                    println("Error: \(error.localizedDescription)")
-                }
-            })
-            
-        }
-        else {
-            dispatch_async(dispatch_get_main_queue(), {
-                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                    cellToUpdate.imageView.image = image
-                }
-            })
-        }
+//        if( image == nil ) {
+//            // If the image does not exist, we need to download it
+//            var imgURL: NSURL = NSURL(string: urlString)!
+//            
+//            // Download an NSData representation of the image at the URL
+//            let request: NSURLRequest = NSURLRequest(URL: imgURL)
+//            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+//                if error == nil {
+//                    image = UIImage(data: data)
+//                    
+//                    // Store the image in to our cache
+//                    self.imageCache[urlString] = image
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
+//                            cellToUpdate.imageView.image = image
+//                        }
+//                    })
+//                }
+//                else {
+//                    println("Error: \(error.localizedDescription)")
+//                }
+//            })
+//            
+//        }
+//        else {
+//            dispatch_async(dispatch_get_main_queue(), {
+//                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
+//                    cellToUpdate.imageView.image = image
+//                }
+//            })
+//        }
         
         cell.userName?.text = pin.userName
         
         return cell
     }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 450
+    }
+    
+    // MARK: Load Pin
 
     func loadPins(results: NSDictionary) {
         //Process the jsonresult parse from API Controller
@@ -152,7 +169,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
                 pinList.append(Pin(pinDict: pinDict as NSDictionary))
             }
         }
-        pins = pinList
+        self.pins = pinList
         self.pinsTableView.reloadData()
     }
     
@@ -163,7 +180,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
 
     /**********************************
     *
-    *   Navigation
+    *   MARK: Navigation
     *
     ***********************************/
     
@@ -180,7 +197,7 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
     
     /**********************************
     *
-    *   Login Delegate
+    *   MARK: Login Delegate
     *
     ***********************************/
 
