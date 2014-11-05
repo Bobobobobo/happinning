@@ -56,7 +56,7 @@ class LoginResponse: BaseResponse {
     var user:User?
     
     override func createModelsWithJSON(JSON: AnyObject) {
-        println("JSON \(JSON)")
+        println("LoginResponse JSON \(JSON)")
         
         if JSON["status"] as Int == 200 {
             self.user = User.currentUser
