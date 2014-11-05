@@ -49,7 +49,8 @@ class PinListViewController: BaseViewController , UITableViewDelegate, UITableVi
         } else {
             self.locationManager = CLLocationManager()
             self.locationManager.delegate = self
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+            self.locationManager.distanceFilter = CLLocationDistance(2000.0)
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
             
             if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined {
                 self.locationManager.requestWhenInUseAuthorization()
@@ -75,7 +76,7 @@ class PinListViewController: BaseViewController , UITableViewDelegate, UITableVi
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        locationManager.stopUpdatingLocation()
+        //locationManager.stopUpdatingLocation()
         var locValue: CLLocationCoordinate2D = locationManager.location.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
 
@@ -117,7 +118,7 @@ class PinListViewController: BaseViewController , UITableViewDelegate, UITableVi
         
         var baseURL = BASE_URL
         var urlString = "\(baseURL)\(pin.thumbURL)"
-        println("text \(pin.text) url \(pin.thumbURL)")
+        //println("text \(pin.text) url \(pin.thumbURL)")
         if strlen(pin.thumbURL) == 0 {
             cell.imageHeight!.constant = 0.0
             cell.pinImage?.hidden = true
@@ -152,6 +153,7 @@ class PinListViewController: BaseViewController , UITableViewDelegate, UITableVi
         request.latitude = latitude
         request.longitude = longitude
         request.userID = userId!
+        request.distance = 10000
         
         request.request({ (result) -> Void in
             var response = result as PinResponse
