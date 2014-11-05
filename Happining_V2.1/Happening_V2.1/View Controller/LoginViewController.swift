@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LoginViewDelegate : NSObjectProtocol {
-    func loginViewDidFinishWithEmail(email:String, Password password:NSString, Username username:String)
+    func loginViewDidFinishWithUser(user:User?)
 }
 
 class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
@@ -25,12 +25,12 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var pagingView: UIView!
 
-    var pageControl:StyledPageControl!
-    var textHolder = ["Email", "Password", "Username"]
+    private var pageControl:StyledPageControl!
+    private var textHolder = ["Email", "Password", "Username"]
     
-    var email:String = ""
-    var password:String = ""
-    var username:String = ""
+    private var email:String = ""
+    private var password:String = ""
+    private var username:String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -190,12 +190,25 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                 self.nextLabel.text = "Done"
             }
         } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
-            
-            if self.delegate != nil {
-                var delegate = self.delegate!
-                if delegate.respondsToSelector(Selector("loginViewDidFinishWithEmail:Password:Username:")) {
-                    delegate.loginViewDidFinishWithEmail(self.email, Password: self.password, Username: self.username)
+            // TODO: Finish login with these data
+            var request:LoginRequest = LoginRequest()
+            request.email = email
+            request.password = password
+            request.userName = username
+            request.request { (result) -> Void in
+                var response = result as LoginResponse
+                
+                if response.user != nil {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
+                    if self.delegate != nil {
+                        var delegate = self.delegate!
+                        if delegate.respondsToSelector(Selector("loginViewDidFinishWithUser:Password:Username:")) {
+                            delegate.loginViewDidFinishWithUser(response.user!)
+                        }
+                    }
+                } else {
+                    println("Login Error \(response.error)")
                 }
             }
         }
@@ -210,7 +223,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     }
     
     func validatePassword(password:String) -> Bool {
-        return strlen(password) >= 4 && strlen(password) <= 20
+        return strlen(password) >= 6 && strlen(password) <= 20
     }
     
     func validateUserName(username:String) -> Bool {

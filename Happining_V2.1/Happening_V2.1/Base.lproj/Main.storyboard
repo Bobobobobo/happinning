@@ -262,7 +262,8 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ADI-uR-BfS" userLabel="PinImage">
                                                     <rect key="frame" x="10" y="104" width="300" height="220"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" secondItem="ADI-uR-BfS" secondAttribute="height" multiplier="15:11" id="aiL-Dg-uVT"/>
+                                                        <constraint firstAttribute="height" constant="220" id="2Fe-46-TIm"/>
+                                                        <constraint firstAttribute="width" secondItem="ADI-uR-BfS" secondAttribute="height" multiplier="15:11" priority="999" id="aiL-Dg-uVT"/>
                                                     </constraints>
                                                     <variation key="widthClass=compact" misplaced="YES">
                                                         <rect key="frame" x="10" y="105" width="300" height="249"/>
@@ -283,7 +284,7 @@
                                                             </variation>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Ccq-51-sdO"/>
                                                     </constraints>
@@ -308,7 +309,7 @@
                                                             </variation>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="qjl-H7-7IV"/>
                                                     </constraints>
@@ -373,6 +374,7 @@
                                         <connections>
                                             <outlet property="commentButton" destination="mXy-9S-GDp" id="fUZ-Ln-Kh3"/>
                                             <outlet property="commentView" destination="mux-2x-TuW" id="Hyi-c2-TUS"/>
+                                            <outlet property="imageHeight" destination="2Fe-46-TIm" id="nJ6-4Z-aSP"/>
                                             <outlet property="likeButton" destination="zak-v5-CfJ" id="pgO-0Y-aRy"/>
                                             <outlet property="likeView" destination="fo6-Le-odj" id="Jff-SA-jln"/>
                                             <outlet property="pinImage" destination="ADI-uR-BfS" id="b7x-R1-zrE"/>

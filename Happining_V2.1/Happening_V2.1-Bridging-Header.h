@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Kan Boonprakub. All rights reserved.
 //
 
+#import <CommonCrypto/CommonCrypto.h>
+
 #import "KeychainWrapper.h"
 #import "StyledPageControl.h"
 #import "SWRevealViewController.h"

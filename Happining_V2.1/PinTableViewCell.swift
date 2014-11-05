@@ -20,5 +20,5 @@ class PinTableViewCell: UITableViewCell {
     @IBOutlet var likeView: UIView?
     @IBOutlet var commentView: UIView?
     
-
+    @IBOutlet var imageHeight:NSLayoutConstraint?
 }
