@@ -146,7 +146,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     if self.validatePassword(text) {
                         self.password = text
                     } else {
-                        self.showAlert("Password should be 4-20 characters")
+                        self.showAlert("Password should be 6-20 characters")
                         return
                     }
                     break
