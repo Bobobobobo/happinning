@@ -9,11 +9,13 @@
 import UIKit
 import CoreLocation
 
-class PinListViewController: UIViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
+class PinListViewController: BaseViewController , UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, LoginViewDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     
+    let kCellIdentifier = "PinCell"
+
     var pins:[Pin] = []
     
     var api : APIController!
@@ -31,28 +33,33 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
         self.api = APIController()
+        
+        // Logged in
+        isLogin = User.isLogin()
     }
     
     var isLogin: Bool = false
     
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(true)
+        super.viewDidAppear(animated)
         
         if !isLogin {
             self.performSegueWithIdentifier("signin", sender: self)
             isLogin = true
-        }
-        else {
+        } else {
             self.locationManager = CLLocationManager()
             self.locationManager.delegate = self
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-            self.locationManager.requestAlwaysAuthorization()
-            self.locationManager.startUpdatingLocation()
+            self.locationManager.distanceFilter = CLLocationDistance(2000.0)
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+            
+            if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined {
+                self.locationManager.requestWhenInUseAuthorization()
+            }
             
             //testing
-            var latitude: Double = 13.8353822
-            var longitude: Double = 100.5701188
-            self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+            //var latitude: Double = 13.7324541
+            //var longitude: Double = 100.5309073
+            //self.loadPinsAt(latitude, longitude: longitude)
         }
     }
     
@@ -69,95 +76,121 @@ class PinListViewController: UIViewController , UITableViewDelegate, UITableView
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        locationManager.stopUpdatingLocation()
+        //locationManager.stopUpdatingLocation()
         var locValue: CLLocationCoordinate2D = locationManager.location.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
-        var latitude: Double = 13.8353822
-        var longitude: Double = 100.5701188
-        self.api.getPins(latitude, longitude: longitude, distance: 100000, loadPins)
+
+        var latitude: Double = locValue.latitude
+        var longitude: Double = locValue.longitude
+        var userId = User.currentUser.userID
+        //self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
+        self.loadPinsAt(latitude, longitude: longitude)
+    }
+    
+    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.AuthorizedWhenInUse {
+            self.locationManager.startUpdatingLocation()
+        }
     }
     
     func testTapped(sender: UIBarButtonItem!) {
         self.revealViewController().revealToggle(sender)
     }
+    
+    // MARK: Table View
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1;
+    }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //Return number of row for pins
-        return pins.count;
+        return self.pins.count;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //Process result cell in the tableView
-        let kCellIdentifier = "PinCell"
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
         
-        let pin = self.pins[indexPath.row]
+        var pin = self.pins[indexPath.row]
         
         cell.pinTitle?.text = pin.text
         
-        var urlString = "http://54.179.16.196:3000\(pin.imageURL)"
-        
-        var image = self.imageCache[urlString]
-
-//        cell.pinImage?.image = UIImage(data: NSData(contentsOfURL: NSURL(string: urlString)))
-        
-        if( image == nil ) {
-            // If the image does not exist, we need to download it
-            var imgURL: NSURL = NSURL(string: urlString)
-            
-            // Download an NSData representation of the image at the URL
-            let request: NSURLRequest = NSURLRequest(URL: imgURL)
-            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                if error == nil {
-                    image = UIImage(data: data)
-                    
-                    // Store the image in to our cache
-                    self.imageCache[urlString] = image
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                            cellToUpdate.imageView?.image = image
-                        }
-                    })
-                }
-                else {
-                    println("Error: \(error.localizedDescription)")
-                }
-            })
-            
-        }
-        else {
-            dispatch_async(dispatch_get_main_queue(), {
-                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) {
-                    cellToUpdate.imageView?.image = image
-                }
-            })
+        var baseURL = BASE_URL
+        var urlString = "\(baseURL)\(pin.thumbURL)"
+        //println("text \(pin.text) url \(pin.thumbURL)")
+        if strlen(pin.thumbURL) == 0 {
+            cell.imageHeight!.constant = 0.0
+            cell.pinImage?.hidden = true
+        } else {
+            cell.imageHeight!.constant = 220.0
+            cell.pinImage?.hidden = false
+            cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
         }
         
+        //var image = self.imageCache[urlString]
+        cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL))
         cell.userName?.text = pin.userName
         
         return cell
     }
-
-    func loadPins(results: NSDictionary) {
-        //Process the jsonresult parse from API Controller
-        var pinfromResult: NSArray = results["pins"] as NSArray
-        //println(pinfromResult)
-        var pinList: [Pin] = [];
-        for pinDict in pinfromResult {
-            //println(_stdlib_getTypeName(pinDict))
-            if pinDict is NSDictionary {
-                pinList.append(Pin(pinDict: pinDict as NSDictionary))
-            }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        var pin = self.pins[indexPath.row]
+        if countElements(pin.thumbURL) == 0 {
+            return 170
         }
-        pins = pinList
-        self.pinsTableView.reloadData()
+        
+        return 390
     }
     
-//    func getPageIndex() -> Int {
-//        return  self.pageIndex
-//    }
+    // MARK: Load Pin
 
+    func loadPinsAt(latitude:Double, longitude:Double) {
+        var userId = User.currentUser.userID
+        //self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
+        var request = PinRequest()
+        request.latitude = latitude
+        request.longitude = longitude
+        request.userID = userId!
+        request.distance = 10000
+        
+        request.request({ (result) -> Void in
+            var response = result as PinResponse
+            self.pins = response.pins
+            self.pinsTableView.reloadData()
+        })
+    }
 
+    /**********************************
+    *
+    *   MARK: Navigation
+    *
+    ***********************************/
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier != nil) {
+            var segueID = segue.identifier!
+            if (segueID == "signin") {
+                var navigationController:UINavigationController = segue.destinationViewController as UINavigationController
+                var loginController:LoginViewController = navigationController.viewControllers[0] as LoginViewController
+                loginController.delegate = self
+            }
+        }
+    }
+    
+    /**********************************
+    *
+    *   MARK: Login Delegate
+    *
+    ***********************************/
 
+    func loginViewDidFinishWithUser(user: User?) {
+        if user != nil {
+            println("Finish login with \(user!.userName)")
+        } else {
+            println("Login Error")
+        }
+    }
 }
 
