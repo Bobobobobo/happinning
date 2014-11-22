@@ -108,7 +108,15 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 									return;
 								}
 								console.log("Record added as "+records[0]._id);
-								res.send(messageBuilder.buildComplete(records[0]));
+								records[0].username = result.username;
+								records[0].userImage = result.userImage;
+								records[0].isLike = false;
+								records[0].likesNum = 0;
+								records[0].commentsNum = 0;
+								
+								var pins = new Object();
+						        pins.pins = [records[0]];
+								res.send(messageBuilder.buildComplete(pins));
 							});
 							
 							addUserPin(query, jsValue._id, mongodb);
@@ -160,7 +168,15 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 						return;
 					}
 					console.log("Record added as "+records[0]._id);
-					res.send(messageBuilder.buildComplete(records[0]));
+					records[0].username = result.username;
+					records[0].userImage = result.userImage;
+					records[0].isLike = false;
+					records[0].likesNum = 0;
+					records[0].commentsNum = 0;
+					
+					var pins = new Object();
+			        pins.pins = [records[0]];
+					res.send(messageBuilder.buildComplete(pins));
 				});
 				
 				addUserPin(query, jsValue._id, mongodb);
