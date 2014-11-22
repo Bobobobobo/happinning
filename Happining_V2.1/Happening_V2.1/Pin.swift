@@ -11,7 +11,7 @@ import Foundation
 class Pin {
     
     var pinId: String!
-    var pinType: Int
+    var pinType: Int?
     var text: String
     var uploadDate: String
     var thumbURL: String
@@ -48,7 +48,8 @@ class Pin {
         if let tempPinId = pinDict["_id"] as? String {
             self.pinId = tempPinId
         }
-        self.pinType = pinDict["pinType"] as Int
+                
+        self.pinType = pinDict["pinType"] as? Int
         self.text = pinDict["text"] as String
         var tempUploadDate: Int = pinDict["uploadDate"] as Int
         self.uploadDate =  "\(tempUploadDate)"

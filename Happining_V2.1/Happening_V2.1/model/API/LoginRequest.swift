@@ -65,6 +65,10 @@ class LoginResponse: BaseResponse {
             var userDefault = NSUserDefaults.standardUserDefaults()
             userDefault.setObject(JSON, forKey: kUserLoggedKey)
             userDefault.synchronize()
+        } else {
+            if JSON["message"] != nil {
+                self.error = NSError(domain: "HPN", code: JSON["status"] as Int, userInfo:NSDictionary(objectsAndKeys:JSON["message"]!!, NSLocalizedDescriptionKey ))
+            }
         }
     }
 }

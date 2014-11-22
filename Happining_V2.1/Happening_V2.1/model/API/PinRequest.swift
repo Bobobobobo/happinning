@@ -6,13 +6,11 @@
 //  Copyright (c) 2557 Kan Boonprakub. All rights reserved.
 //
 
-import UIKit
-
 class PinRequest: BaseRequest {
     
     var latitude:Double = 0.0
     var longitude:Double = 0.0
-    var distance:Double = 100000
+    var distance:Double = 500
     var userID:String = ""
     
     override func urlRequest() -> NSURLRequest? {
@@ -20,7 +18,8 @@ class PinRequest: BaseRequest {
             self.latitude, PARAM_LAT,
             self.longitude, PARAM_LONG,
             self.distance, PARAM_DISTANCE,
-            self.userID, PARAM_USER_ID
+            self.userID, PARAM_USER_ID,
+            self.page, PARAM_PAGE
         )
         
         println("Param \(params)")
@@ -37,7 +36,7 @@ class PinResponse: BaseResponse {
     var pins:[Pin] = []
 
     override func createModelsWithJSON(JSON: AnyObject) {
-        println("PinResponse JSON \(JSON)")
+        //println("PinResponse JSON \(JSON)")
         
         var pinfromResult:NSArray? = JSON["pins"] as? NSArray
         //println(pinfromResult)

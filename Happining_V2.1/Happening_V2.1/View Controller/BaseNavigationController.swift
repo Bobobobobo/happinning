@@ -1,19 +1,20 @@
 //
-//  PinDetailViewController.swift
-//  Happening_V2.1
+//  BaseNavigationController.swift
+//  Happining_V2.1
 //
-//  Created by Kan Boonprakub on 8/12/2557 BE.
+//  Created by Sopana Thitipariwat on 11/6/2557 BE.
 //  Copyright (c) 2557 Kan Boonprakub. All rights reserved.
 //
 
 import UIKit
 
-class PinDetailViewController: BaseViewController {
+class BaseNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,11 +24,11 @@ class PinDetailViewController: BaseViewController {
     
 
     /*
-    // #pragma mark - Navigation
+    // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
     */

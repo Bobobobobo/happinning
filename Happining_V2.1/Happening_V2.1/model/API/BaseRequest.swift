@@ -14,8 +14,11 @@ let BASE_URL = "http://54.179.16.196:3000"
 // MARK: API FUNCTIONS
 let API_LOGIN = "/login"
 let API_GET_PINS = "/getPins"
+let API_ADD_PIN = "/addPin"
 
 // MARK: API PARAMS
+
+let PARAM_PAGE = "page"
 
 // Login
 let PARAM_USERNAME = "username"
@@ -27,6 +30,15 @@ let PARAM_LAT = "latitude"
 let PARAM_LONG = "longitude"
 let PARAM_DISTANCE = "maxdistance"
 let PARAM_USER_ID = "userId"
+
+// Add Pin
+let PARAM_PIN_TYPE = "pinType"
+let PARAM_LOCATION = "location"
+let PARAM_TYPE = "type"
+let PARAM_LOCALITY = "locality"
+let PARAM_SUB_LOCALITY = "subLocality"
+let PARAN_COORDINATE = "coordinates"
+let PARAM_TEXT = "text"
 
 class API: NSObject {
     class func request(request:BaseRequest, responseClass:AnyClass, block:(result:BaseResponse) -> Void) -> NSURLSessionDataTask? {
@@ -42,7 +54,12 @@ class API: NSObject {
         let task = session.dataTaskWithRequest(urlRequest!, completionHandler: { (data, response, error) -> Void in
             var className = responseClass as BaseResponse.Type
             var theResponse = className(request: request, response: response, responseError: error, data: data)
-            block(result: theResponse)
+            
+            // Move to the UI thread
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                // Show the alert
+                block(result: theResponse)
+            })
         })
         
         task.resume()
@@ -117,7 +134,8 @@ class API: NSObject {
 
 class BaseRequest: NSObject {
     var task:NSURLSessionDataTask?
-    
+    var page = 1;
+
     func request(block:(result:BaseResponse) -> Void){
         self.task = API.request(self, responseClass: self.responseClass(), block:block)
     }
@@ -170,6 +188,6 @@ class BaseRequest: NSObject {
     }
     
     func createModelsWithJSON(JSON:AnyObject) {
-        
+        println(JSON)
     }
 }

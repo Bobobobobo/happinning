@@ -23,6 +23,8 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var nextLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var backLabel: UILabel!
     @IBOutlet weak var pagingView: UIView!
 
     private var pageControl:StyledPageControl!
@@ -44,9 +46,15 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
         pageControl.strokeNormalColor = UIColor.whiteColor()
         pageControl.strokeSelectedColor = UIColor.whiteColor()
         pageControl.diameter = 10;
+        pageControl.userInteractionEnabled = false
         self.pageControl = pageControl
         self.pagingView.addSubview(pageControl)
         
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+            self.email = "nim2@email.com"
+            self.password = "11111111"
+            self.username = "nnnn"
+        #endif
     }
     
     override func viewDidLayoutSubviews() {
@@ -61,6 +69,22 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     }
     
     // MARK: Button Action
+    
+    @IBAction func previousPage(sender: AnyObject) {
+        self.collectionView.scrollEnabled = true
+        var page:Int = Int(self.pageControl.currentPage)
+
+        var width = CGRectGetWidth(self.collectionView.frame)
+        var indexPath = NSIndexPath(forItem: page-1, inSection: 0)
+        self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.CenteredHorizontally, animated: true)
+        self.pageControl.currentPage = Int32(page-1)
+        
+        self.collectionView.scrollEnabled = false
+        self.backButton.hidden = (self.pageControl.currentPage == 0)
+        
+        self.nextButton.setImage(UIImage(named: "button_next_login_inact.png"), forState: .Normal)
+        self.nextLabel.text = "Next"
+    }
     
     @IBAction func nextPage(sender: AnyObject) {
         var page:Int = Int(self.pageControl.currentPage)
@@ -90,6 +114,9 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
             cell.textField.returnKeyType = .Next
         }
         
+        cell.textField.secureTextEntry = (indexPath.item == 1)
+        cell.textField.keyboardType = ((indexPath.item == 0) ? UIKeyboardType.EmailAddress : UIKeyboardType.Default)
+        
         switch (LoginStep(rawValue:indexPath.item)!) {
             case .email:
                 cell.textField.text = self.email
@@ -114,6 +141,10 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
         return CGSizeMake(CGRectGetWidth(collectionView.frame), 270)
     }
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        var cell:LoginCollectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as LoginCollectionViewCell
+        cell.textField.resignFirstResponder()
+    }
     
     /**********************************
     *
@@ -122,7 +153,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     ***********************************/
     
     func loginCellDidResignTextField(cell: LoginCollectionViewCell) {
-        self.validateTextInCell(cell);
+        //self.validateTextInCell(cell);
     }
     
     // MARK: Validate data
@@ -146,7 +177,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     if self.validatePassword(text) {
                         self.password = text
                     } else {
-                        self.showAlert("Password should be 6-20 characters")
+                        self.showAlert("Password should be 8-20 characters")
                         return
                     }
                     break
@@ -186,11 +217,10 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
             self.pageControl.currentPage = page+1
             
             if (page == 1) {
-                self.nextButton.setTitle("Done", forState: .Normal)
+                self.nextButton.setImage(UIImage(named: "button_done_login_inact.png"), forState: .Normal)
                 self.nextLabel.text = "Done"
             }
         } else {
-            // TODO: Finish login with these data
             var request:LoginRequest = LoginRequest()
             request.email = email
             request.password = password
@@ -209,10 +239,17 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     }
                 } else {
                     println("Login Error \(response.error)")
+                    
+                    if response.error != nil {
+                        var message = response.error!.localizedDescription
+                        var alertView = UIAlertView(title: "Login failed", message:message, delegate: nil, cancelButtonTitle: "OK")
+                        alertView.show()
+                    }
                 }
             }
         }
         self.collectionView.scrollEnabled = false
+        self.backButton.hidden = (self.pageControl.currentPage == 0)
     }
     
     func validateEmail(email:String) -> Bool {
@@ -223,7 +260,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
     }
     
     func validatePassword(password:String) -> Bool {
-        return strlen(password) >= 6 && strlen(password) <= 20
+        return strlen(password) >= 8 && strlen(password) <= 20
     }
     
     func validateUserName(username:String) -> Bool {
