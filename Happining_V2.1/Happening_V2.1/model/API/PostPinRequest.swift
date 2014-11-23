@@ -16,6 +16,7 @@ class PostPinRequest: BaseRequest {
     var pinLocality = ""
     var pinSubLocality = ""
     var pinText = ""
+    var pinImage:UIImage?
     
     override func urlRequest() -> NSURLRequest? {
         var data = NSDictionary(objectsAndKeys:
@@ -23,7 +24,7 @@ class PostPinRequest: BaseRequest {
             NSDictionary(objectsAndKeys:
                 self.pinLocality, PARAM_LOCALITY,
                 self.pinSubLocality, PARAM_SUB_LOCALITY,
-                NSArray(objects: self.longitude, self.latitude), PARAN_COORDINATE,
+                [self.longitude, self.latitude], PARAN_COORDINATE,
                 "Point", PARAM_TYPE
             ), PARAM_LOCATION,
             self.pinText, PARAM_TEXT,
@@ -32,15 +33,22 @@ class PostPinRequest: BaseRequest {
         
         var jsonData = NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.allZeros, error: nil)
         
-        var params = NSDictionary(objectsAndKeys:
+        var params = NSMutableDictionary(objectsAndKeys:
             NSString(data: jsonData!, encoding: NSUTF8StringEncoding)!, "data"
         )
         
+        if self.pinImage != nil {
+            params.setObject(UIImageJPEGRepresentation(self.pinImage!.scaleImageToScale(0.5), 0.5), forKey: PARAM_THUMBNAIL)
+            params.setObject(UIImageJPEGRepresentation(self.pinImage!, 0.5), forKey: PARAM_IMAGE)
+        } else {
+            return API.requestPostWith(BASE_URL, path:API_ADD_PIN, parameters: params)
+        }
+        
         //{"pinType":1,"location":{"type":"Point","locality":"Bangkok Thailand","subLocality":"จามจุรี 24 floor","coordinates":[100.5309391,13.732464]},"text":"ggg","userId":"543e72b9e7bc519606823385"}
         
-        println("Param \(params)")
+        //println("Param \(params)")
         
-        return API.requestPostWith(BASE_URL, path:API_ADD_PIN, parameters: params)
+        return API.requestUploadWith(BASE_URL, path:API_ADD_PIN, parameters: params)
     }
     
     override func responseClass() -> AnyClass {

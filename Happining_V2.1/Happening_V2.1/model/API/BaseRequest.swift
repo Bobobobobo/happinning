@@ -39,8 +39,12 @@ let PARAM_LOCALITY = "locality"
 let PARAM_SUB_LOCALITY = "subLocality"
 let PARAN_COORDINATE = "coordinates"
 let PARAM_TEXT = "text"
+let PARAM_IMAGE = "image"
+let PARAM_VIDEO = "video"
+let PARAM_THUMBNAIL = "thumb"
 
 class API: NSObject {
+    
     class func request(request:BaseRequest, responseClass:AnyClass, block:(result:BaseResponse) -> Void) -> NSURLSessionDataTask? {
 
         var urlRequest = request.urlRequest()
@@ -64,6 +68,71 @@ class API: NSObject {
         
         task.resume()
         return task
+    }
+    
+    class func upload(request:BaseRequest, responseClass:AnyClass, block:(result:BaseResponse) -> Void) -> NSURLSessionDataTask? {
+        
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let manager = AFURLSessionManager(sessionConfiguration: configuration)
+        
+        var urlRequest = request.urlRequest()
+        
+        if urlRequest == nil {
+            return nil
+        }
+        
+        let uploadTask = manager.uploadTaskWithStreamedRequest(urlRequest!, progress: nil) { (response, data, error) -> Void in
+            
+            println("Upload Finish \(data)")
+            
+            var className = responseClass as BaseResponse.Type
+            var theResponse = className(request: request, response: response, responseError: error, data: data)
+            
+            // Move to the UI thread
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                // Show the alert
+                block(result: theResponse)
+            })
+        }
+        
+        uploadTask.resume()
+        return uploadTask
+    }
+    
+    class func requestUploadWith(url:String, path:String?, parameters:NSDictionary?) -> NSURLRequest? {
+        var urlString:NSMutableString = NSMutableString(string: url)
+        
+        if (path != nil) {
+            urlString.appendString(path!)
+        }
+        
+        if (parameters != nil) {
+            var dataParam:NSMutableDictionary = NSMutableDictionary()
+            var objectParam:NSMutableDictionary = NSMutableDictionary()
+            
+            for (key, value) in parameters! {
+                if value.isKindOfClass(NSData.self) {
+                    dataParam.setObject(value, forKey: "\(key)")
+                } else  {
+                    objectParam.setObject(value, forKey: "\(key)")
+                }
+            }
+            
+            if dataParam.count == 0 {
+                return self.requestPostWith(url, path: path, parameters: parameters)
+            } else {
+                var serializer = AFHTTPRequestSerializer()
+                var request:NSURLRequest = serializer.multipartFormRequestWithMethod("POST", URLString: urlString, parameters: objectParam, constructingBodyWithBlock: { (formData: AFMultipartFormData!) -> Void in
+                        for (key, value) in dataParam {
+                            //fromData.appendPartWithFormData(value as NSData, name: key as String)
+                            formData.appendPartWithFileData(value as NSData, name: key as String, fileName: "\(key).jpg", mimeType: "image/jpeg")
+                        }
+                    }, error: nil)
+                return request
+            }
+        }
+        
+        return nil
     }
     
     class func requestPostWith(url:String, path:String?, parameters:NSDictionary?) -> NSURLRequest? {
@@ -140,6 +209,10 @@ class BaseRequest: NSObject {
         self.task = API.request(self, responseClass: self.responseClass(), block:block)
     }
     
+    func upload(block:(result:BaseResponse) -> Void){
+        self.task = API.upload(self, responseClass: self.responseClass(), block:block)
+    }
+    
     func urlRequest() -> NSURLRequest? {
         return nil
     }
@@ -156,7 +229,7 @@ class BaseRequest: NSObject {
     var error:NSError?
     var data:AnyObject?
     
-    required init(request:BaseRequest!, response:NSURLResponse?, responseError:NSError?, data:NSData?) {
+    required init(request:BaseRequest!, response:NSURLResponse?, responseError:NSError?, data:AnyObject?) {
         super.init()
         
         self.request = request
@@ -168,17 +241,22 @@ class BaseRequest: NSObject {
             // If there is an error in the web request, print it to the console
             println(responseError!.localizedDescription)
         } else if data != nil {
-            var err: NSError?
-            
-            var jsonResult:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,options:nil,error: &err)
-            
-            if jsonResult != nil {
-                self.createModelsWithJSON(jsonResult!)
-            } else if err != nil {
-                // If there is an error parsing JSON, print it to the console
-                println("JSON Error: \(err!.localizedDescription)")
-                self.error = err
-                self.createModelsWithData(data!)
+            if data! is NSData {
+                var rawData = data! as NSData
+                var err: NSError?
+                
+                var jsonResult:AnyObject? = NSJSONSerialization.JSONObjectWithData(rawData,options:nil,error: &err)
+                
+                if jsonResult != nil {
+                    self.createModelsWithJSON(jsonResult!)
+                } else if err != nil {
+                    // If there is an error parsing JSON, print it to the console
+                    println("JSON Error: \(err!.localizedDescription)")
+                    self.error = err
+                    self.createModelsWithData(rawData)
+                }
+            } else {
+                self.createModelsWithJSON(data!)
             }
         }
     }

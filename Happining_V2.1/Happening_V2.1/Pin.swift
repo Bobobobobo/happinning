@@ -15,8 +15,8 @@ class Pin {
     var text: String
     var uploadDate: String
     var thumbURL: String
-    var imageURL: String
-    var videoURL: String
+    var imageURL: String?
+    var videoURL: String?
     var ratio: Double
     var userId: String
     var userName: String
@@ -54,8 +54,8 @@ class Pin {
         var tempUploadDate: Int = pinDict["uploadDate"] as Int
         self.uploadDate =  "\(tempUploadDate)"
         self.thumbURL = pinDict["thumb"] as String
-        self.imageURL = pinDict["image"] as String
-        self.videoURL = pinDict["video"] as String
+        self.imageURL = pinDict["image"] as? String
+        self.videoURL = pinDict["video"] as? String
         self.ratio = pinDict["ratio"] as Double
         self.userId = pinDict["userId"] as String
         self.userName = pinDict["username"] as String

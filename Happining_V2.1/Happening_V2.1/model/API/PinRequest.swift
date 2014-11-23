@@ -36,7 +36,7 @@ class PinResponse: BaseResponse {
     var pins:[Pin] = []
 
     override func createModelsWithJSON(JSON: AnyObject) {
-        //println("PinResponse JSON \(JSON)")
+        println("PinResponse JSON \(JSON)")
         
         var pinfromResult:NSArray? = JSON["pins"] as? NSArray
         //println(pinfromResult)

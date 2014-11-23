@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreLocation
+import MobileCoreServices
 
-class PinListViewController: BaseViewController , UICollectionViewDataSource, UICollectionViewDelegate , UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, CLLocationManagerDelegate, LoginViewDelegate {
+class PinListViewController: BaseViewController , UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, CLLocationManagerDelegate, LoginViewDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
@@ -19,12 +20,17 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
     @IBOutlet weak var postTextView: UITextView!
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var tagCollectionView: UICollectionView!
+    @IBOutlet weak var postImageButton: UIButton!
+    @IBOutlet weak var postVideoButton: UIButton!
+    @IBOutlet weak var postPinButton: UIButton!
+    @IBOutlet weak var previewImageView: UIImageView!
+    @IBOutlet weak var previewImageConstraint: NSLayoutConstraint!
     
     var refreshControl:UIRefreshControl!
     var request:PinRequest?
     
     let kCellIdentifier = "PinCell"
-    let kPostViewSize:CGFloat = 140
+    let kPostViewSize:CGFloat = 142
 
     var pins:[Pin] = []
     
@@ -40,6 +46,14 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
     var isDragging = false
     var shouldHidePost = false
     var beginPoint = CGPointZero
+    
+    var selectedImage:UIImage?
+    var selectedVideo:NSData?
+    
+    enum PostMedia : Int {
+        case PostMediaNone = 0
+        case PostMediaImage, PostMediaVideo
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,7 +166,11 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
         showNewPost(!isShowPost)
     }
     
-    // MARK: New post
+    /**********************************
+    *
+    *   MARK: New post
+    *
+    ***********************************/
     
     func showNewPost(show:Bool) {
         if show {
@@ -160,6 +178,9 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
         } else {
             self.postViewConstraint.constant = 0
             self.postTextView.resignFirstResponder()
+            
+            self.postImageButton.selected = false
+            self.previewImageView.image = nil
         }
         
         self.view.userInteractionEnabled = false
@@ -185,8 +206,12 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
             postPinRequest.userID = User.currentUser.userID!
             postPinRequest.pinText = self.postTextView.text
             
+            if self.previewImageView.image != nil {
+                postPinRequest.pinImage = self.previewImageView.image
+            }
+            
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-            postPinRequest.request({ (result) -> Void in
+            postPinRequest.upload({ (result) -> Void in
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 
                 var response:PinResponse = result as PinResponse
@@ -198,6 +223,22 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
                 }
             })
         }
+    }
+    
+    @IBAction func addNewImage(sender: AnyObject) {
+        self.postImageButton.selected = !self.postImageButton.selected
+        
+        if self.postImageButton.selected {
+            showImagePickerFor(PostMedia.PostMediaImage)
+        } else {
+            self.postViewConstraint.constant = kPostViewSize
+            self.view.layoutIfNeeded()
+            self.previewImageView.image = nil
+        }
+    }
+    
+    @IBAction func addNewVideo(sender: AnyObject) {
+        showImagePickerFor(PostMedia.PostMediaVideo)
     }
     
     // MARK: Table View
@@ -220,8 +261,8 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
         cell.pinTitle?.text = pin.text
         
         var baseURL = BASE_URL
-        var urlString = "\(baseURL)\(pin.imageURL)"
-        //println("text \(pin.text) url \(pin.thumbURL)")
+        var urlString = "\(baseURL)\(pin.thumbURL)"
+        println("text \(pin.text) url \(urlString)")
         if strlen(pin.thumbURL) == 0 {
             cell.imageHeight!.constant = 0.0
             cell.pinImage?.hidden = true
@@ -418,6 +459,35 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         return collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as UICollectionViewCell
+    }
+    
+    /**********************************
+    *
+    *   MARK: Image Picker
+    *
+    ***********************************/
+    
+    func showImagePickerFor(mediaType:PostMedia) {
+        var picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeImage]
+        picker.delegate = self
+        
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+            picker.sourceType = .Camera
+        }
+        
+        self.presentViewController(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+        self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
+        self.view.layoutIfNeeded()
+        self.previewImageView.image = image
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 

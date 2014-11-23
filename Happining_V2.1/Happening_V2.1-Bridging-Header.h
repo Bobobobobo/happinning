@@ -8,7 +8,9 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
+#import "AFNetworking.h"
 #import "KeychainWrapper.h"
 #import "StyledPageControl.h"
 #import "SWRevealViewController.h"
+#import "UIImage+Resize.h"
 #import "UIImageView+WebCache.h"
