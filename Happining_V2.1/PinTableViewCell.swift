@@ -21,4 +21,8 @@ class PinTableViewCell: UITableViewCell {
     @IBOutlet var commentView: UIView?
     
     @IBOutlet var imageHeight:NSLayoutConstraint?
+
+    @IBOutlet var locaionLabel: UILabel?
+    @IBOutlet var timeLabel: UILabel?
+    @IBOutlet var distanceLabel: UILabel?
 }

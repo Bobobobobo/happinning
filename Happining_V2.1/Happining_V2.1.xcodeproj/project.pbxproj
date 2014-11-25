@@ -12,6 +12,8 @@
 		09EA10FB19AF56AA0086D4DF /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA10FA19AF56AA0086D4DF /* Location.swift */; };
 		09EA882B19EC2065004AB442 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EA882A19EC2065004AB442 /* KeychainWrapper.m */; };
 		09F9BE9719EE93D200C3BCA4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F9BE9619EE93D200C3BCA4 /* KeychainService.swift */; };
+		3C2A66661A2441B300180939 /* post_icon_list.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A66651A2441B300180939 /* post_icon_list.plist */; };
+		3C2A666A1A244DD000180939 /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A66691A244DD000180939 /* NSDate+NVTimeAgo.m */; };
 		3C33E0361A204F54000952DA /* UIColor+Happinning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C33E0351A204F54000952DA /* UIColor+Happinning.swift */; };
 		3C33E0381A20540F000952DA /* PostPinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C33E0371A20540F000952DA /* PostPinRequest.swift */; };
 		3C33E03C1A20DD8A000952DA /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C33E03B1A20DD8A000952DA /* UIImage+Resize.m */; };
@@ -82,6 +84,9 @@
 		09EA882919EC2065004AB442 /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeychainWrapper.h; path = Happening_V2.1/KeychainWrapper.h; sourceTree = SOURCE_ROOT; };
 		09EA882A19EC2065004AB442 /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeychainWrapper.m; path = Happening_V2.1/KeychainWrapper.m; sourceTree = SOURCE_ROOT; };
 		09F9BE9619EE93D200C3BCA4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainService.swift; path = Happening_V2.1/KeychainService.swift; sourceTree = SOURCE_ROOT; };
+		3C2A66651A2441B300180939 /* post_icon_list.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = post_icon_list.plist; sourceTree = "<group>"; };
+		3C2A66681A244DD000180939 /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
+		3C2A66691A244DD000180939 /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		3C33E0351A204F54000952DA /* UIColor+Happinning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Happinning.swift"; sourceTree = "<group>"; };
 		3C33E0371A20540F000952DA /* PostPinRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostPinRequest.swift; sourceTree = "<group>"; };
 		3C33E03A1A20DD8A000952DA /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
@@ -210,6 +215,15 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		3C2A66671A244DD000180939 /* NSDate-Time-Ago */ = {
+			isa = PBXGroup;
+			children = (
+				3C2A66681A244DD000180939 /* NSDate+NVTimeAgo.h */,
+				3C2A66691A244DD000180939 /* NSDate+NVTimeAgo.m */,
+			);
+			path = "NSDate-Time-Ago";
+			sourceTree = "<group>";
+		};
 		3C33E0391A20DD8A000952DA /* UIImage+Resize */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +290,7 @@
 			isa = PBXGroup;
 			children = (
 				3C6328D61A222FB8004955D4 /* AFNetworking */,
+				3C2A66671A244DD000180939 /* NSDate-Time-Ago */,
 				3C33E0391A20DD8A000952DA /* UIImage+Resize */,
 				3C6A91111A0616600075BA1A /* SDWebImage */,
 				3C6A91031A05E0F50075BA1A /* StyledPageControl */,
@@ -400,6 +415,7 @@
 				094E63AD19E192D9008325CA /* SigninPageContentViewcontroller.swift */,
 				E04215EA199A1C3100551C1D /* Main.storyboard */,
 				E04215ED199A1C3100551C1D /* Images.xcassets */,
+				3C2A66651A2441B300180939 /* post_icon_list.plist */,
 				E04215E4199A1C3100551C1D /* Supporting Files */,
 				3C6A90FA1A05D57C0075BA1A /* LaunchScreen.xib */,
 			);
@@ -526,6 +542,7 @@
 				E04215EC199A1C3100551C1D /* Main.storyboard in Resources */,
 				3C6A90FB1A05D57C0075BA1A /* LaunchScreen.xib in Resources */,
 				E04215EE199A1C3100551C1D /* Images.xcassets in Resources */,
+				3C2A66661A2441B300180939 /* post_icon_list.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +573,7 @@
 				3C6A913A1A0616600075BA1A /* SDWebImageManager.m in Sources */,
 				3C6A91371A0616600075BA1A /* SDWebImageDecoder.m in Sources */,
 				3C6A90FF1A05D6500075BA1A /* BaseViewController.swift in Sources */,
+				3C2A666A1A244DD000180939 /* NSDate+NVTimeAgo.m in Sources */,
 				3C6328EC1A222FB8004955D4 /* AFHTTPSessionManager.m in Sources */,
 				3C84EE471A07730E00D78AC8 /* BaseRequest.swift in Sources */,
 				3C6328F11A222FB8004955D4 /* AFURLResponseSerialization.m in Sources */,

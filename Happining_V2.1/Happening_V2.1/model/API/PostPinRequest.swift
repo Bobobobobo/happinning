@@ -38,6 +38,12 @@ class PostPinRequest: BaseRequest {
         )
         
         if self.pinImage != nil {
+            var maxLength = max(self.pinImage!.size.width, self.pinImage!.size.height)
+            if maxLength > 2000 {
+                var scaleTo = (100.0/maxLength)*20.0
+                self.pinImage = self.pinImage!.scaleImageToScale(scaleTo)
+            }
+            
             params.setObject(UIImageJPEGRepresentation(self.pinImage!.scaleImageToScale(0.5), 0.5), forKey: PARAM_THUMBNAIL)
             params.setObject(UIImageJPEGRepresentation(self.pinImage!, 0.5), forKey: PARAM_IMAGE)
         } else {

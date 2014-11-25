@@ -8,12 +8,31 @@
 
 import Foundation
 
+class PinManager {
+    var pinList:[String] = []
+    
+    class var manager : PinManager {
+        struct Singleton {
+            static let instance:PinManager = PinManager()
+        }
+        
+        var path = NSBundle.mainBundle().pathForResource("post_icon_list", ofType: "plist")
+        var list:NSArray = NSArray(contentsOfFile: path!)!
+        
+        for icon in list {
+            Singleton.instance.pinList.append(icon as String)
+        }
+        
+        return Singleton.instance
+    }
+}
+
 class Pin {
     
     var pinId: String!
-    var pinType: Int?
+    var pinType: String?
     var text: String
-    var uploadDate: String
+    var uploadDate: NSDate
     var thumbURL: String
     var imageURL: String?
     var videoURL: String?
@@ -25,34 +44,18 @@ class Pin {
     var likesNum: Int
     var commentsNum: Int
     var location: Location
-    
-    init(pinId: String!, pinType: Int, text: String, uploadDate: String, thumbURL: String, imageURL: String, videoURL: String, ratio: Double, userId: String, userName: String, userImageURL: String, isLike: Bool, likesNum: Int, commentsNum: Int, location: Location) {
-        self.pinId = pinId
-        self.pinType = pinType
-        self.text = text
-        self.uploadDate = uploadDate
-        self.thumbURL = thumbURL
-        self.imageURL = imageURL
-        self.videoURL = videoURL
-        self.ratio = ratio
-        self.userId = userId
-        self.userName = userName
-        self.userImageURL = userImageURL
-        self.isLike = isLike;
-        self.likesNum = likesNum
-        self.commentsNum = commentsNum
-        self.location = location
-    }
+    var pinName: String?
+    var distance:Float = 0 // in kilometers
     
     init(pinDict: NSDictionary) {
         if let tempPinId = pinDict["_id"] as? String {
             self.pinId = tempPinId
         }
-                
-        self.pinType = pinDict["pinType"] as? Int
+        
+        self.pinType = pinDict["pinType"] as? String
         self.text = pinDict["text"] as String
-        var tempUploadDate: Int = pinDict["uploadDate"] as Int
-        self.uploadDate =  "\(tempUploadDate)"
+        var tempUploadDate: Double = pinDict["uploadDate"] as Double
+        self.uploadDate = NSDate(timeIntervalSince1970: NSTimeInterval(tempUploadDate*0.001))
         self.thumbURL = pinDict["thumb"] as String
         self.imageURL = pinDict["image"] as? String
         self.videoURL = pinDict["video"] as? String
@@ -75,6 +78,11 @@ class Pin {
         }
         var tempLocationDict = pinDict["location"] as NSDictionary
         self.location = Location(locationDict: tempLocationDict)
+
+        if self.pinType != nil {
+            self.pinName = PinManager.manager.pinList[self.pinType!.toInt()!-1]
+            //println("\(self.pinName).png")
+        }
     }
    
 }

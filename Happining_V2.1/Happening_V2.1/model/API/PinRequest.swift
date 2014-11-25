@@ -6,6 +6,8 @@
 //  Copyright (c) 2557 Kan Boonprakub. All rights reserved.
 //
 
+import CoreLocation
+
 class PinRequest: BaseRequest {
     
     var latitude:Double = 0.0
@@ -44,8 +46,20 @@ class PinResponse: BaseResponse {
         if pinfromResult != nil {
             for pinDict in pinfromResult! {
                 //println(_stdlib_getTypeName(pinDict))
+                var pin:Pin?
                 if pinDict is NSDictionary {
-                    pinList.append(Pin(pinDict: pinDict as NSDictionary))
+                    pin = Pin(pinDict: pinDict as NSDictionary)
+                    
+                    var request = self.request as PinRequest
+                    var pinLocation = CLLocation(latitude: pin!.location.coordinate.latitude, longitude: pin!.location.coordinate.longitude)
+                    var currentLocation = CLLocation(latitude: request.latitude, longitude: request.longitude)
+                    //println("pinLocation \(pinLocation)")
+                    //println("currentLocation \(currentLocation)")
+                    var distanceInMeters = currentLocation.distanceFromLocation(pinLocation)
+                    //println("distanceInMeters \(distanceInMeters)")
+                    pin!.distance = Float(distanceInMeters*0.001)
+                    
+                    pinList.append(pin!)
                 }
             }
         }

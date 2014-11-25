@@ -10,6 +10,7 @@
 
 #import "AFNetworking.h"
 #import "KeychainWrapper.h"
+#import "NSDate+NVTimeAgo.h"
 #import "StyledPageControl.h"
 #import "SWRevealViewController.h"
 #import "UIImage+Resize.h"

@@ -108,7 +108,13 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
             self.pinsTableView.reloadData()
 
             if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined {
-                self.locationManager.requestWhenInUseAuthorization()
+                if self.locationManager.respondsToSelector(Selector("requestWhenInUseAuthorization")) {
+                    self.locationManager.requestWhenInUseAuthorization()
+                } else {
+                    self.locationManager.startUpdatingLocation()
+                }
+            } else {
+                self.locationManager.startUpdatingLocation()
             }
             
             NSNotificationCenter.defaultCenter().addObserver(self,
@@ -197,6 +203,11 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
     }
     
     @IBAction func addNewPin(sender: AnyObject) {
+        if strlen(self.postTextView.text) == 0 {
+            self.postTextView.becomeFirstResponder()
+            return
+        }
+        
         if self.request != nil {
             var postPinRequest = PostPinRequest()
             postPinRequest.latitude = self.request!.latitude
@@ -252,52 +263,73 @@ class PinListViewController: BaseViewController , UICollectionViewDataSource, UI
         return self.pins.count;
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func configureCellAtIndexPaht(indexPath: NSIndexPath) -> UITableViewCell {
         //Process result cell in the tableView
-        var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
+        var cell = self.pinsTableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
         
         var pin = self.pins[indexPath.row]
         
         cell.pinTitle?.text = pin.text
         
+        if pin.pinName != nil {
+            cell.pintypeImage?.image = UIImage(named: "\(pin.pinName!).png")
+        }
+        
+        var locality = pin.location.locality
+        if strlen(pin.location.subLocality) > 0 {
+            locality = pin.location.subLocality
+        }
+        
+        cell.locaionLabel?.text = locality
+        cell.timeLabel?.text = pin.uploadDate.formattedAsTimeAgo()
+
+        if pin.distance >= 0.1 {
+            cell.distanceLabel?.text = NSString(format: "%.2f km", pin.distance)
+        } else {
+            cell.distanceLabel?.text = NSString(format: "%.2f m", pin.distance*1000)
+        }
+        
         var baseURL = BASE_URL
-        var urlString = "\(baseURL)\(pin.thumbURL)"
-        println("text \(pin.text) url \(urlString)")
-        if strlen(pin.thumbURL) == 0 {
+        if pin.imageURL == nil || strlen(pin.imageURL!) == 0 {
             cell.imageHeight!.constant = 0.0
             cell.pinImage?.hidden = true
         } else {
-            cell.imageHeight!.constant = 220.0
+            cell.imageHeight!.constant = 200.0
             cell.pinImage?.hidden = false
+            
+            var urlString = "\(baseURL)\(pin.imageURL!)"
             cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
         }
         
-        //var image = self.imageCache[urlString]
         cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!))
         cell.userName?.text = pin.userName
-
+        
         // Make sure the constraints have been added to this cell, since it may have just been created from scratch
         cell.setNeedsUpdateConstraints()
         cell.updateConstraintsIfNeeded()
-
+        
         return cell
     }
     
-//    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        var pin = self.pins[indexPath.row]
-//        if countElements(pin.thumbURL) == 0 {
-//            return 160
-//        }
-//        
-//        return 380
-//    }
+    func calculateHeightForConfiguredSizingCell(cell:UITableViewCell) -> CGFloat {
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+        var size = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        return size.height
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return self.configureCellAtIndexPaht(indexPath)
+    }
     
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 160
+        return 360
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        var cell = self.configureCellAtIndexPaht(indexPath)
+        return self.calculateHeightForConfiguredSizingCell(cell)
+        //return UITableViewAutomaticDimension
     }
     
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
