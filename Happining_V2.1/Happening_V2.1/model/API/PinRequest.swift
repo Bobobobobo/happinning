@@ -50,14 +50,16 @@ class PinResponse: BaseResponse {
                 if pinDict is NSDictionary {
                     pin = Pin(pinDict: pinDict as NSDictionary)
                     
-                    var request = self.request as PinRequest
-                    var pinLocation = CLLocation(latitude: pin!.location.coordinate.latitude, longitude: pin!.location.coordinate.longitude)
-                    var currentLocation = CLLocation(latitude: request.latitude, longitude: request.longitude)
-                    //println("pinLocation \(pinLocation)")
-                    //println("currentLocation \(currentLocation)")
-                    var distanceInMeters = currentLocation.distanceFromLocation(pinLocation)
-                    //println("distanceInMeters \(distanceInMeters)")
-                    pin!.distance = Float(distanceInMeters*0.001)
+                    var request = self.request as? PinRequest
+                    if request != nil {
+                        var pinLocation = CLLocation(latitude: pin!.location.coordinate.latitude, longitude: pin!.location.coordinate.longitude)
+                        var currentLocation = CLLocation(latitude: request!.latitude, longitude: request!.longitude)
+                        //println("pinLocation \(pinLocation)")
+                        //println("currentLocation \(currentLocation)")
+                        var distanceInMeters = currentLocation.distanceFromLocation(pinLocation)
+                        //println("distanceInMeters \(distanceInMeters)")
+                        pin!.distance = Float(distanceInMeters*0.001)
+                    }
                     
                     pinList.append(pin!)
                 }

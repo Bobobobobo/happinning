@@ -14,4 +14,5 @@
 #import "StyledPageControl.h"
 #import "SWRevealViewController.h"
 #import "UIImage+Resize.h"
+#import "UIImage+UIImage_fixOrientation.h"
 #import "UIImageView+WebCache.h"

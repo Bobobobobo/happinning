@@ -224,7 +224,7 @@ class BaseRequest: NSObject {
 
 @objc class BaseResponse: NSObject {
     
-    var request:BaseRequest?
+    var request:BaseRequest!
     var response:NSURLResponse?
     var error:NSError?
     var data:AnyObject?
@@ -256,7 +256,7 @@ class BaseRequest: NSObject {
                     self.createModelsWithData(rawData)
                 }
             } else {
-                self.createModelsWithJSON(data!)
+                self.createModelsWithJSON(data! as NSDictionary)
             }
         }
     }
