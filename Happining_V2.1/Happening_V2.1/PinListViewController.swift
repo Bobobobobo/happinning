@@ -11,16 +11,12 @@ import UIKit
 import MobileCoreServices
 
 class PinListViewController: BaseViewController ,
-                            // Collection view
-                            UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,
                             // Image Picker
                             UIImagePickerControllerDelegate, UINavigationControllerDelegate ,
-                            // Table View
-                            UITableViewDelegate, UITableViewDataSource,
                             // Text Input
                             UITextViewDelegate, UITextFieldDelegate,
                             // Custom
-                            LoginViewDelegate, LocationDelegate, LocationTagCellDelegate {
+                            LoginViewDelegate, LocationDelegate, PinListDelegate {
                             
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
@@ -42,26 +38,20 @@ class PinListViewController: BaseViewController ,
     var refreshControl:UIRefreshControl!
     var request:PinRequest?
     
-    let kCellIdentifier = "PinCell"
     let kPostViewSize:CGFloat = 142
-
-    var pins:[Pin] = []
-    var locality = []
     
     var api : APIController!
     
     var imageCache = [String : UIImage]()
     
-    var hasMore = false
     var isShowPost = false
-    
     var isLogin = false
-    var isDragging = false
-    var shouldHidePost = false
-    var beginPoint = CGPointZero
     
     var selectedImage:UIImage?
     var selectedVideo:NSData?
+    
+    let tableManager = PinTableViewDataSource()
+    let localityManager = PinLocalityComposerDataSource()
     
     enum PostMedia : Int {
         case PostMediaNone = 0
@@ -94,6 +84,14 @@ class PinListViewController: BaseViewController ,
         self.adjustBorderForView(self.postTextView, withColor: UIColor.hRedColor())
         self.adjustBorderForView(self.postButton, withColor: UIColor.hgreyColor())
         self.adjustBorderForView(self.tagCollectionView.superview!, withColor: UIColor.hgreyColor())
+        
+        self.pinsTableView.delegate = self.tableManager
+        self.pinsTableView.dataSource = self.tableManager
+        self.tableManager.delegate = self
+        
+        self.tagCollectionView.delegate = self.localityManager
+        self.tagCollectionView.dataSource = self.localityManager
+        self.localityManager.collectionView = self.tagCollectionView
     }
     
     func adjustBorderForView(view:UIView, withColor color:UIColor) {
@@ -165,8 +163,8 @@ class PinListViewController: BaseViewController ,
     }
     
     func userLocationDidUpdateGeoCoding(locality: [AnyObject]!) {
-        if !self.placeTagField.isFirstResponder() && self.locality.count == 0 {
-            self.locality = locality
+        if !self.placeTagField.isFirstResponder() && self.localityManager.locality.count == 0 {
+            self.localityManager.locality = locality
             self.tagCollectionView.reloadData()
         }
     }
@@ -182,7 +180,7 @@ class PinListViewController: BaseViewController ,
             self.postViewConstraint.constant = kPostViewSize
             
             if UserLocation.manager.subLocality.count > 0 {
-                self.locality = UserLocation.manager.subLocality
+                self.localityManager.locality = UserLocation.manager.subLocality
                 self.tagCollectionView.reloadData()
             }
         } else {
@@ -212,13 +210,13 @@ class PinListViewController: BaseViewController ,
             return
         }
         
-        if self.locality.count == 0 {
+        if self.localityManager.locality.count == 0 {
             self.placeTagField.becomeFirstResponder()
             return
         }
         
         if self.request != nil {
-            var subLocal = self.locality.firstObject as String
+            var subLocal = self.localityManager.locality.firstObject as String
             var locality = (UserLocation.manager.locality as NSArray).componentsJoinedByString(",")
             
             var postPinRequest = PostPinRequest()
@@ -244,7 +242,7 @@ class PinListViewController: BaseViewController ,
                 if response.pins.count > 0 {
                     self.showNewPost(false)
                     self.postTextView.text = ""
-                    self.pins = response.pins + self.pins
+                    self.tableManager.pins = response.pins + self.tableManager.pins
                     self.pinsTableView.reloadData()
                 }
             })
@@ -267,147 +265,35 @@ class PinListViewController: BaseViewController ,
         showImagePickerFor(PostMedia.PostMediaVideo)
     }
     
-    // MARK: Table View
+    /**********************************
+    *
+    *   MARK: Table View
+    *
+    ***********************************/
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1;
-    }
-
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //Return number of row for pins
-        return self.pins.count;
-    }
-    
-    func configureCellAtIndexPaht(indexPath: NSIndexPath) -> UITableViewCell {
-        //Process result cell in the tableView
-        var cell = self.pinsTableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
-        
-        var pin = self.pins[indexPath.row]
-        
-        cell.pinTitle?.text = pin.text
-        
-        if pin.pinName != nil {
-            cell.pintypeImage?.image = UIImage(named: "\(pin.pinName!).png")
-        }
-        
-        var locality = ""
-        if strlen(pin.location.subLocality) > 0 {
-            locality = pin.location.subLocality
-        }
-        
-        cell.locaionLabel?.text = locality
-        cell.timeLabel?.text = pin.uploadDate.formattedAsTimeAgo()
-
-        if pin.distance >= 0.1 {
-            cell.distanceLabel?.text = NSString(format: "%.2f km", pin.distance)
-        } else {
-            cell.distanceLabel?.text = NSString(format: "%.2f m", pin.distance*1000)
-        }
-        
-        var baseURL = BASE_URL
-        if pin.imageURL == nil || strlen(pin.imageURL!) == 0 {
-            cell.imageHeight!.constant = 0.0
-            cell.pinImage?.hidden = true
-        } else {
-            cell.imageHeight!.constant = 200.0
-            cell.pinImage?.hidden = false
-            
-            var urlString = "\(baseURL)\(pin.imageURL!)"
-            cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
-        }
-        
-        cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!))
-        cell.userName?.text = pin.userName
-        
-        // Make sure the constraints have been added to this cell, since it may have just been created from scratch
-        cell.setNeedsUpdateConstraints()
-        cell.updateConstraintsIfNeeded()
-        
-        return cell
-    }
-    
-    func calculateHeightForConfiguredSizingCell(cell:UITableViewCell) -> CGFloat {
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
-        var size = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        return size.height
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return self.configureCellAtIndexPaht(indexPath)
-    }
-    
-    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 360
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        var cell = self.configureCellAtIndexPaht(indexPath)
-        return self.calculateHeightForConfiguredSizingCell(cell)
-        //return UITableViewAutomaticDimension
-    }
-    
-    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-        if scrollView == self.pinsTableView {
-            isDragging = true
-            beginPoint = scrollView.contentOffset
-        }
-    }
-    
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if scrollView == self.pinsTableView {
-            isDragging = false
-            endingScroll()
-        }
-    }
-    
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if scrollView == self.pinsTableView {
-            isDragging = false
-            endingScroll()
-        }
-    }
-    
-    func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
-        if scrollView == self.pinsTableView {
-            isDragging = false
-            endingScroll()
-        }
-    }
-    
-    func endingScroll() {
-        if shouldHidePost {
+    func pinListShouldHideComposerView() {
+        if self.tableManager.shouldHidePost {
             self.postViewConstraint.constant = 0
             showNewPost(false)
-            shouldHidePost = false
+            self.tableManager.shouldHidePost = false
         } else if !isShowPost {
             self.postViewConstraint.constant = 0
             self.view.layoutIfNeeded()
         }
     }
     
-    func scrollViewDidScroll(aScrollView: UIScrollView) {
-        if aScrollView == self.pinsTableView {
-            var offset:CGPoint = aScrollView.contentOffset
-            var bounds:CGRect = aScrollView.bounds
-            var size:CGSize = aScrollView.contentSize
-            var inset:UIEdgeInsets = aScrollView.contentInset
-            var y:CGFloat = offset.y + bounds.size.height - inset.bottom
-            var h:CGFloat = size.height
-            var reload_distance:CGFloat = 10
-            
-            if((y > (h + reload_distance)) && hasMore) {
-                if  self.request != nil {
-                    self.loadPinsAt(self.request!.latitude, longitude: self.request!.longitude, page: request!.page+1)
-                }
-            } else if beginPoint.y < offset.y {
-                if isShowPost {
-                    shouldHidePost = true
-                    self.postViewConstraint.constant -= (offset.y - beginPoint.y)
-                    self.view.layoutIfNeeded()
-                    aScrollView.contentOffset = CGPointZero
-                }
-            }
+    func pinListShouldUpdateComposerView(constant: CGFloat) {
+        if isShowPost {
+            self.tableManager.shouldHidePost = true
+            self.postViewConstraint.constant -= constant
+            self.view.layoutIfNeeded()
+            self.pinsTableView.contentOffset = CGPointZero
+        }
+    }
+    
+    func pinListShouldLoadMore() {
+        if  self.request != nil {
+            self.loadPinsAt(self.request!.latitude, longitude: self.request!.longitude, page: request!.page+1)
         }
     }
     
@@ -450,18 +336,18 @@ class PinListViewController: BaseViewController ,
         if self.request != nil {
             if response.pins.count > 0 {
                 if self.request!.page == 1 {
-                    self.pins = response.pins
+                    self.tableManager.pins = response.pins
                     self.pinsTableView.contentOffset = CGPointMake(0, -self.pinsTableView.contentInset.top);
                 } else {
-                    self.pins += response.pins
+                    self.tableManager.pins += response.pins
                 }
                 
                 //println("pins \(self.pins.count)")
                 
-                hasMore = !(response.pins.count < 20)
+                self.tableManager.hasMore = !(response.pins.count < 20)
             }
             
-            self.noPinView.hidden = (self.pins.count > 0)
+            self.noPinView.hidden = (self.tableManager.pins.count > 0)
         }
         
         self.pinsTableView.reloadData()
@@ -501,62 +387,12 @@ class PinListViewController: BaseViewController ,
     
     /**********************************
     *
-    *   MARK: Tagging view collection
+    *   MARK: Location view collection
     *
     ***********************************/
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var count = self.locality.count
-        collectionView.hidden = (count == 0)
-        return count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return self.cellForCollectionView(collectionView, atIndexPath: indexPath)
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        
-        var text:NSString? = self.locality[indexPath.item] as? NSString
-        var size = CGSizeMake(100, 24)
-
-        if text != nil {
-            size = text!.sizeWithAttributes([NSFontAttributeName : UIFont.systemFontOfSize(13.0)])
-            size.width += 30
-            size.height = 24
-        }
-        
-        return size
-    }
-    
-    func cellForCollectionView(collectionView: UICollectionView, atIndexPath indexPath:NSIndexPath) -> UICollectionViewCell {
-        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as LocationTagCell
-        cell.delegate = self
-        cell.layer.borderColor = UIColor.hDarkGreyColor().CGColor
-        cell.layer.borderWidth = 1.0
-        cell.layer.cornerRadius = 2.0
-        
-        var label = cell.contentView.viewWithTag(100) as UILabel
-        label.text = self.locality[indexPath.item] as? String
-        //println(self.locality[indexPath.item])
-        return cell
-    }
-    
-    func locaionDidDeleteAt(cell: LocationTagCell) {
-        var indexPath = self.tagCollectionView.indexPathForCell(cell)!
-        var ar:NSMutableArray = NSMutableArray(array: self.locality)
-        
-        ar.removeObjectAtIndex(indexPath.item)
-        self.locality = ar
-        self.tagCollectionView.reloadData()
-    }
-    
     @IBAction func clearAllLocation(sender: AnyObject) {
-        self.locality = []
+        self.localityManager.locality = []
         self.tagCollectionView.reloadData()
     }
     
@@ -573,7 +409,7 @@ class PinListViewController: BaseViewController ,
     
     func textFieldDidEndEditing(textField: UITextField) {
         if strlen(textField.text) > 0 {
-            self.locality = [textField.text]
+            self.localityManager.locality = [textField.text]
             self.tagCollectionView.reloadData()
             textField.text = ""
         }

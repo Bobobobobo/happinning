@@ -20,6 +20,8 @@
 		3C3802131A25744E000B071E /* UserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3802121A25744E000B071E /* UserLocation.swift */; };
 		3C3802171A25AF91000B071E /* LocationTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3802161A25AF91000B071E /* LocationTagCell.swift */; };
 		3C38021A1A25B776000B071E /* UIImage+UIImage_fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3802191A25B776000B071E /* UIImage+UIImage_fixOrientation.m */; };
+		3C38021C1A25C7B4000B071E /* PinTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C38021B1A25C7B4000B071E /* PinTableViewDataSource.swift */; };
+		3C38021E1A25CC11000B071E /* PinLocalityComposerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C38021D1A25CC11000B071E /* PinLocalityComposerDataSource.swift */; };
 		3C3836FD1A09F96300741FEA /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3836FC1A09F96300741FEA /* LoginRequest.swift */; };
 		3C3836FF1A0A104B00741FEA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3836FE1A0A104B00741FEA /* User.swift */; };
 		3C4412211A0B760A00489E6E /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4412201A0B760A00489E6E /* BaseNavigationController.swift */; };
@@ -98,6 +100,8 @@
 		3C3802161A25AF91000B071E /* LocationTagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTagCell.swift; sourceTree = "<group>"; };
 		3C3802181A25B776000B071E /* UIImage+UIImage_fixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UIImage_fixOrientation.h"; sourceTree = "<group>"; };
 		3C3802191A25B776000B071E /* UIImage+UIImage_fixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UIImage_fixOrientation.m"; sourceTree = "<group>"; };
+		3C38021B1A25C7B4000B071E /* PinTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinTableViewDataSource.swift; sourceTree = "<group>"; };
+		3C38021D1A25CC11000B071E /* PinLocalityComposerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinLocalityComposerDataSource.swift; sourceTree = "<group>"; };
 		3C3836FC1A09F96300741FEA /* LoginRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		3C3836FE1A0A104B00741FEA /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3C3837001A0A4A5F00741FEA /* Chang-Wattana.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chang-Wattana.gpx"; sourceTree = "<group>"; };
@@ -178,7 +182,7 @@
 		E0421607199A1FB500551C1D /* PinDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDetailViewController.swift; sourceTree = "<group>"; };
 		E09CB5B2199F97D6009B449E /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		E09CB5B3199F97D6009B449E /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
-		E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTableViewCell.swift; path = ../PinTableViewCell.swift; sourceTree = "<group>"; };
+		E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTableViewCell.swift; path = ../../PinTableViewCell.swift; sourceTree = "<group>"; };
 		E0F2DAD7199A26C600132CDD /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -214,10 +218,8 @@
 			isa = PBXGroup;
 			children = (
 				3C84EE431A0772D300D78AC8 /* API */,
-				E0421605199A1E0700551C1D /* Pin.swift */,
-				09EA10FA19AF56AA0086D4DF /* Location.swift */,
-				3C3836FE1A0A104B00741FEA /* User.swift */,
-				3C3802121A25744E000B071E /* UserLocation.swift */,
+				3C38021F1A25CD9A000B071E /* Pin */,
+				3C3802201A25CDAC000B071E /* User */,
 				3C33E0351A204F54000952DA /* UIColor+Happinning.swift */,
 			);
 			path = model;
@@ -249,6 +251,26 @@
 				3C3802161A25AF91000B071E /* LocationTagCell.swift */,
 			);
 			path = "Location Cell";
+			sourceTree = "<group>";
+		};
+		3C38021F1A25CD9A000B071E /* Pin */ = {
+			isa = PBXGroup;
+			children = (
+				09EA10FA19AF56AA0086D4DF /* Location.swift */,
+				E0421605199A1E0700551C1D /* Pin.swift */,
+				3C38021B1A25C7B4000B071E /* PinTableViewDataSource.swift */,
+				3C38021D1A25CC11000B071E /* PinLocalityComposerDataSource.swift */,
+			);
+			name = Pin;
+			sourceTree = "<group>";
+		};
+		3C3802201A25CDAC000B071E /* User */ = {
+			isa = PBXGroup;
+			children = (
+				3C3836FE1A0A104B00741FEA /* User.swift */,
+				3C3802121A25744E000B071E /* UserLocation.swift */,
+			);
+			name = User;
 			sourceTree = "<group>";
 		};
 		3C3C80941A06865D00A360A5 /* Assets */ = {
@@ -329,6 +351,7 @@
 		3C6A91071A05EEFE0075BA1A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */,
 				3C3802151A25AF71000B071E /* Location Cell */,
 				3C6A910E1A05EF380075BA1A /* Login */,
 			);
@@ -425,7 +448,6 @@
 				3C6A91071A05EEFE0075BA1A /* View */,
 				3C6A90FD1A05D6320075BA1A /* View Controller */,
 				E0421607199A1FB500551C1D /* PinDetailViewController.swift */,
-				E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */,
 				E04215E6199A1C3100551C1D /* AppDelegate.swift */,
 				E04215E8199A1C3100551C1D /* PinListViewController.swift */,
 				E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */,
@@ -608,6 +630,7 @@
 				3C3836FF1A0A104B00741FEA /* User.swift in Sources */,
 				3C6328EA1A222FB8004955D4 /* AFHTTPRequestOperation.m in Sources */,
 				3C6A91101A05EF380075BA1A /* LoginCollectionViewCell.swift in Sources */,
+				3C38021E1A25CC11000B071E /* PinLocalityComposerDataSource.swift in Sources */,
 				3C6A91061A05E0F50075BA1A /* StyledPageControl.m in Sources */,
 				3C6A913D1A0616600075BA1A /* UIImage+GIF.m in Sources */,
 				3C6A913F1A0616600075BA1A /* UIImage+WebP.m in Sources */,
@@ -631,6 +654,7 @@
 				3C6328EB1A222FB8004955D4 /* AFHTTPRequestOperationManager.m in Sources */,
 				3C6A91331A0616600075BA1A /* MKAnnotationView+WebCache.m in Sources */,
 				3C6A91391A0616600075BA1A /* SDWebImageDownloaderOperation.m in Sources */,
+				3C38021C1A25C7B4000B071E /* PinTableViewDataSource.swift in Sources */,
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,
 				E0421606199A1E0700551C1D /* Pin.swift in Sources */,
 				3C33E03C1A20DD8A000952DA /* UIImage+Resize.m in Sources */,
