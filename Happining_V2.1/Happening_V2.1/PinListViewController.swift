@@ -16,8 +16,10 @@ class PinListViewController: BaseViewController ,
                             // Text Input
                             UITextViewDelegate, UITextFieldDelegate,
                             // Custom
-                            LoginViewDelegate, LocationDelegate, PinListDelegate {
-                            
+                            LoginViewDelegate, LocationDelegate, PinListDelegate,
+                            // Collection View
+                            UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+    
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
     @IBOutlet weak var postViewConstraint: NSLayoutConstraint!
@@ -30,8 +32,11 @@ class PinListViewController: BaseViewController ,
     @IBOutlet weak var postImageButton: UIButton!
     @IBOutlet weak var postVideoButton: UIButton!
     @IBOutlet weak var postPinButton: UIButton!
+    @IBOutlet var buttonIcons: [UIImageView]!
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet weak var previewImageConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pinTypeChooser: UIView!
+    @IBOutlet weak var pinTypeChooserView: UICollectionView!
     
     @IBOutlet weak var noPinView: UIView!
     
@@ -39,6 +44,7 @@ class PinListViewController: BaseViewController ,
     var request:PinRequest?
     
     let kPostViewSize:CGFloat = 142
+    let kDefaultPostType = 12
     
     var api : APIController!
     
@@ -178,7 +184,8 @@ class PinListViewController: BaseViewController ,
     func showNewPost(show:Bool) {
         if show {
             self.postViewConstraint.constant = kPostViewSize
-            
+            self.pinTypeChooserView.selectItemAtIndexPath(NSIndexPath(forItem: kDefaultPostType, inSection: 0), animated: false, scrollPosition: .None)
+
             if UserLocation.manager.subLocality.count > 0 {
                 self.localityManager.locality = UserLocation.manager.subLocality
                 self.tagCollectionView.reloadData()
@@ -189,6 +196,10 @@ class PinListViewController: BaseViewController ,
             
             self.postImageButton.selected = false
             self.previewImageView.image = nil
+            updateIconFor(self.postImageButton)
+            
+            self.postPinButton.selected = false
+            updateIconFor(self.postPinButton)
         }
         
         self.view.userInteractionEnabled = false
@@ -226,6 +237,7 @@ class PinListViewController: BaseViewController ,
             postPinRequest.pinSubLocality = subLocal
             postPinRequest.userID = User.currentUser.userID!
             postPinRequest.pinText = self.postTextView.text
+            postPinRequest.pinType = "\((self.pinTypeChooserView.indexPathsForSelectedItems()?.first as NSIndexPath).item + 1)"
             
             if self.previewImageView.image != nil {
                 postPinRequest.pinImage = self.previewImageView.image
@@ -244,13 +256,27 @@ class PinListViewController: BaseViewController ,
                     self.postTextView.text = ""
                     self.tableManager.pins = response.pins + self.tableManager.pins
                     self.pinsTableView.reloadData()
+                    
+                    self.localityManager.locality = UserLocation.manager.subLocality
+                    self.tagCollectionView.reloadData()
                 }
             })
         }
     }
     
+    func updateIconFor(button:UIButton) {
+        (self.buttonIcons[button.tag%100-1]).highlighted = button.selected
+        
+        if button == self.postImageButton {
+            self.previewImageView.hidden = !button.selected
+        } else if button == self.postPinButton {
+            self.pinTypeChooser.hidden = !button.selected
+        }
+    }
+    
     @IBAction func addNewImage(sender: AnyObject) {
         self.postImageButton.selected = !self.postImageButton.selected
+        updateIconFor(self.postImageButton)
         
         if self.postImageButton.selected {
             showImagePickerFor(PostMedia.PostMediaImage)
@@ -263,6 +289,27 @@ class PinListViewController: BaseViewController ,
     
     @IBAction func addNewVideo(sender: AnyObject) {
         showImagePickerFor(PostMedia.PostMediaVideo)
+    }
+    
+    @IBAction func addPinType(sender: AnyObject) {
+        self.postPinButton.selected = !self.postPinButton.selected
+        updateIconFor(self.postPinButton)
+        
+        if self.postPinButton.selected {
+            if self.previewImageView.hidden {
+                self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.view.layoutIfNeeded()
+                })
+            }
+        } else {
+            if self.previewImageView.hidden {
+                self.postViewConstraint.constant = kPostViewSize
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.view.layoutIfNeeded()
+                })
+            }
+        }
     }
     
     /**********************************
@@ -437,11 +484,50 @@ class PinListViewController: BaseViewController ,
         self.dismissViewControllerAnimated(true, completion: nil)
         self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
         self.view.layoutIfNeeded()
+
+        self.postPinButton.selected = false
+        updateIconFor(self.postPinButton)
+
+        self.previewImageView.hidden = false
         self.previewImageView.image = image
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         self.dismissViewControllerAnimated(true, completion: nil)
+        self.postImageButton.selected = false
+        updateIconFor(self.postImageButton)
+    }
+    
+    /**********************************
+    *
+    *   MARK: Post type
+    *
+    ***********************************/
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return PinManager.manager.pinList.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("iconCell", forIndexPath: indexPath) as PinIconCell
+        
+        var imageName = PinManager.manager.pinList[indexPath.item]
+        cell.iconImage.image = UIImage(named: "\(imageName).png")
+        
+        var iconName = imageName.stringByReplacingOccurrencesOfString("icon_", withString: "")
+        iconName = iconName.stringByReplacingOccurrencesOfString("_", withString: " ")
+        
+        if iconName.hasPrefix("department") {
+            iconName = iconName.stringByReplacingOccurrencesOfString("department ", withString: "")
+        }
+        
+        cell.textLabel.text = iconName.capitalizedString
+        
+        return cell
     }
 }
 

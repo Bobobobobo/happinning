@@ -58,6 +58,7 @@
 		3C84EE451A0772D300D78AC8 /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE441A0772D300D78AC8 /* APIController.swift */; };
 		3C84EE471A07730E00D78AC8 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE461A07730E00D78AC8 /* BaseRequest.swift */; };
 		3C84EE491A07732E00D78AC8 /* PinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE481A07732E00D78AC8 /* PinRequest.swift */; };
+		3CC05ED61A25E308001BC277 /* PinIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC05ED51A25E308001BC277 /* PinIconCell.swift */; };
 		E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
 		E04215E9199A1C3100551C1D /* PinListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E8199A1C3100551C1D /* PinListViewController.swift */; };
@@ -168,6 +169,7 @@
 		3C84EE441A0772D300D78AC8 /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		3C84EE461A07730E00D78AC8 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		3C84EE481A07732E00D78AC8 /* PinRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinRequest.swift; sourceTree = "<group>"; };
+		3CC05ED51A25E308001BC277 /* PinIconCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinIconCell.swift; sourceTree = "<group>"; };
 		E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E04215E5199A1C3100551C1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 				E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */,
 				3C3802151A25AF71000B071E /* Location Cell */,
 				3C6A910E1A05EF380075BA1A /* Login */,
+				3CC05ED51A25E308001BC277 /* PinIconCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -625,6 +628,7 @@
 				3C6328EF1A222FB8004955D4 /* AFURLConnectionOperation.m in Sources */,
 				3C6328ED1A222FB8004955D4 /* AFNetworkReachabilityManager.m in Sources */,
 				3C6A913B1A0616600075BA1A /* SDWebImagePrefetcher.m in Sources */,
+				3CC05ED61A25E308001BC277 /* PinIconCell.swift in Sources */,
 				3C6A91411A0616600075BA1A /* UIImageView+WebCache.m in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				3C3836FF1A0A104B00741FEA /* User.swift in Sources */,

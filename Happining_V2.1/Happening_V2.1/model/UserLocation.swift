@@ -36,7 +36,7 @@ class UserLocation : NSObject, CLLocationManagerDelegate {
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
         self.locationManager.distanceFilter = CLLocationDistance(2000.0)
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         
         if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined {
             if self.locationManager.respondsToSelector(Selector("requestWhenInUseAuthorization")) {
