@@ -63,7 +63,7 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 					async.parallel([
 					                function(callback) { //This is the first task, and callback is its callback task
 					                	likes.findOne(
-					    						{_id: ''+_id, 'likes.userId': userID},
+					    						{_id: ''+pinID, 'likes.userId': userID},
 					    						{_id: 0, 'likes.userId': 1}
 					    				    ,
 					    					function(err, resultLike) {
