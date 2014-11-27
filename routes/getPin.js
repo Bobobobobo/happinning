@@ -7,7 +7,7 @@ var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
 function getPin(res, mongodb, pinID, userID, ObjectID) {
-	if (pinID === null || pinID === undefined) {
+	if (pinID === null || pinID === undefined || pinID === '') {
 		res.send(messageBuilder.buildError('no pinID'));
 		return;
 	}
@@ -17,7 +17,7 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 	var pinviews = mongodb.collection('pinviews');
 	var likes = mongodb.collection('likes');
 	
-	if (userID !== null && userID !== undefined) {
+	if (userID !== null && userID !== undefined && userID !== '') {
 		users.findOne({_id: new ObjectID(userID)}, function (err, result) {
 			if (err) {
 				return;
@@ -62,6 +62,11 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 					
 					async.parallel([
 					                function(callback) { //This is the first task, and callback is its callback task
+					                	if (userID === null || userID === undefined || userID === '') {
+					                		result.isLike = false;
+					                		callback();
+					                		return;
+					                	}
 					                	likes.findOne(
 					    						{_id: ''+pinID, 'likes.userId': userID},
 					    						{_id: 0, 'likes.userId': 1}
