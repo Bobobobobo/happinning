@@ -55,7 +55,9 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         
         cell.locaionLabel?.text = locality
         cell.timeLabel?.text = pin.uploadDate.formattedAsTimeAgo()
-        
+        cell.mediaPlayer.stop()
+        cell.mediaPlayer.view.hidden = true
+
         if pin.distance >= 0.1 {
             cell.distanceLabel?.text = NSString(format: "%.2f km", pin.distance)
         } else {
@@ -74,6 +76,12 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
 
             if pin.imageURL != nil && strlen(pin.imageURL!) > 0 {
                 urlString = "\(baseURL)\(pin.imageURL!)"
+                cell.pinImage?.contentMode = .ScaleAspectFill
+            } else if pin.videoURL != nil && strlen(pin.videoURL!) > 0 {
+                cell.mediaPlayer.contentURL = NSURL(string: "\(baseURL)\(pin.videoURL!)")
+                cell.mediaPlayer.view.hidden = false
+                cell.mediaPlayer.prepareToPlay()
+                cell.pinImage?.contentMode = .ScaleAspectFit
             }
             
             cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
@@ -117,29 +125,43 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         isDragging = false
-        endingScroll()
+        endingScroll(scrollView)
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         isDragging = false
-        endingScroll()
+        endingScroll(scrollView)
     }
     
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
         isDragging = false
-        endingScroll()
+        endingScroll(scrollView)
     }
     
-    func endingScroll() {
+    func endingScroll(scrollView: UIScrollView) {
         if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldHideComposerView")) {
             self.delegate!.pinListShouldHideComposerView()
         }
         
-        playVideo()
+        playVideo(scrollView)
     }
     
-    func playVideo() {
-        
+    func playVideo(scrollView: UIScrollView) {
+        var tableView = scrollView as UITableView
+        for cell in tableView.visibleCells() {
+            var pinCell = cell as PinTableViewCell
+            var window:UIView = (UIApplication.sharedApplication().delegate?.window!)!
+            var cellRect = window.convertRect(cell.bounds, fromView: cell as? UIView)
+            var indexPath:NSIndexPath? = tableView.indexPathForCell(pinCell)
+            
+            if CGRectContainsRect(window.bounds, cellRect){
+                var pin = self.pins[indexPath!.row]
+                
+                if pin.videoURL != nil && strlen(pin.videoURL!) > 0 {
+                    pinCell.mediaPlayer.play()
+                }
+            }
+        }
     }
     
     func scrollViewDidScroll(aScrollView: UIScrollView) {

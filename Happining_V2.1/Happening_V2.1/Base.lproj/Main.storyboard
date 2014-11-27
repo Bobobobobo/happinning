@@ -694,6 +694,7 @@
                                                 </imageView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ADI-uR-BfS" userLabel="PinImage">
                                                     <rect key="frame" x="10" y="108" width="300" height="200"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="ADI-uR-BfS" secondAttribute="height" multiplier="15:8" priority="750" id="99K-Ep-XfA"/>
                                                         <constraint firstAttribute="height" priority="999" constant="200" id="yFe-I8-s6A"/>
