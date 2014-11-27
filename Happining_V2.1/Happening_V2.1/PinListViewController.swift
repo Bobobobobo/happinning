@@ -8,6 +8,8 @@
 
 import CoreLocation
 import UIKit
+import AVFoundation
+import MediaPlayer
 import MobileCoreServices
 
 class PinListViewController: BaseViewController ,
@@ -44,7 +46,7 @@ class PinListViewController: BaseViewController ,
     var request:PinRequest?
     
     let kPostViewSize:CGFloat = 142
-    let kDefaultPostType = 12
+    let kDefaultPostType = 10
     
     var api : APIController!
     
@@ -59,10 +61,19 @@ class PinListViewController: BaseViewController ,
     let tableManager = PinTableViewDataSource()
     let localityManager = PinLocalityComposerDataSource()
     
+    let mediaPlayer = MPMoviePlayerController()
+    var isAddConstraint = false
+    
     enum PostMedia : Int {
-        case PostMediaNone = 0
-        case PostMediaImage, PostMediaVideo
+        case None = 0
+        case Image, Video
     }
+    
+    /**********************************
+    *
+    *   MARK: View cycle
+    *
+    ***********************************/
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,6 +109,18 @@ class PinListViewController: BaseViewController ,
         self.tagCollectionView.delegate = self.localityManager
         self.tagCollectionView.dataSource = self.localityManager
         self.localityManager.collectionView = self.tagCollectionView
+        
+        self.setUpPlayer()
+    }
+    
+    func setUpPlayer() {
+        self.mediaPlayer.shouldAutoplay = false
+        self.mediaPlayer.controlStyle = .None
+        self.mediaPlayer.movieSourceType = .File
+        
+        var tapGesture = UITapGestureRecognizer(target: self, action: Selector("playPreviewVideo:"))
+        self.previewImageView.userInteractionEnabled = true
+        self.previewImageView.addGestureRecognizer(tapGesture)
     }
     
     func adjustBorderForView(view:UIView, withColor color:UIColor) {
@@ -183,6 +206,7 @@ class PinListViewController: BaseViewController ,
     
     func showNewPost(show:Bool) {
         if show {
+            self.mediaPlayer.view.removeFromSuperview()
             self.postViewConstraint.constant = kPostViewSize
             self.pinTypeChooserView.selectItemAtIndexPath(NSIndexPath(forItem: kDefaultPostType, inSection: 0), animated: false, scrollPosition: .None)
 
@@ -198,6 +222,10 @@ class PinListViewController: BaseViewController ,
             self.previewImageView.image = nil
             updateIconFor(self.postImageButton)
             
+            self.mediaPlayer.stop()
+            self.postVideoButton.selected = false
+            updateIconFor(self.postVideoButton)
+
             self.postPinButton.selected = false
             updateIconFor(self.postPinButton)
         }
@@ -243,6 +271,11 @@ class PinListViewController: BaseViewController ,
                 postPinRequest.pinImage = self.previewImageView.image
             }
             
+            if self.postVideoButton.selected {
+                println("post video \(self.mediaPlayer.contentURL)")
+                postPinRequest.pinVideo = NSData(contentsOfURL:self.mediaPlayer.contentURL)
+            }
+            
             UIApplication.sharedApplication().networkActivityIndicatorVisible = true
             self.postButton.enabled = false
             
@@ -252,6 +285,8 @@ class PinListViewController: BaseViewController ,
 
                 var response:PinResponse = result as PinResponse
                 if response.pins.count > 0 {
+                    self.removeAllVideo()
+                    
                     self.showNewPost(false)
                     self.postTextView.text = ""
                     self.tableManager.pins = response.pins + self.tableManager.pins
@@ -267,7 +302,7 @@ class PinListViewController: BaseViewController ,
     func updateIconFor(button:UIButton) {
         (self.buttonIcons[button.tag%100-1]).highlighted = button.selected
         
-        if button == self.postImageButton {
+        if button == self.postImageButton || button == self.postImageButton {
             self.previewImageView.hidden = !button.selected
         } else if button == self.postPinButton {
             self.pinTypeChooser.hidden = !button.selected
@@ -278,8 +313,11 @@ class PinListViewController: BaseViewController ,
         self.postImageButton.selected = !self.postImageButton.selected
         updateIconFor(self.postImageButton)
         
+        self.postVideoButton.selected = false
+        updateIconFor(self.postVideoButton)
+
         if self.postImageButton.selected {
-            showImagePickerFor(PostMedia.PostMediaImage)
+            showImagePickerFor(.Image)
         } else {
             self.postViewConstraint.constant = kPostViewSize
             self.view.layoutIfNeeded()
@@ -288,7 +326,28 @@ class PinListViewController: BaseViewController ,
     }
     
     @IBAction func addNewVideo(sender: AnyObject) {
-        showImagePickerFor(PostMedia.PostMediaVideo)
+        self.postVideoButton.selected = !self.postVideoButton.selected
+        updateIconFor(self.postVideoButton)
+
+        self.postImageButton.selected = false
+        updateIconFor(self.postImageButton)
+
+        if self.postVideoButton.selected {
+            showImagePickerFor(.Video)
+        } else {
+            self.postViewConstraint.constant = kPostViewSize
+            self.view.layoutIfNeeded()
+            self.previewImageView.image = nil
+            self.mediaPlayer.stop()
+            self.mediaPlayer.view.removeFromSuperview()
+        }
+    }
+    
+    func playPreviewVideo(sender: AnyObject) {
+        var tapGesture = sender as UITapGestureRecognizer
+        if self.postVideoButton.selected && tapGesture.state == .Ended {
+            self.mediaPlayer.play()
+        }
     }
     
     @IBAction func addPinType(sender: AnyObject) {
@@ -323,7 +382,7 @@ class PinListViewController: BaseViewController ,
             self.postViewConstraint.constant = 0
             showNewPost(false)
             self.tableManager.shouldHidePost = false
-        } else if !isShowPost {
+        } else if !isShowPost && self.postViewConstraint.constant > 0 {
             self.postViewConstraint.constant = 0
             self.view.layoutIfNeeded()
         }
@@ -470,8 +529,14 @@ class PinListViewController: BaseViewController ,
     
     func showImagePickerFor(mediaType:PostMedia) {
         var picker = UIImagePickerController()
-        picker.mediaTypes = [kUTTypeImage]
         picker.delegate = self
+        
+        if mediaType == .Image {
+            picker.mediaTypes = [kUTTypeImage]
+        } else {
+            picker.mediaTypes = [kUTTypeMovie]
+            picker.videoMaximumDuration = 15.0
+        }
         
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             picker.sourceType = .Camera
@@ -480,16 +545,120 @@ class PinListViewController: BaseViewController ,
         self.presentViewController(picker, animated: true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        
         self.dismissViewControllerAnimated(true, completion: nil)
+        
+        var mediaType = info[UIImagePickerControllerMediaType] as String
+        var image:UIImage?
+        
+        if mediaType == kUTTypeMovie {
+            var contentURL = info[UIImagePickerControllerMediaURL] as NSURL
+            println("contentURL \(contentURL)")
+            
+            var asset = AVAsset.assetWithURL(contentURL) as AVAsset
+            var imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            var time = CMTimeMake(1, 1)
+            var imageRef = imageGenerator.copyCGImageAtTime(time, actualTime: nil, error: nil)
+            
+            image = UIImage(CGImage: imageRef, scale:1.0, orientation:.Up)
+
+            self.view.userInteractionEnabled = false
+            self.convertVideoToMp4(contentURL, handler: { (success, input, output) -> Void in
+                self.view.userInteractionEnabled = true
+                if Bool(success) {
+//                    self.mediaPlayer.stop()
+//                    self.mediaPlayer.contentURL = output
+//                    self.mediaPlayer.play()
+                    
+                    self.mediaPlayer.contentURL = output
+                    self.mediaPlayer.view.frame = self.previewImageView.bounds
+                    self.mediaPlayer.view.userInteractionEnabled = false
+                    self.previewImageView.addSubview(self.mediaPlayer.view)
+                    self.addMediaPlayerConstraint()
+                    self.mediaPlayer.prepareToPlay()
+                    self.mediaPlayer.play()
+                } else {
+                    if self.postVideoButton.selected {
+                        self.addNewVideo(self.postVideoButton)
+                    }
+                }
+            })
+        } else {
+            image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        }
+    
         self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
         self.view.layoutIfNeeded()
-
+        
         self.postPinButton.selected = false
         updateIconFor(self.postPinButton)
-
+        
         self.previewImageView.hidden = false
         self.previewImageView.image = image
+
+    }
+    
+    func convertVideoToMp4(videoURL:NSURL, handler: ((success:Bool, input:NSURL?, output:NSURL?) -> Void)!) {
+        println("videoURL \(videoURL)")
+        
+        removeAllVideo()
+        
+        var paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
+        var originPath = (paths[0] as NSString).stringByAppendingPathComponent("video.mov")
+        NSData(contentsOfURL: videoURL)?.writeToFile(originPath, atomically: false)
+
+        println("originPath \(originPath)")
+
+        var avAsset = AVURLAsset(URL: NSURL(fileURLWithPath: originPath), options: nil)
+        
+        var exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetMediumQuality)        
+        var videoPath = (paths[0] as NSString).stringByAppendingPathComponent("video.mp4")
+        println("videoPath \(videoPath)")
+
+        exportSession.outputURL = NSURL(fileURLWithPath: videoPath)
+        exportSession.outputFileType = AVFileTypeMPEG4
+        exportSession.exportAsynchronouslyWithCompletionHandler { () -> Void in
+            if exportSession.status == .Failed {
+                println("exportSession error \(exportSession.error)")
+               
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if handler != nil {
+                        handler(success: false, input:videoURL, output: nil)
+                    }
+                })
+                self.removeAllVideo()
+            } else if exportSession.status == .Completed {
+                println("exportSession success")
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if handler != nil {
+                        handler(success: true, input:videoURL, output: exportSession.outputURL)
+                    }
+                })
+                
+            }
+        }
+    }
+    
+    func addMediaPlayerConstraint() {
+        if isAddConstraint {
+            return
+        }
+        
+        self.mediaPlayer.view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        isAddConstraint = true
+    }
+    
+    func removeAllVideo() {
+        var fileManager = NSFileManager.defaultManager()
+        var paths = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
+        var originPath = (paths[0] as NSString).stringByAppendingPathComponent("video.mov")
+        var videoPath = (paths[0] as NSString).stringByAppendingPathComponent("video.mp4")
+
+        fileManager.removeItemAtPath(originPath, error: nil)
+        fileManager.removeItemAtPath(videoPath, error: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {

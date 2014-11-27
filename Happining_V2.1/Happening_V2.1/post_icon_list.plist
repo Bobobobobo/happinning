@@ -7,14 +7,13 @@
 	<string>icon_beauty</string>
 	<string>icon_cafe</string>
 	<string>icon_cinema</string>
-	<string>icon_department_store</string>
 	<string>icon_concert</string>
 	<string>icon_education</string>
 	<string>icon_fast_food</string>
 	<string>icon_fitness</string>
 	<string>icon_government</string>
-	<string>icon_hospital</string>
 	<string>icon_home</string>
+	<string>icon_hospital</string>
 	<string>icon_laundry</string>
 	<string>icon_park</string>
 	<string>icon_pub_bar</string>
@@ -22,7 +21,7 @@
 	<string>icon_service</string>
 	<string>icon_shop</string>
 	<string>icon_stadium</string>
+	<string>icon_department_store</string>
 	<string>icon_transport</string>
-	<string>icon_office</string>
 </array>
 </plist>

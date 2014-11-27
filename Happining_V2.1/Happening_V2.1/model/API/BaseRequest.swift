@@ -124,8 +124,12 @@ class API: NSObject {
                 var serializer = AFHTTPRequestSerializer()
                 var request:NSURLRequest = serializer.multipartFormRequestWithMethod("POST", URLString: urlString, parameters: objectParam, constructingBodyWithBlock: { (formData: AFMultipartFormData!) -> Void in
                         for (key, value) in dataParam {
-                            //fromData.appendPartWithFormData(value as NSData, name: key as String)
-                            formData.appendPartWithFileData(value as NSData, name: key as String, fileName: "\(key).jpg", mimeType: "image/jpeg")
+                            if key as NSString == PARAM_VIDEO {
+                                formData.appendPartWithFileData(value as NSData, name: key as String, fileName: "\(key).mp4", mimeType: "video/mp4")
+                            } else {
+                                formData.appendPartWithFileData(value as NSData, name: key as String, fileName: "\(key).jpg", mimeType: "image/jpeg")
+
+                            }
                         }
                     }, error: nil)
                 return request

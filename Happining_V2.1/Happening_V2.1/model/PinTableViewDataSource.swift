@@ -63,14 +63,19 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         }
         
         var baseURL = BASE_URL
-        if pin.imageURL == nil || strlen(pin.imageURL!) == 0 {
+        if pin.thumbURL == nil || strlen(pin.thumbURL!) == 0 {
             cell.imageHeight!.constant = 0.0
             cell.pinImage?.hidden = true
         } else {
             cell.imageHeight!.constant = 200.0
             cell.pinImage?.hidden = false
             
-            var urlString = "\(baseURL)\(pin.imageURL!)"
+            var urlString = "\(baseURL)\(pin.thumbURL!)"
+
+            if pin.imageURL != nil && strlen(pin.imageURL!) > 0 {
+                urlString = "\(baseURL)\(pin.imageURL!)"
+            }
+            
             cell.pinImage?.sd_setImageWithURL(NSURL(string: urlString))
         }
         
@@ -129,6 +134,12 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldHideComposerView")) {
             self.delegate!.pinListShouldHideComposerView()
         }
+        
+        playVideo()
+    }
+    
+    func playVideo() {
+        
     }
     
     func scrollViewDidScroll(aScrollView: UIScrollView) {

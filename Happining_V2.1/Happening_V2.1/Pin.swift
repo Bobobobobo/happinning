@@ -33,7 +33,7 @@ class Pin {
     var pinType: String?
     var text: String
     var uploadDate: NSDate
-    var thumbURL: String
+    var thumbURL: String?
     var imageURL: String?
     var videoURL: String?
     var ratio: Double

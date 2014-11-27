@@ -6,7 +6,6 @@
 //  Copyright (c) 2557 Kan Boonprakub. All rights reserved.
 //
 
-
 class PostPinRequest: BaseRequest {
 
     var latitude:Double = 0.0
@@ -17,6 +16,7 @@ class PostPinRequest: BaseRequest {
     var pinSubLocality = ""
     var pinText = ""
     var pinImage:UIImage?
+    var pinVideo:NSData?
     
     override func urlRequest() -> NSURLRequest? {
         var data = NSDictionary(objectsAndKeys:
@@ -41,11 +41,18 @@ class PostPinRequest: BaseRequest {
             var maxLength = max(self.pinImage!.size.width, self.pinImage!.size.height)
             if maxLength > 2000 {
                 var scaleTo = (100.0/maxLength)*20.0
-                self.pinImage = self.pinImage!.scaleImageToScale(scaleTo).fixOrientation()
+                self.pinImage = self.pinImage!.scaleImageToScale(scaleTo)
             }
             
+            self.pinImage = self.pinImage!.fixOrientation()
+            
             params.setObject(UIImageJPEGRepresentation(self.pinImage!.scaleImageToScale(0.5), 0.5), forKey: PARAM_THUMBNAIL)
-            params.setObject(UIImageJPEGRepresentation(self.pinImage!, 0.5), forKey: PARAM_IMAGE)
+            
+            if self.pinVideo != nil {
+                params.setObject(self.pinVideo!, forKey: PARAM_VIDEO)
+            } else {
+                params.setObject(UIImageJPEGRepresentation(self.pinImage!, 0.5), forKey: PARAM_IMAGE)
+            }
         } else {
             return API.requestPostWith(BASE_URL, path:API_ADD_PIN, parameters: params)
         }
