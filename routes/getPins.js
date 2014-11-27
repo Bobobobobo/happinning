@@ -88,9 +88,9 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 								});
 			                }
 			            ],
-			            // optional callback
-			            function(err){
-							callback(err);
+	            // optional callback
+			    function(err){
+					callback(err);
 				});
 		}, function(err) {
 			if (err) res.send(messageBuilder.buildError(err));
