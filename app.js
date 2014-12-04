@@ -79,7 +79,8 @@ app.post('/addPin', function(req, res){
 	}
 });
 app.post('/login', function(req, res){
-	login.initialize(res, req.param('email', null), req.param('password', null), req.param('username', null), mongodb);
+	login.initialize(res, req.param('email', null), req.param('password', null),
+			req.param('username', null), req.param('fbId', null), mongodb);
 });
 app.get('/image/:id/:name', function(req, res){
 	fs.readFile(require('./dir').dir + req.params.id + '/' + req.params.name, function (err, data) {

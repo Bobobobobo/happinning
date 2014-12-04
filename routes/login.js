@@ -6,7 +6,7 @@
 var shortId = require('shortid');
 var messageBuilder = require('../happining_modules/messageBuilder');
 
-function login(res, email, password, username, mongodb) {
+function login(res, email, password, username, fbId, mongodb) {
 	if (email === null || email === undefined) {
 		res.send(messageBuilder.buildError('no email'));
 		return;
@@ -16,6 +16,11 @@ function login(res, email, password, username, mongodb) {
 	}else if (username === null || username === undefined) {
 		res.send(messageBuilder.buildError('no username'));
 		return;
+	}
+	
+	var userImage = 'http://identicon.org/?t='+username+'&s=256'
+	if (fbId !== null && fbId !== undefined) {
+		userImage = 'http://graph.facebook.com/v2.2/'+fbId+'/picture?type=large';
 	}
 	
 	var query = {email: email};
@@ -29,12 +34,12 @@ function login(res, email, password, username, mongodb) {
 		
 		if (result !== null && result !== undefined) {
 			if (result.password !== password) {
-				res.send(messageBuilder.buildError('password not match'));
+				res.send(messageBuilder.buildError('password is incorrect'));
 				// TODO send message password not match and also send email for sending code to reset
 				return;
 			}
 			if (result.username !== username) {
-				users.update({_id: result._id}, {$set: {'username': username, 'userImage': 'http://identicon.org/?t='+username+'&s=256'}},
+				users.update({_id: result._id}, {$set: {'username': username, 'userImage': userImage}},
 						function(err, records) {
 						if (err) {
 							console.error('login.js - login'+err);
@@ -47,7 +52,7 @@ function login(res, email, password, username, mongodb) {
 		}
 		
 		var code = shortId.generate();
-		var document = {email: email, password: password, code: code, username: username, userImage: 'http://identicon.org/?t='+username+'&s=256'};
+		var document = {email: email, password: password, code: code, username: username, userImage: userImage};
 		
 		users.insert(document, function(err, records) {
 			if (err) {
