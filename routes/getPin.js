@@ -4,9 +4,10 @@
  */
 
 var messageBuilder = require('../happining_modules/messageBuilder');
+var async = require('async');
 
 function getPin(res, mongodb, pinID, userID, ObjectID) {
-	if (pinID === null || pinID === undefined) {
+	if (pinID === null || pinID === undefined || pinID === '') {
 		res.send(messageBuilder.buildError('no pinID'));
 		return;
 	}
@@ -14,8 +15,9 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 	var pins = mongodb.collection('pins');
 	var users = mongodb.collection('users');
 	var pinviews = mongodb.collection('pinviews');
+	var likes = mongodb.collection('likes');
 	
-	if (userID !== null && userID !== undefined) {
+	if (userID !== null && userID !== undefined && userID !== '') {
 		users.findOne({_id: new ObjectID(userID)}, function (err, result) {
 			if (err) {
 				return;
@@ -57,18 +59,44 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 						res.send(messageBuilder.buildError('no pin found'));
 						return;
 					}
-					users.findOne({_id: new ObjectID(result.userId)}, function (err, resultUser) {
-						if (err) {
-							res.send(messageBuilder.buildError(err));
-							return;
-						}
-						result.username = resultUser.username;
-						result.userImage = resultUser.userImage;
-						res.send(messageBuilder.buildComplete(result));
-					});
+					
+					async.parallel([
+					                function(callback) { //This is the first task, and callback is its callback task
+					                	if (userID === null || userID === undefined || userID === '') {
+					                		result.isLike = false;
+					                		callback();
+					                		return;
+					                	}
+					                	likes.findOne(
+					    						{_id: ''+pinID, 'likes.userId': userID},
+					    						{_id: 0, 'likes.userId': 1}
+					    				    ,
+					    					function(err, resultLike) {
+					    						if (err || resultLike === null || resultLike === undefined) {
+					    							result.isLike = false;
+					    						}else {
+					    							result.isLike = true;	
+					    						}
+					    						callback();
+					    					});
+					                },
+					                function(callback) { //This is the second task, and callback is its callback task
+					                	users.findOne({_id: new ObjectID(result.userId)}, function (err, resultUser) {
+											if (err) {
+												callback(err);
+											}
+											result.username = resultUser.username;
+											result.userImage = resultUser.userImage;
+											callback();
+										}); 
+					                }
+					            ], function(err) { //This is the final callback
+									if (err) res.send(messageBuilder.buildError(err));
+									res.send(messageBuilder.buildComplete(result));
+					            });
 				});
 	}catch (err) {
-		res.send(messageBuilder.buildError('no pin found'));
+		res.send(messageBuilder.buildError(err));
 	}
 }
 

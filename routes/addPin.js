@@ -126,7 +126,7 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 						}
 					});
 				}catch (e) {
-					res.send(messageBuilder.buildError('no user connect with this post'));
+					res.send(messageBuilder.buildError(e));
 				}
 			}
 		  });
@@ -186,7 +186,7 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 			}
 		});	
 	}catch (e) {
-		res.send(messageBuilder.buildError('no user connect with this post'));
+		res.send(messageBuilder.buildError(e));
 	}
 }
 
