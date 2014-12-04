@@ -12,24 +12,17 @@ import AVFoundation
 import MediaPlayer
 import MobileCoreServices
 
-class PinListViewController: BaseViewController ,
-                            // Image Picker
-                            UIImagePickerControllerDelegate, UINavigationControllerDelegate ,
-                            // Text Input
-                            UITextViewDelegate, UITextFieldDelegate,
-                            // Custom
-                            LoginViewDelegate, LocationDelegate, PinListDelegate,
-                            // Collection View
-                            UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+class PinListViewController: BaseViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITextViewDelegate, UITextFieldDelegate, LoginViewDelegate, LocationDelegate, PinListDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
-    @IBOutlet weak var postViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var postScrollView: UIScrollView!
     
     // New pin
     @IBOutlet weak var postTextView: UITextView!
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var tagCollectionView: UICollectionView!
+    @IBOutlet weak var locationTableView: UITableView!
     @IBOutlet weak var placeTagField: UITextField!
     @IBOutlet weak var postImageButton: UIButton!
     @IBOutlet weak var postVideoButton: UIButton!
@@ -40,12 +33,19 @@ class PinListViewController: BaseViewController ,
     @IBOutlet weak var pinTypeChooser: UIView!
     @IBOutlet weak var pinTypeChooserView: UICollectionView!
     
+    // Sample pin
+    @IBOutlet weak var sampleProfileImage: UIImageView!
+    @IBOutlet weak var sampleUserName: UILabel!
+    @IBOutlet weak var samplePinitle: UILabel!
+    @IBOutlet weak var samplePinType: UIImageView!
+    @IBOutlet weak var samplePinImageConstraint: NSLayoutConstraint!
+    @IBOutlet weak var samplePinLocation: UILabel!
+    
     @IBOutlet weak var noPinView: UIView!
     
     var refreshControl:UIRefreshControl!
     var request:PinRequest?
     
-    let kPostViewSize:CGFloat = 142
     let kDefaultPostType = 10
     
     var api : APIController!
@@ -59,6 +59,7 @@ class PinListViewController: BaseViewController ,
     var selectedVideo:NSData?
     
     let tableManager = PinTableViewDataSource()
+    let locationDataSource = PinLocationTableDataSource()
     let localityManager = PinLocalityComposerDataSource()
     
     let mediaPlayer = MPMoviePlayerController()
@@ -79,10 +80,10 @@ class PinListViewController: BaseViewController ,
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
 
-        sidebarButton.target = self.revealViewController()
-        sidebarButton.action = Selector("revealToggle:")
+        //sidebarButton.target = self.revealViewController()
+        //sidebarButton.action = Selector("revealToggle:")
 
-        self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        //self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         
         self.api = APIController()
         
@@ -90,13 +91,21 @@ class PinListViewController: BaseViewController ,
         self.refreshControl.tintColor = UIColor.hRedColor()
         self.refreshControl.addTarget(self, action: "reloadPins:", forControlEvents: UIControlEvents.ValueChanged)
         self.pinsTableView.addSubview(self.refreshControl)
+        self.postScrollView.contentInset = UIEdgeInsetsMake(64.0, 0.0, 0.0, 0.0)
         
         // Logged in
         isLogin = User.isLogin()
-        self.postViewConstraint.constant = 0;
+        
+        if isLogin == true {
+            self.loginViewDidFinishWithUser(User.currentUser)
+        }
+        
+        self.postScrollView.alpha = 0.0
         
         self.postTextView.scrollsToTop = false
+        self.pinTypeChooserView.scrollsToTop = false
         self.tagCollectionView.scrollsToTop = false
+        self.pinsTableView.scrollsToTop = true
         
         self.adjustBorderForView(self.postTextView, withColor: UIColor.hRedColor())
         self.adjustBorderForView(self.postButton, withColor: UIColor.hgreyColor())
@@ -106,11 +115,16 @@ class PinListViewController: BaseViewController ,
         self.pinsTableView.dataSource = self.tableManager
         self.tableManager.delegate = self
         
+        self.locationTableView.dataSource = self.locationDataSource
+        self.locationTableView.delegate = self.locationDataSource
+
         self.tagCollectionView.delegate = self.localityManager
         self.tagCollectionView.dataSource = self.localityManager
         self.localityManager.collectionView = self.tagCollectionView
         
         self.setUpPlayer()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("reloadPins:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     func setUpPlayer() {
@@ -140,9 +154,6 @@ class PinListViewController: BaseViewController ,
             self.performSegueWithIdentifier("signin", sender: self)
             isLogin = true
         } else {
-            UserLocation.manager.startUpdatingLocation()
-            UserLocation.manager.delegate = self
-            
             NSNotificationCenter.defaultCenter().addObserver(self,
                 selector: "onContentSizeChange:",
                 name: UIContentSizeCategoryDidChangeNotification,
@@ -180,6 +191,8 @@ class PinListViewController: BaseViewController ,
     ***********************************/
     
     func userLocationDidUpdateLocations(locations: [AnyObject]!) {
+        UserLocation.manager.locationManager.stopUpdatingLocation()
+        
         var loc:CLLocation = locations[locations.count-1] as CLLocation
         var locValue: CLLocationCoordinate2D = loc.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
@@ -189,13 +202,40 @@ class PinListViewController: BaseViewController ,
         var userId = User.currentUser.userID
         //self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
         self.loadPinsAt(latitude, longitude: longitude, page:1)
+   
+        var request = LocationRequest()
+        request.latitude = latitude
+        request.longitude = longitude
+        request.request(handleLocationResponse)
     }
     
     func userLocationDidUpdateGeoCoding(locality: [AnyObject]!) {
-        if !self.placeTagField.isFirstResponder() && self.localityManager.locality.count == 0 {
-            self.localityManager.locality = locality
-            self.tagCollectionView.reloadData()
-        }
+//        if !self.placeTagField.isFirstResponder() && self.localityManager.locality.count == 0 {
+//            self.localityManager.locality = locality
+//            self.tagCollectionView.reloadData()
+//        }
+    }
+    
+    func handleLocationResponse(result:BaseResponse) {
+        var response = result as LocationResponse
+        self.locationDataSource.locations = response.locations
+        self.locationTableView.reloadData()
+    }
+    
+    func userDidSelectLocation(location:Location!) {
+        self.placeTagField.text = location.subLocality
+        self.placeTagField.resignFirstResponder()
+    }
+    
+    /**********************************
+    *
+    *   MARK: Location view collection
+    *
+    ***********************************/
+    
+    @IBAction func clearAllLocation(sender: AnyObject) {
+        self.localityManager.locality = []
+        self.tagCollectionView.reloadData()
     }
     
     /**********************************
@@ -204,22 +244,30 @@ class PinListViewController: BaseViewController ,
     *
     ***********************************/
     
+    func prepareSamplePin() {
+        self.sampleProfileImage.sd_setImageWithURL(NSURL(string: User.currentUser.userImage!))
+        self.sampleUserName.text = User.currentUser.userName
+    }
+    
     func showNewPost(show:Bool) {
+        var alpha:CGFloat = 0.0
         if show {
+            self.prepareSamplePin()
             self.mediaPlayer.view.removeFromSuperview()
-            self.postViewConstraint.constant = kPostViewSize
+            alpha = 1.0
             self.pinTypeChooserView.selectItemAtIndexPath(NSIndexPath(forItem: kDefaultPostType, inSection: 0), animated: false, scrollPosition: .None)
 
-            if UserLocation.manager.subLocality.count > 0 {
-                self.localityManager.locality = UserLocation.manager.subLocality
-                self.tagCollectionView.reloadData()
-            }
+            //if UserLocation.manager.subLocality.count > 0 {
+                //self.localityManager.locality = UserLocation.manager.subLocality
+                //self.tagCollectionView.reloadData()
+            //}
         } else {
-            self.postViewConstraint.constant = 0
+            alpha = 0.0
             self.postTextView.resignFirstResponder()
+            self.placeTagField.resignFirstResponder()
             
             self.postImageButton.selected = false
-            self.previewImageView.image = nil
+            self.removePreviewImage()
             updateIconFor(self.postImageButton)
             
             self.mediaPlayer.stop()
@@ -233,11 +281,10 @@ class PinListViewController: BaseViewController ,
         self.view.userInteractionEnabled = false
         self.pinsTableView.scrollEnabled = false
         UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self.view.layoutIfNeeded()
+            self.postScrollView.alpha = alpha
         }, completion: {(conplete) -> Void in
             self.view.userInteractionEnabled = true
             self.pinsTableView.scrollEnabled = true
-            self.pinsTableView.contentOffset = CGPointMake(0, -self.pinsTableView.contentInset.top)
         })
         
         self.isShowPost = show
@@ -307,6 +354,9 @@ class PinListViewController: BaseViewController ,
         } else if button == self.postPinButton {
             self.pinTypeChooser.hidden = !button.selected
         }
+        
+        self.postTextView.resignFirstResponder()
+        self.placeTagField.resignFirstResponder()
     }
     
     @IBAction func addNewImage(sender: AnyObject) {
@@ -319,9 +369,7 @@ class PinListViewController: BaseViewController ,
         if self.postImageButton.selected {
             showImagePickerFor(.Image)
         } else {
-            self.postViewConstraint.constant = kPostViewSize
-            self.view.layoutIfNeeded()
-            self.previewImageView.image = nil
+            self.removePreviewImage()
         }
     }
     
@@ -335,9 +383,7 @@ class PinListViewController: BaseViewController ,
         if self.postVideoButton.selected {
             showImagePickerFor(.Video)
         } else {
-            self.postViewConstraint.constant = kPostViewSize
-            self.view.layoutIfNeeded()
-            self.previewImageView.image = nil
+            self.removePreviewImage()
             self.mediaPlayer.stop()
             self.mediaPlayer.view.removeFromSuperview()
         }
@@ -353,22 +399,6 @@ class PinListViewController: BaseViewController ,
     @IBAction func addPinType(sender: AnyObject) {
         self.postPinButton.selected = !self.postPinButton.selected
         updateIconFor(self.postPinButton)
-        
-        if self.postPinButton.selected {
-            if self.previewImageView.hidden {
-                self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.view.layoutIfNeeded()
-                })
-            }
-        } else {
-            if self.previewImageView.hidden {
-                self.postViewConstraint.constant = kPostViewSize
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.view.layoutIfNeeded()
-                })
-            }
-        }
     }
     
     /**********************************
@@ -379,21 +409,8 @@ class PinListViewController: BaseViewController ,
     
     func pinListShouldHideComposerView() {
         if self.tableManager.shouldHidePost {
-            self.postViewConstraint.constant = 0
             showNewPost(false)
             self.tableManager.shouldHidePost = false
-        } else if !isShowPost && self.postViewConstraint.constant > 0 {
-            self.postViewConstraint.constant = 0
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    func pinListShouldUpdateComposerView(constant: CGFloat) {
-        if isShowPost {
-            self.tableManager.shouldHidePost = true
-            self.postViewConstraint.constant -= constant
-            self.view.layoutIfNeeded()
-            self.pinsTableView.contentOffset = CGPointZero
         }
     }
     
@@ -443,7 +460,6 @@ class PinListViewController: BaseViewController ,
             if response.pins.count > 0 {
                 if self.request!.page == 1 {
                     self.tableManager.pins = response.pins
-                    self.pinsTableView.contentOffset = CGPointMake(0, -self.pinsTableView.contentInset.top);
                 } else {
                     self.tableManager.pins += response.pins
                 }
@@ -486,6 +502,8 @@ class PinListViewController: BaseViewController ,
     func loginViewDidFinishWithUser(user: User?) {
         if user != nil {
             println("Finish login with \(user!.userName)")
+            UserLocation.manager.startUpdatingLocation()
+            UserLocation.manager.delegate = self
         } else {
             println("Login Error")
         }
@@ -493,20 +511,29 @@ class PinListViewController: BaseViewController ,
     
     /**********************************
     *
-    *   MARK: Location view collection
-    *
-    ***********************************/
-    
-    @IBAction func clearAllLocation(sender: AnyObject) {
-        self.localityManager.locality = []
-        self.tagCollectionView.reloadData()
-    }
-    
-    /**********************************
-    *
     *   MARK: Text field
     *
     ***********************************/
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        self.samplePinitle.text = (textView.text as NSString).stringByReplacingCharactersInRange(range, withString: text)
+
+        return true
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        
+        self.samplePinLocation.text = (textField.text as NSString).stringByReplacingCharactersInRange(range, withString: string)
+
+        if self.samplePinLocation.text != nil {
+            self.locationDataSource.searchWith(self.samplePinLocation.text!)
+        } else {
+            self.locationDataSource.tableData = self.locationDataSource.locations
+        }
+        
+        self.locationTableView.reloadData()
+        return true
+    }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -517,8 +544,16 @@ class PinListViewController: BaseViewController ,
         if strlen(textField.text) > 0 {
             self.localityManager.locality = [textField.text]
             self.tagCollectionView.reloadData()
+            self.samplePinLocation.text = textField.text
             textField.text = ""
         }
+        
+        self.locationTableView.hidden = true
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        self.locationTableView.hidden = false
+        return true
     }
     
     /**********************************
@@ -588,13 +623,12 @@ class PinListViewController: BaseViewController ,
         } else {
             image = info[UIImagePickerControllerOriginalImage] as? UIImage
         }
-    
-        self.postViewConstraint.constant = kPostViewSize + CGRectGetWidth(self.view.frame)
-        self.view.layoutIfNeeded()
-        
+            
         self.postPinButton.selected = false
         updateIconFor(self.postPinButton)
         
+        self.samplePinImageConstraint.constant = 200;
+        self.previewImageView.superview?.layoutIfNeeded()
         self.previewImageView.hidden = false
         self.previewImageView.image = image
 
@@ -663,8 +697,20 @@ class PinListViewController: BaseViewController ,
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         self.dismissViewControllerAnimated(true, completion: nil)
+        self.removePreviewImage()
+        
         self.postImageButton.selected = false
         updateIconFor(self.postImageButton)
+        
+        self.postVideoButton.selected = false
+        updateIconFor(self.postVideoButton)
+
+    }
+    
+    func removePreviewImage() {
+        self.samplePinImageConstraint.constant = 0;
+        self.previewImageView.superview?.layoutIfNeeded()
+        self.previewImageView.image = nil
     }
     
     /**********************************
@@ -697,6 +743,11 @@ class PinListViewController: BaseViewController ,
         cell.textLabel.text = iconName.capitalizedString
         
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        var imageName = PinManager.manager.pinList[indexPath.item]
+        self.samplePinType.image = UIImage(named: "\(imageName).png")
     }
 }
 

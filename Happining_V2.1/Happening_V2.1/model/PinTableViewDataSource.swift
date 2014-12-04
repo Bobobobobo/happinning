@@ -10,7 +10,6 @@ import UIKit
 
 protocol PinListDelegate : NSObjectProtocol {
     func pinListShouldHideComposerView()
-    func pinListShouldUpdateComposerView(constant:CGFloat)
     func pinListShouldLoadMore()
 }
 
@@ -59,9 +58,9 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         cell.mediaPlayer.view.hidden = true
 
         if pin.distance >= 0.1 {
-            cell.distanceLabel?.text = NSString(format: "%.2f km", pin.distance)
+            cell.distanceLabel?.text = NSString(format: "%.1f km", pin.distance)
         } else {
-            cell.distanceLabel?.text = NSString(format: "%.2f m", pin.distance*1000)
+            cell.distanceLabel?.text = NSString(format: "%.1f m", pin.distance*1000)
         }
         
         var baseURL = BASE_URL
@@ -143,7 +142,7 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
             self.delegate!.pinListShouldHideComposerView()
         }
         
-        playVideo(scrollView)
+        //playVideo(scrollView)
     }
     
     func playVideo(scrollView: UIScrollView) {
@@ -159,6 +158,7 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
                 
                 if pin.videoURL != nil && strlen(pin.videoURL!) > 0 {
                     pinCell.mediaPlayer.play()
+                    return
                 }
             }
         }
@@ -171,16 +171,14 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         var inset:UIEdgeInsets = aScrollView.contentInset
         var y:CGFloat = offset.y + bounds.size.height - inset.bottom
         var h:CGFloat = size.height
-        var reload_distance:CGFloat = 10
+        var reload_distance:CGFloat = 100
         
         if((y > (h + reload_distance)) && hasMore) {
             if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldLoadMore")) {
                 self.delegate!.pinListShouldLoadMore()
             }
         } else if beginPoint.y < offset.y {
-            if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldUpdateComposerView:")) {
-                self.delegate!.pinListShouldUpdateComposerView((offset.y - beginPoint.y))
-            }
+            
         }
     }
 }

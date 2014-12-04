@@ -12,6 +12,7 @@ import Foundation
 protocol LocationDelegate : NSObjectProtocol {
     func userLocationDidUpdateLocations(locations: [AnyObject]!)
     func userLocationDidUpdateGeoCoding(locality: [AnyObject]!)
+    func userDidSelectLocation(location: Location!)
 }
 
 class UserLocation : NSObject, CLLocationManagerDelegate {
