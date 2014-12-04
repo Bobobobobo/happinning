@@ -25,6 +25,8 @@
 		3C3836FD1A09F96300741FEA /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3836FC1A09F96300741FEA /* LoginRequest.swift */; };
 		3C3836FF1A0A104B00741FEA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3836FE1A0A104B00741FEA /* User.swift */; };
 		3C4412211A0B760A00489E6E /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4412201A0B760A00489E6E /* BaseNavigationController.swift */; };
+		3C45EDD11A3021ED00AFA062 /* LocationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C45EDD01A3021ED00AFA062 /* LocationRequest.swift */; };
+		3C45EDD31A302B7800AFA062 /* PinLocationTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C45EDD21A302B7800AFA062 /* PinLocationTableDataSource.swift */; };
 		3C6328EA1A222FB8004955D4 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6328D81A222FB8004955D4 /* AFHTTPRequestOperation.m */; };
 		3C6328EB1A222FB8004955D4 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6328DA1A222FB8004955D4 /* AFHTTPRequestOperationManager.m */; };
 		3C6328EC1A222FB8004955D4 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6328DC1A222FB8004955D4 /* AFHTTPSessionManager.m */; };
@@ -108,6 +110,8 @@
 		3C3837001A0A4A5F00741FEA /* Chang-Wattana.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Chang-Wattana.gpx"; sourceTree = "<group>"; };
 		3C3C80981A06870800A360A5 /* Sam-Yarn.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Sam-Yarn.gpx"; sourceTree = "<group>"; };
 		3C4412201A0B760A00489E6E /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
+		3C45EDD01A3021ED00AFA062 /* LocationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationRequest.swift; sourceTree = "<group>"; };
+		3C45EDD21A302B7800AFA062 /* PinLocationTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinLocationTableDataSource.swift; sourceTree = "<group>"; };
 		3C6328D71A222FB8004955D4 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		3C6328D81A222FB8004955D4 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		3C6328D91A222FB8004955D4 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -261,6 +265,7 @@
 				09EA10FA19AF56AA0086D4DF /* Location.swift */,
 				E0421605199A1E0700551C1D /* Pin.swift */,
 				3C38021B1A25C7B4000B071E /* PinTableViewDataSource.swift */,
+				3C45EDD21A302B7800AFA062 /* PinLocationTableDataSource.swift */,
 				3C38021D1A25CC11000B071E /* PinLocalityComposerDataSource.swift */,
 			);
 			name = Pin;
@@ -416,6 +421,7 @@
 				3C84EE461A07730E00D78AC8 /* BaseRequest.swift */,
 				3C84EE481A07732E00D78AC8 /* PinRequest.swift */,
 				3C33E0371A20540F000952DA /* PostPinRequest.swift */,
+				3C45EDD01A3021ED00AFA062 /* LocationRequest.swift */,
 				3C3836FC1A09F96300741FEA /* LoginRequest.swift */,
 			);
 			path = API;
@@ -640,7 +646,9 @@
 				3C6A913F1A0616600075BA1A /* UIImage+WebP.m in Sources */,
 				3C6A91341A0616600075BA1A /* NSData+ImageContentType.m in Sources */,
 				3C6328EE1A222FB8004955D4 /* AFSecurityPolicy.m in Sources */,
+				3C45EDD31A302B7800AFA062 /* PinLocationTableDataSource.swift in Sources */,
 				3C38021A1A25B776000B071E /* UIImage+UIImage_fixOrientation.m in Sources */,
+				3C45EDD11A3021ED00AFA062 /* LocationRequest.swift in Sources */,
 				3C6A91361A0616600075BA1A /* SDWebImageCompat.m in Sources */,
 				E09CB5B4199F97D6009B449E /* SWRevealViewController.m in Sources */,
 				3C4412211A0B760A00489E6E /* BaseNavigationController.swift in Sources */,

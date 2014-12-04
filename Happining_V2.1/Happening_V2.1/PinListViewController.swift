@@ -12,15 +12,7 @@ import AVFoundation
 import MediaPlayer
 import MobileCoreServices
 
-class PinListViewController: BaseViewController ,
-                            // Image Picker
-                            UIImagePickerControllerDelegate, UINavigationControllerDelegate ,
-                            // Text Input
-                            UITextViewDelegate, UITextFieldDelegate,
-                            // Custom
-                            LoginViewDelegate, LocationDelegate, PinListDelegate,
-                            // Collection View
-                            UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+class PinListViewController: BaseViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate , UITextViewDelegate, UITextFieldDelegate, LoginViewDelegate, LocationDelegate, PinListDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet var pinsTableView : UITableView!
     @IBOutlet var sidebarButton : UIBarButtonItem!
@@ -30,6 +22,7 @@ class PinListViewController: BaseViewController ,
     @IBOutlet weak var postTextView: UITextView!
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var tagCollectionView: UICollectionView!
+    @IBOutlet weak var locationTableView: UITableView!
     @IBOutlet weak var placeTagField: UITextField!
     @IBOutlet weak var postImageButton: UIButton!
     @IBOutlet weak var postVideoButton: UIButton!
@@ -66,6 +59,7 @@ class PinListViewController: BaseViewController ,
     var selectedVideo:NSData?
     
     let tableManager = PinTableViewDataSource()
+    let locationDataSource = PinLocationTableDataSource()
     let localityManager = PinLocalityComposerDataSource()
     
     let mediaPlayer = MPMoviePlayerController()
@@ -101,6 +95,11 @@ class PinListViewController: BaseViewController ,
         
         // Logged in
         isLogin = User.isLogin()
+        
+        if isLogin == true {
+            self.loginViewDidFinishWithUser(User.currentUser)
+        }
+        
         self.postScrollView.alpha = 0.0
         
         self.postTextView.scrollsToTop = false
@@ -116,11 +115,16 @@ class PinListViewController: BaseViewController ,
         self.pinsTableView.dataSource = self.tableManager
         self.tableManager.delegate = self
         
+        self.locationTableView.dataSource = self.locationDataSource
+        self.locationTableView.delegate = self.locationDataSource
+
         self.tagCollectionView.delegate = self.localityManager
         self.tagCollectionView.dataSource = self.localityManager
         self.localityManager.collectionView = self.tagCollectionView
         
         self.setUpPlayer()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("reloadPins:"), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     func setUpPlayer() {
@@ -150,9 +154,6 @@ class PinListViewController: BaseViewController ,
             self.performSegueWithIdentifier("signin", sender: self)
             isLogin = true
         } else {
-            UserLocation.manager.startUpdatingLocation()
-            UserLocation.manager.delegate = self
-            
             NSNotificationCenter.defaultCenter().addObserver(self,
                 selector: "onContentSizeChange:",
                 name: UIContentSizeCategoryDidChangeNotification,
@@ -190,6 +191,8 @@ class PinListViewController: BaseViewController ,
     ***********************************/
     
     func userLocationDidUpdateLocations(locations: [AnyObject]!) {
+        UserLocation.manager.locationManager.stopUpdatingLocation()
+        
         var loc:CLLocation = locations[locations.count-1] as CLLocation
         var locValue: CLLocationCoordinate2D = loc.coordinate
         println("location = \(locValue.latitude) \(locValue.longitude)")
@@ -199,6 +202,11 @@ class PinListViewController: BaseViewController ,
         var userId = User.currentUser.userID
         //self.api.getPins(latitude, longitude: longitude,distance: 100000, userId: userId, loadPins)
         self.loadPinsAt(latitude, longitude: longitude, page:1)
+   
+        var request = LocationRequest()
+        request.latitude = latitude
+        request.longitude = longitude
+        request.request(handleLocationResponse)
     }
     
     func userLocationDidUpdateGeoCoding(locality: [AnyObject]!) {
@@ -206,6 +214,28 @@ class PinListViewController: BaseViewController ,
 //            self.localityManager.locality = locality
 //            self.tagCollectionView.reloadData()
 //        }
+    }
+    
+    func handleLocationResponse(result:BaseResponse) {
+        var response = result as LocationResponse
+        self.locationDataSource.locations = response.locations
+        self.locationTableView.reloadData()
+    }
+    
+    func userDidSelectLocation(location:Location!) {
+        self.placeTagField.text = location.subLocality
+        self.placeTagField.resignFirstResponder()
+    }
+    
+    /**********************************
+    *
+    *   MARK: Location view collection
+    *
+    ***********************************/
+    
+    @IBAction func clearAllLocation(sender: AnyObject) {
+        self.localityManager.locality = []
+        self.tagCollectionView.reloadData()
     }
     
     /**********************************
@@ -324,6 +354,9 @@ class PinListViewController: BaseViewController ,
         } else if button == self.postPinButton {
             self.pinTypeChooser.hidden = !button.selected
         }
+        
+        self.postTextView.resignFirstResponder()
+        self.placeTagField.resignFirstResponder()
     }
     
     @IBAction func addNewImage(sender: AnyObject) {
@@ -469,20 +502,11 @@ class PinListViewController: BaseViewController ,
     func loginViewDidFinishWithUser(user: User?) {
         if user != nil {
             println("Finish login with \(user!.userName)")
+            UserLocation.manager.startUpdatingLocation()
+            UserLocation.manager.delegate = self
         } else {
             println("Login Error")
         }
-    }
-    
-    /**********************************
-    *
-    *   MARK: Location view collection
-    *
-    ***********************************/
-    
-    @IBAction func clearAllLocation(sender: AnyObject) {
-        self.localityManager.locality = []
-        self.tagCollectionView.reloadData()
     }
     
     /**********************************
@@ -493,6 +517,21 @@ class PinListViewController: BaseViewController ,
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         self.samplePinitle.text = (textView.text as NSString).stringByReplacingCharactersInRange(range, withString: text)
+
+        return true
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        
+        self.samplePinLocation.text = (textField.text as NSString).stringByReplacingCharactersInRange(range, withString: string)
+
+        if self.samplePinLocation.text != nil {
+            self.locationDataSource.searchWith(self.samplePinLocation.text!)
+        } else {
+            self.locationDataSource.tableData = self.locationDataSource.locations
+        }
+        
+        self.locationTableView.reloadData()
         return true
     }
     
@@ -508,6 +547,13 @@ class PinListViewController: BaseViewController ,
             self.samplePinLocation.text = textField.text
             textField.text = ""
         }
+        
+        self.locationTableView.hidden = true
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        self.locationTableView.hidden = false
+        return true
     }
     
     /**********************************

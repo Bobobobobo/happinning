@@ -15,6 +15,7 @@ let BASE_URL = "http://54.179.16.196:3000"
 let API_LOGIN = "/login"
 let API_GET_PINS = "/getPins"
 let API_ADD_PIN = "/addPin"
+let API_GET_LOCATION = "/getLocation"
 
 // MARK: API PARAMS
 
