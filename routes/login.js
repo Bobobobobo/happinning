@@ -66,7 +66,7 @@ function login(res, email, password, username, fbId, mongodb) {
 }
 
 module.exports = {
-	initialize: function(res, email, password, username, mongodb) {
-		login(res, email, password, username, mongodb);
+	initialize: function(res, email, password, username, fbId, mongodb) {
+		login(res, email, password, username, fbId, mongodb);
 	}
 };
