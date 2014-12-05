@@ -54,7 +54,8 @@ app.get('/pinDetail', function(req, res){
 });
 app.get('/users', user.list);
 app.get('/getPins',  function(req, res){
-	pins.initialize(res, req.query.latitude, req.query.longitude, req.query.userId, req.query.maxdistance, req.query.page, mongodb, ObjectID);
+	pins.initialize(res, req.query.latitude, req.query.longitude, req.query.userId, req.query.maxdistance, req.query.page,
+			req.query.place, req.query.uid, mongodb, ObjectID);
 });
 app.get('/getPin', function(req, res){
 	pin.initialize(res, mongodb, req.query.pinID, req.query.userId, ObjectID);
@@ -79,7 +80,8 @@ app.post('/addPin', function(req, res){
 	}
 });
 app.post('/login', function(req, res){
-	login.initialize(res, req.param('email', null), req.param('password', null), req.param('username', null), mongodb);
+	login.initialize(res, req.param('email', null), req.param('password', null),
+			req.param('username', null), req.param('fbId', null), mongodb);
 });
 app.get('/image/:id/:name', function(req, res){
 	fs.readFile(require('./dir').dir + req.params.id + '/' + req.params.name, function (err, data) {
