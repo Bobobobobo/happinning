@@ -5,7 +5,7 @@
 var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
-function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID) {
+function getPins(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID) {
 	if (latitude == null || latitude === undefined || latitude === ''||
 		longitude === null || longitude === undefined || longitude === '') {
 		res.send(messageBuilder.buildError('no latitude, longitude'));
@@ -105,6 +105,14 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 		{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
 	}};
 	
+	if (uid !== null && uid !== undefined && uid !== '') {
+		query.userId = uid;
+	}
+	
+	if (place !== null && place !== undefined && place !== '') {
+		
+	}
+	
 	if (page > 1) {
 		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
 	}else {
@@ -121,7 +129,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, O
 }
 
 module.exports = {
-	initialize: function(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID) {
-		getPins(res, latitude, longitude, userId, maxDistance, page, mongodb, ObjectID);
+	initialize: function(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID) {
+		getPins(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID);
 	}
 };
