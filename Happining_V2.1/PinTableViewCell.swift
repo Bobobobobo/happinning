@@ -56,10 +56,12 @@ class PinTableViewCell: UITableViewCell {
     
     func playPreviewVideo(sender: AnyObject) {
         var tapGesture = sender as UITapGestureRecognizer
-        if !self.mediaPlayer.view.hidden && tapGesture.state == .Ended {
+        if self.mediaPlayer.contentURL != nil {
             if self.mediaPlayer.playbackState == .Playing {
+                self.mediaPlayer.view.alpha = 0.0
                 self.mediaPlayer.stop()
             } else {
+                self.mediaPlayer.view.alpha = 1.0
                 self.mediaPlayer.play()
             }
         }

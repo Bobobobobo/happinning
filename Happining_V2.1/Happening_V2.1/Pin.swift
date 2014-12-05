@@ -46,6 +46,7 @@ class Pin {
     var location: Location
     var pinName: String?
     var distance:Float = 0 // in kilometers
+    var height:CGFloat = 0.0
     
     init(pinDict: NSDictionary) {
         if let tempPinId = pinDict["_id"] as? String {

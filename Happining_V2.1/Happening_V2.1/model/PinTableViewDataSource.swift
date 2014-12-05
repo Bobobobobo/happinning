@@ -56,7 +56,11 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         
         cell.locaionLabel?.text = locality
         cell.timeLabel?.text = pin.uploadDate.formattedAsTimeAgo()
-        cell.mediaPlayer.stop()
+
+        if cell.mediaPlayer.playbackState == .Playing {
+            cell.mediaPlayer.stop()
+        }
+        
         cell.mediaPlayer.view.hidden = true
 
         if pin.distance >= 0.1 {
@@ -81,6 +85,7 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
             } else if pin.videoURL != nil && strlen(pin.videoURL!) > 0 {
                 cell.mediaPlayer.contentURL = NSURL(string: "\(baseURL)\(pin.videoURL!)")
                 cell.mediaPlayer.view.hidden = false
+                cell.mediaPlayer.view.alpha = 0.0
                 cell.mediaPlayer.prepareToPlay()
                 cell.pinImage?.contentMode = .ScaleAspectFit
             }
@@ -94,8 +99,8 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         cell.likeButton?.selected = pin.isLike
         
         // Make sure the constraints have been added to this cell, since it may have just been created from scratch
-        cell.setNeedsUpdateConstraints()
-        cell.updateConstraintsIfNeeded()
+        //cell.setNeedsUpdateConstraints()
+        //cell.updateConstraintsIfNeeded()
         
         return cell
     }
@@ -116,8 +121,15 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        var pin = self.pins[indexPath.row]
+        
+        if pin.height > 0 {
+            return pin.height
+        }
+        
         var cell = self.configureCellFor(tableView, atIndexPaht: indexPath)
-        return self.calculateHeightForConfiguredSizingCell(cell)
+        pin.height = self.calculateHeightForConfiguredSizingCell(cell)
+        return pin.height
         //return UITableViewAutomaticDimension
     }
     
