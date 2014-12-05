@@ -34,7 +34,7 @@ class PostPinRequest: BaseRequest {
         var jsonData = NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.allZeros, error: nil)
         
         var params = NSMutableDictionary(objectsAndKeys:
-            NSString(data: jsonData!, encoding: NSUTF8StringEncoding)!, "data"
+            NSString(data: jsonData!, encoding: NSUTF8StringEncoding)!, PARAM_DATA
         )
         
         if self.pinImage != nil {
@@ -66,5 +66,27 @@ class PostPinRequest: BaseRequest {
     
     override func responseClass() -> AnyClass {
         return PinResponse.self
+    }
+}
+
+class PinLikeRequest: BaseRequest {
+    var userID:String = ""
+    var pinID:String = ""
+    var isLike = false
+    
+    override func urlRequest() -> NSURLRequest? {
+        var data = NSDictionary(objectsAndKeys:
+            self.userID, PARAM_USER_ID,
+            Int(self.isLike), PARAM_LIKE
+        )
+        
+        var jsonData = NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.allZeros, error: nil)
+        
+        var params = NSDictionary(objectsAndKeys:
+            NSString(data: jsonData!, encoding: NSUTF8StringEncoding)!, PARAM_DATA,
+            self.pinID, PARAM_PIN_ID
+        )
+        
+        return API.requestPostWith(BASE_URL, path:API_LIKE, parameters: params)
     }
 }

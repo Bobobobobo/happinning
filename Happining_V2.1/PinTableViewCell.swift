@@ -9,6 +9,11 @@
 import UIKit
 import MediaPlayer
 
+protocol PinTableViewCellDelegate : NSObjectProtocol {
+    func pinCellLikeAtCell(cell:PinTableViewCell!)
+    func pinCellCommentAtCell(cell:PinTableViewCell!)
+}
+
 class PinTableViewCell: UITableViewCell {
 
     @IBOutlet var profileImage: UIImageView?
@@ -28,6 +33,8 @@ class PinTableViewCell: UITableViewCell {
     @IBOutlet var distanceLabel: UILabel?
     
     let mediaPlayer = MPMoviePlayerController()
+
+    var delegate:PinTableViewCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,6 +62,18 @@ class PinTableViewCell: UITableViewCell {
             } else {
                 self.mediaPlayer.play()
             }
+        }
+    }
+    
+    @IBAction func likeAction(sender: AnyObject) {
+        if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinCellLikeAtCell:")) {
+            self.delegate!.pinCellLikeAtCell(self)
+        }
+    }
+    
+    @IBAction func commentAction(sender: AnyObject) {
+        if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinCellCommentAtCell:")) {
+            self.delegate!.pinCellCommentAtCell(self)
         }
     }
 }

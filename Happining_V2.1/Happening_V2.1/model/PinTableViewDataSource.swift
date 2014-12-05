@@ -11,19 +11,20 @@ import UIKit
 protocol PinListDelegate : NSObjectProtocol {
     func pinListShouldHideComposerView()
     func pinListShouldLoadMore()
+    func pinListDidEndScrolling()
 }
 
-class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegate {
+class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegate, PinTableViewCellDelegate {
     
     let kCellIdentifier = "PinCell"
 
     var pins:[Pin] = []
 
     var hasMore = false
-    var isDragging = false
+    var isScrolling = false
     var shouldHidePost = false
     var beginPoint = CGPointZero
-    
+    var tableView:UITableView?
     var delegate:PinListDelegate?
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -38,6 +39,7 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
     func configureCellFor(tableView:UITableView, atIndexPaht indexPath: NSIndexPath) -> UITableViewCell {
         //Process result cell in the tableView
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier) as PinTableViewCell
+        cell.delegate = self
         
         var pin = self.pins[indexPath.row]
         
@@ -89,6 +91,8 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!))
         cell.userName?.text = pin.userName
         
+        cell.likeButton?.selected = pin.isLike
+        
         // Make sure the constraints have been added to this cell, since it may have just been created from scratch
         cell.setNeedsUpdateConstraints()
         cell.updateConstraintsIfNeeded()
@@ -118,28 +122,36 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
     }
     
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-        isDragging = true
+        isScrolling = true
         beginPoint = scrollView.contentOffset
     }
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        isDragging = false
-        endingScroll(scrollView)
+        if !decelerate {
+            isScrolling = false
+            endingScroll(scrollView)
+        }
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        isDragging = false
+        isScrolling = false
         endingScroll(scrollView)
     }
     
     func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
-        isDragging = false
+        isScrolling = false
         endingScroll(scrollView)
     }
     
     func endingScroll(scrollView: UIScrollView) {
-        if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldHideComposerView")) {
-            self.delegate!.pinListShouldHideComposerView()
+        if self.delegate != nil {
+            if self.delegate!.respondsToSelector(Selector("pinListShouldHideComposerView")) {
+                self.delegate!.pinListShouldHideComposerView()
+            }
+            
+            if self.delegate!.respondsToSelector(Selector("pinListDidEndScrolling")) {
+                self.delegate!.pinListDidEndScrolling()
+            }
         }
         
         //playVideo(scrollView)
@@ -171,7 +183,7 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         var inset:UIEdgeInsets = aScrollView.contentInset
         var y:CGFloat = offset.y + bounds.size.height - inset.bottom
         var h:CGFloat = size.height
-        var reload_distance:CGFloat = 100
+        var reload_distance:CGFloat = -100
         
         if((y > (h + reload_distance)) && hasMore) {
             if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinListShouldLoadMore")) {
@@ -180,5 +192,27 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         } else if beginPoint.y < offset.y {
             
         }
+    }
+
+    func pinCellLikeAtCell(cell:PinTableViewCell!) {
+        var indexPath:NSIndexPath! = self.tableView?.indexPathForCell(cell)!
+        var pin = self.pins[indexPath.row]
+        
+        pin.isLike = !pin.isLike
+        
+        cell.likeButton?.selected = pin.isLike
+        
+        var request = PinLikeRequest()
+        request.pinID = pin.pinId
+        request.isLike = pin.isLike
+        request.userID = User.currentUser.userID!
+        request.request { (result) -> Void in
+            
+        }
+    }
+    
+    func pinCellCommentAtCell(cell:PinTableViewCell!) {
+        var indexPath:NSIndexPath! = self.tableView?.indexPathForCell(cell)!
+        var pin = self.pins[indexPath.row]
     }
 }

@@ -113,6 +113,7 @@ class PinListViewController: BaseViewController , UIImagePickerControllerDelegat
         
         self.pinsTableView.delegate = self.tableManager
         self.pinsTableView.dataSource = self.tableManager
+        self.tableManager.tableView = self.pinsTableView
         self.tableManager.delegate = self
         
         self.locationTableView.dataSource = self.locationDataSource
@@ -420,6 +421,10 @@ class PinListViewController: BaseViewController , UIImagePickerControllerDelegat
         }
     }
     
+    func pinListDidEndScrolling() {
+        self.pinsTableView.reloadData()
+    }
+    
     /**********************************
     *
     *   MARK: Load Pin
@@ -472,7 +477,10 @@ class PinListViewController: BaseViewController , UIImagePickerControllerDelegat
             self.noPinView.hidden = (self.tableManager.pins.count > 0)
         }
         
-        self.pinsTableView.reloadData()
+        if !self.tableManager.isScrolling {
+            self.pinsTableView.reloadData()
+        }
+        
         self.refreshControl.endRefreshing()
     }
 

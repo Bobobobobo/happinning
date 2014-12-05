@@ -330,10 +330,10 @@
                                                         <rect key="frame" x="10" y="105" width="300" height="249"/>
                                                     </variation>
                                                 </imageView>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fo6-Le-odj" userLabel="LikeView">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fo6-Le-odj" userLabel="LikeView" customClass="UIControl">
                                                     <rect key="frame" x="5" y="319" width="155" height="40"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IgN-1e-eV3">
+                                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IgN-1e-eV3">
                                                             <rect key="frame" x="8" y="5" width="46" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="46" id="NvG-FT-Yip"/>
@@ -345,6 +345,7 @@
                                                                 <color key="titleColor" red="0.76862745099999996" green="0.098039215690000001" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
+                                                            <state key="selected" image="icon_like_selected"/>
                                                             <variation key="widthClass=compact" fixedFrame="YES">
                                                                 <rect key="frame" x="152" y="0.0" width="30" height="30"/>
                                                             </variation>
@@ -374,11 +375,14 @@
                                                         <constraint firstItem="IgN-1e-eV3" firstAttribute="leading" secondItem="fo6-Le-odj" secondAttribute="leading" constant="8" id="rOe-Qg-xpi"/>
                                                         <constraint firstItem="IgN-1e-eV3" firstAttribute="top" secondItem="fo6-Le-odj" secondAttribute="top" constant="5" id="vPK-q3-XjS"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <action selector="likeAction:" destination="UMB-um-tlj" eventType="touchUpInside" id="fJd-dg-jIs"/>
+                                                    </connections>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mux-2x-TuW" userLabel="CommentView">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mux-2x-TuW" userLabel="CommentView" customClass="UIControl">
                                                     <rect key="frame" x="160" y="319" width="155" height="40"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7u-kP-XiR">
+                                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W7u-kP-XiR">
                                                             <rect key="frame" x="8" y="5" width="42" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="42" id="pys-86-18E"/>
@@ -412,6 +416,9 @@
                                                     <variation key="widthClass=compact" misplaced="YES">
                                                         <rect key="frame" x="200" y="362" width="110" height="30"/>
                                                     </variation>
+                                                    <connections>
+                                                        <action selector="commentAction:" destination="UMB-um-tlj" eventType="touchUpInside" id="7Ce-Kb-Qs9"/>
+                                                    </connections>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F5L-Tl-1Fs">
                                                     <rect key="frame" x="79" y="25" width="198" height="21"/>
@@ -508,6 +515,7 @@
                                             <outlet property="commentView" destination="mux-2x-TuW" id="Hyi-c2-TUS"/>
                                             <outlet property="distanceLabel" destination="B0c-Q7-cjq" id="WVY-SY-d89"/>
                                             <outlet property="imageHeight" destination="yFe-I8-s6A" id="S6h-da-CQT"/>
+                                            <outlet property="likeButton" destination="IgN-1e-eV3" id="1Za-Hg-kg1"/>
                                             <outlet property="likeView" destination="fo6-Le-odj" id="Jff-SA-jln"/>
                                             <outlet property="locaionLabel" destination="F5L-Tl-1Fs" id="1wj-83-DPN"/>
                                             <outlet property="pinImage" destination="ADI-uR-BfS" id="b7x-R1-zrE"/>
@@ -876,7 +884,7 @@
                                                                     <rect key="frame" x="10" y="76" width="300" height="21"/>
                                                                 </variation>
                                                             </label>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="amT-E5-Hfv" userLabel="PinImage">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="amT-E5-Hfv" userLabel="PinImage">
                                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" id="Fnu-T4-Yoo"/>
@@ -1483,6 +1491,7 @@
         <image name="icon_image_act" width="48" height="40"/>
         <image name="icon_image_inact" width="48" height="40"/>
         <image name="icon_like_inact" width="64" height="54"/>
+        <image name="icon_like_selected" width="64" height="54"/>
         <image name="icon_no_pin" width="108" height="124"/>
         <image name="icon_pin_act" width="42" height="48"/>
         <image name="icon_pin_inact" width="42" height="48"/>

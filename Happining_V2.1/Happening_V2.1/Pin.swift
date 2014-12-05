@@ -56,7 +56,7 @@ class Pin {
         self.text = pinDict["text"] as String
         var tempUploadDate: Double = pinDict["uploadDate"] as Double
         self.uploadDate = NSDate(timeIntervalSince1970: NSTimeInterval(tempUploadDate*0.001))
-        self.thumbURL = pinDict["thumb"] as String
+        self.thumbURL = pinDict["thumb"] as? String
         self.imageURL = pinDict["image"] as? String
         self.videoURL = pinDict["video"] as? String
         self.ratio = pinDict["ratio"] as Double
