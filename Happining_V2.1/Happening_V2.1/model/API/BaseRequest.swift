@@ -14,8 +14,11 @@ let BASE_URL = "http://54.179.16.196:3000"
 // MARK: API FUNCTIONS
 let API_LOGIN = "/login"
 let API_GET_PINS = "/getPins"
+let API_GET_PIN = "/getPin"
 let API_ADD_PIN = "/addPin"
 let API_GET_LOCATION = "/getLocation"
+let API_GET_COMMENTS = "/getComments"
+let API_ADD_COMMENT = "/addComment"
 let API_LIKE = "/like"
 
 // MARK: API PARAMS
@@ -45,6 +48,7 @@ let PARAM_IMAGE = "image"
 let PARAM_VIDEO = "video"
 let PARAM_THUMBNAIL = "thumb"
 let PARAM_LIKE = "like"
+let PARAM_COMMENT = "comment"
 let PARAM_DATA = "data"
 let PARAM_PIN_ID = "pinID"
 

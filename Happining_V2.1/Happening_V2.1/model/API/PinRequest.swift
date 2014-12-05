@@ -34,6 +34,27 @@ class PinRequest: BaseRequest {
     }
 }
 
+class PinDetailRequest: BaseRequest {
+    
+    var userID:String = ""
+    var pinID:String = ""
+    
+    override func urlRequest() -> NSURLRequest? {
+        var params = NSDictionary(objectsAndKeys:
+            self.pinID, PARAM_PIN_ID,
+            self.userID, PARAM_USER_ID
+        )
+        
+        println("Param \(params)")
+        
+        return API.requestWith(BASE_URL, path:API_GET_PIN, parameters: params)
+    }
+    
+    override func responseClass() -> AnyClass {
+        return PinResponse.self
+    }
+}
+
 class PinResponse: BaseResponse {
     var pins:[Pin] = []
 
@@ -43,29 +64,36 @@ class PinResponse: BaseResponse {
         var pinfromResult:NSArray? = JSON["pins"] as? NSArray
         //println(pinfromResult)
         var pinList: [Pin] = [];
+        
         if pinfromResult != nil {
             for pinDict in pinfromResult! {
                 //println(_stdlib_getTypeName(pinDict))
                 var pin:Pin?
                 if pinDict is NSDictionary {
                     pin = Pin(pinDict: pinDict as NSDictionary)
-                    
-                    var request = self.request as? PinRequest
-                    if request != nil {
-                        var pinLocation = CLLocation(latitude: pin!.location.coordinate.latitude, longitude: pin!.location.coordinate.longitude)
-                        var currentLocation = CLLocation(latitude: request!.latitude, longitude: request!.longitude)
-                        //println("pinLocation \(pinLocation)")
-                        //println("currentLocation \(currentLocation)")
-                        var distanceInMeters = currentLocation.distanceFromLocation(pinLocation)
-                        //println("distanceInMeters \(distanceInMeters)")
-                        pin!.distance = Float(distanceInMeters*0.001)
-                    }
-                    
+                    addDictanceToPin(pin)
                     pinList.append(pin!)
                 }
             }
+        } else if self.request.isKindOfClass(PinDetailRequest.self) {
+            var pin = Pin(pinDict: JSON as NSDictionary)
+            addDictanceToPin(pin)
+            pinList.append(pin)
         }
         
         self.pins = pinList
+    }
+    
+    func addDictanceToPin(pin:Pin?) {
+        var request = self.request as? PinRequest
+        if request != nil {
+            var pinLocation = CLLocation(latitude: pin!.location.coordinate.latitude, longitude: pin!.location.coordinate.longitude)
+            var currentLocation = CLLocation(latitude: request!.latitude, longitude: request!.longitude)
+            //println("pinLocation \(pinLocation)")
+            //println("currentLocation \(currentLocation)")
+            var distanceInMeters = currentLocation.distanceFromLocation(pinLocation)
+            //println("distanceInMeters \(distanceInMeters)")
+            pin!.distance = Float(distanceInMeters*0.001)
+        }
     }
 }

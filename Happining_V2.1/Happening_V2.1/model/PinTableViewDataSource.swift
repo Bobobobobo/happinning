@@ -96,7 +96,13 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
         cell.profileImage?.sd_setImageWithURL(NSURL(string: pin.userImageURL.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!))
         cell.userName?.text = pin.userName
         
-        cell.likeButton?.selected = pin.isLike
+        updateLikeAtCell(cell, withPin: pin)
+        
+        if pin.commentsNum > 0 {
+            cell.commentLabel.text = NSString(format: "%d Comment%@", pin.commentsNum, (pin.commentsNum > 1 ? "s" : ""))
+        } else {
+            cell.commentLabel.text = "Comment"
+        }
         
         // Make sure the constraints have been added to this cell, since it may have just been created from scratch
         //cell.setNeedsUpdateConstraints()
@@ -106,10 +112,17 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
     }
     
     func calculateHeightForConfiguredSizingCell(cell:UITableViewCell) -> CGFloat {
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
-        var size = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-        return size.height
+//        cell.setNeedsLayout()
+//        cell.layoutIfNeeded()
+//        var size = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+//        return size.height
+        
+        var pinCell = cell as PinTableViewCell
+        var attrText = NSAttributedString(string: pinCell.pinTitle.text!, attributes: [NSFontAttributeName : pinCell.pinTitle.font])
+        
+        var rect:CGRect = attrText.boundingRectWithSize(CGSizeMake(CGRectGetWidth(pinCell.pinTitle.frame), CGFloat.max), options: .UsesLineFragmentOrigin, context: nil)
+
+        return 143 + CGRectGetHeight(rect) + pinCell.imageHeight!.constant
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -205,21 +218,37 @@ class PinTableViewDataSource:NSObject, UITableViewDataSource, UITableViewDelegat
             
         }
     }
+    
+    func updateLikeAtCell(cell:PinTableViewCell!, withPin pin:Pin) {
+        if pin.likesNum > 0 {
+            cell.likeLabel.text = NSString(format: "%d Like%@", pin.likesNum, (pin.likesNum > 1 ? "s" : ""))
+        } else {
+            cell.likeLabel.text = "Like"
+        }
+        
+        cell.likeButton?.selected = pin.isLike
+    }
 
     func pinCellLikeAtCell(cell:PinTableViewCell!) {
         var indexPath:NSIndexPath! = self.tableView?.indexPathForCell(cell)!
         var pin = self.pins[indexPath.row]
         
         pin.isLike = !pin.isLike
-        
-        cell.likeButton?.selected = pin.isLike
+        pin.likesNum += (pin.isLike ? 1 : -1)
+
+        updateLikeAtCell(cell, withPin: pin)
         
         var request = PinLikeRequest()
         request.pinID = pin.pinId
         request.isLike = pin.isLike
         request.userID = User.currentUser.userID!
         request.request { (result) -> Void in
-            
+            if result.error == nil {
+                pin.isLike = !pin.isLike
+                pin.likesNum += (pin.isLike ? 1 : -1)
+                
+                self.updateLikeAtCell(cell, withPin: pin)
+            }
         }
     }
     

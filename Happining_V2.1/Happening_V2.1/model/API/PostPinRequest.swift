@@ -90,3 +90,23 @@ class PinLikeRequest: BaseRequest {
         return API.requestPostWith(BASE_URL, path:API_LIKE, parameters: params)
     }
 }
+
+class PostCommentRequest: PinLikeRequest {
+    var text:String = ""
+
+    override func urlRequest() -> NSURLRequest? {
+        var data = NSDictionary(objectsAndKeys:
+            self.userID, PARAM_USER_ID,
+            self.text, PARAM_COMMENT
+        )
+        
+        var jsonData = NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.allZeros, error: nil)
+        
+        var params = NSDictionary(objectsAndKeys:
+            NSString(data: jsonData!, encoding: NSUTF8StringEncoding)!, PARAM_DATA,
+            self.pinID, PARAM_PIN_ID
+        )
+        
+        return API.requestPostWith(BASE_URL, path:API_ADD_COMMENT, parameters: params)
+    }
+}

@@ -16,15 +16,17 @@ protocol PinTableViewCellDelegate : NSObjectProtocol {
 
 class PinTableViewCell: UITableViewCell {
 
-    @IBOutlet var profileImage: UIImageView?
-    @IBOutlet var pinTitle: UILabel?
-    @IBOutlet var userName: UILabel?
-    @IBOutlet var pintypeImage: UIImageView?
-    @IBOutlet var pinImage: UIImageView?
-    @IBOutlet var likeButton: UIButton?
-    @IBOutlet var commentButton: UIButton?
-    @IBOutlet var likeView: UIView?
-    @IBOutlet var commentView: UIView?
+    @IBOutlet var profileImage: UIImageView!
+    @IBOutlet var pinTitle: UILabel!
+    @IBOutlet var userName: UILabel!
+    @IBOutlet var pintypeImage: UIImageView!
+    @IBOutlet var pinImage: UIImageView!
+    @IBOutlet var likeButton: UIButton!
+    @IBOutlet var commentButton: UIButton!
+    @IBOutlet var likeView: UIView!
+    @IBOutlet var likeLabel: UILabel!
+    @IBOutlet var commentView: UIView!
+    @IBOutlet var commentLabel: UILabel!
     
     @IBOutlet var imageHeight:NSLayoutConstraint?
 
