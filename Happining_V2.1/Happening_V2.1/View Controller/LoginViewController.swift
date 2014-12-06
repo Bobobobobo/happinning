@@ -233,7 +233,7 @@ class LoginViewController: BaseViewController, LoginCollectionViewCellDelegate, 
                     
                     if self.delegate != nil {
                         var delegate = self.delegate!
-                        if delegate.respondsToSelector(Selector("loginViewDidFinishWithUser:Password:Username:")) {
+                        if delegate.respondsToSelector(Selector("loginViewDidFinishWithUser:")) {
                             delegate.loginViewDidFinishWithUser(response.user!)
                         }
                     }

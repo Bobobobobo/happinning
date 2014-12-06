@@ -9,17 +9,24 @@
 import UIKit
 import MediaPlayer
 
+protocol PinTableViewCellDelegate : NSObjectProtocol {
+    func pinCellLikeAtCell(cell:PinTableViewCell!)
+    func pinCellCommentAtCell(cell:PinTableViewCell!)
+}
+
 class PinTableViewCell: UITableViewCell {
 
-    @IBOutlet var profileImage: UIImageView?
-    @IBOutlet var pinTitle: UILabel?
-    @IBOutlet var userName: UILabel?
-    @IBOutlet var pintypeImage: UIImageView?
-    @IBOutlet var pinImage: UIImageView?
-    @IBOutlet var likeButton: UIButton?
-    @IBOutlet var commentButton: UIButton?
-    @IBOutlet var likeView: UIView?
-    @IBOutlet var commentView: UIView?
+    @IBOutlet var profileImage: UIImageView!
+    @IBOutlet var pinTitle: UILabel!
+    @IBOutlet var userName: UILabel!
+    @IBOutlet var pintypeImage: UIImageView!
+    @IBOutlet var pinImage: UIImageView!
+    @IBOutlet var likeButton: UIButton!
+    @IBOutlet var commentButton: UIButton!
+    @IBOutlet var likeView: UIView!
+    @IBOutlet var likeLabel: UILabel!
+    @IBOutlet var commentView: UIView!
+    @IBOutlet var commentLabel: UILabel!
     
     @IBOutlet var imageHeight:NSLayoutConstraint?
 
@@ -28,6 +35,8 @@ class PinTableViewCell: UITableViewCell {
     @IBOutlet var distanceLabel: UILabel?
     
     let mediaPlayer = MPMoviePlayerController()
+
+    var delegate:PinTableViewCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -49,12 +58,26 @@ class PinTableViewCell: UITableViewCell {
     
     func playPreviewVideo(sender: AnyObject) {
         var tapGesture = sender as UITapGestureRecognizer
-        if !self.mediaPlayer.view.hidden && tapGesture.state == .Ended {
+        if self.mediaPlayer.contentURL != nil {
             if self.mediaPlayer.playbackState == .Playing {
+                self.mediaPlayer.view.alpha = 0.0
                 self.mediaPlayer.stop()
             } else {
+                self.mediaPlayer.view.alpha = 1.0
                 self.mediaPlayer.play()
             }
+        }
+    }
+    
+    @IBAction func likeAction(sender: AnyObject) {
+        if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinCellLikeAtCell:")) {
+            self.delegate!.pinCellLikeAtCell(self)
+        }
+    }
+    
+    @IBAction func commentAction(sender: AnyObject) {
+        if self.delegate != nil && self.delegate!.respondsToSelector(Selector("pinCellCommentAtCell:")) {
+            self.delegate!.pinCellCommentAtCell(self)
         }
     }
 }

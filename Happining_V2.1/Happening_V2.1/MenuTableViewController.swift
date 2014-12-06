@@ -10,7 +10,7 @@ import UIKit
 
 class MenuTableViewController: UITableViewController {
 
-    @IBOutlet var menuTableView : UITableView?
+    @IBOutlet var menuTableView : UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

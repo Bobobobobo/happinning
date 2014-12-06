@@ -60,6 +60,10 @@
 		3C84EE451A0772D300D78AC8 /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE441A0772D300D78AC8 /* APIController.swift */; };
 		3C84EE471A07730E00D78AC8 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE461A07730E00D78AC8 /* BaseRequest.swift */; };
 		3C84EE491A07732E00D78AC8 /* PinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C84EE481A07732E00D78AC8 /* PinRequest.swift */; };
+		3CAAA2071A3156B1009E6BC1 /* PinListViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAAA2061A3156B1009E6BC1 /* PinListViewController+Extension.swift */; };
+		3CAAA2091A319ACE009E6BC1 /* CommentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAAA2081A319ACE009E6BC1 /* CommentRequest.swift */; };
+		3CAAA20B1A319C5F009E6BC1 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAAA20A1A319C5F009E6BC1 /* Comment.swift */; };
+		3CAAA20D1A31A049009E6BC1 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAAA20C1A31A049009E6BC1 /* CommentCell.swift */; };
 		3CC05ED61A25E308001BC277 /* PinIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC05ED51A25E308001BC277 /* PinIconCell.swift */; };
 		E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */; };
 		E04215E7199A1C3100551C1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04215E6199A1C3100551C1D /* AppDelegate.swift */; };
@@ -173,6 +177,10 @@
 		3C84EE441A0772D300D78AC8 /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		3C84EE461A07730E00D78AC8 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		3C84EE481A07732E00D78AC8 /* PinRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinRequest.swift; sourceTree = "<group>"; };
+		3CAAA2061A3156B1009E6BC1 /* PinListViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PinListViewController+Extension.swift"; sourceTree = "<group>"; };
+		3CAAA2081A319ACE009E6BC1 /* CommentRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentRequest.swift; sourceTree = "<group>"; };
+		3CAAA20A1A319C5F009E6BC1 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		3CAAA20C1A31A049009E6BC1 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		3CC05ED51A25E308001BC277 /* PinIconCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinIconCell.swift; sourceTree = "<group>"; };
 		E00876C119A4EFDA00E9C835 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		E04215E1199A1C3100551C1D /* Happining_V2.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Happining_V2.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,6 +272,8 @@
 			children = (
 				09EA10FA19AF56AA0086D4DF /* Location.swift */,
 				E0421605199A1E0700551C1D /* Pin.swift */,
+				3CAAA20A1A319C5F009E6BC1 /* Comment.swift */,
+				3CAAA2061A3156B1009E6BC1 /* PinListViewController+Extension.swift */,
 				3C38021B1A25C7B4000B071E /* PinTableViewDataSource.swift */,
 				3C45EDD21A302B7800AFA062 /* PinLocationTableDataSource.swift */,
 				3C38021D1A25CC11000B071E /* PinLocalityComposerDataSource.swift */,
@@ -359,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				E0ACCB0219C9B0B200CD34F7 /* PinTableViewCell.swift */,
+				3CAAA20C1A31A049009E6BC1 /* CommentCell.swift */,
 				3C3802151A25AF71000B071E /* Location Cell */,
 				3C6A910E1A05EF380075BA1A /* Login */,
 				3CC05ED51A25E308001BC277 /* PinIconCell.swift */,
@@ -423,6 +434,7 @@
 				3C33E0371A20540F000952DA /* PostPinRequest.swift */,
 				3C45EDD01A3021ED00AFA062 /* LocationRequest.swift */,
 				3C3836FC1A09F96300741FEA /* LoginRequest.swift */,
+				3CAAA2081A319ACE009E6BC1 /* CommentRequest.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -619,6 +631,7 @@
 				094E63AC19E18D89008325CA /* SigninViewController.swift in Sources */,
 				3C3836FD1A09F96300741FEA /* LoginRequest.swift in Sources */,
 				3C6A91011A05D6720075BA1A /* LoginViewController.swift in Sources */,
+				3CAAA2091A319ACE009E6BC1 /* CommentRequest.swift in Sources */,
 				3C84EE491A07732E00D78AC8 /* PinRequest.swift in Sources */,
 				3C6A913A1A0616600075BA1A /* SDWebImageManager.m in Sources */,
 				3C6A91371A0616600075BA1A /* SDWebImageDecoder.m in Sources */,
@@ -635,6 +648,7 @@
 				3C6328ED1A222FB8004955D4 /* AFNetworkReachabilityManager.m in Sources */,
 				3C6A913B1A0616600075BA1A /* SDWebImagePrefetcher.m in Sources */,
 				3CC05ED61A25E308001BC277 /* PinIconCell.swift in Sources */,
+				3CAAA2071A3156B1009E6BC1 /* PinListViewController+Extension.swift in Sources */,
 				3C6A91411A0616600075BA1A /* UIImageView+WebCache.m in Sources */,
 				E0F2DAD8199A26C600132CDD /* MapViewController.swift in Sources */,
 				3C3836FF1A0A104B00741FEA /* User.swift in Sources */,
@@ -660,6 +674,7 @@
 				094E63AE19E192D9008325CA /* SigninPageContentViewcontroller.swift in Sources */,
 				3C6A913E1A0616600075BA1A /* UIImage+MultiFormat.m in Sources */,
 				3C6A913C1A0616600075BA1A /* UIButton+WebCache.m in Sources */,
+				3CAAA20B1A319C5F009E6BC1 /* Comment.swift in Sources */,
 				3C6328F01A222FB8004955D4 /* AFURLRequestSerialization.m in Sources */,
 				E00876C219A4EFDA00E9C835 /* MenuTableViewController.swift in Sources */,
 				3C33E0381A20540F000952DA /* PostPinRequest.swift in Sources */,
@@ -670,6 +685,7 @@
 				E0421608199A1FB500551C1D /* PinDetailViewController.swift in Sources */,
 				E0421606199A1E0700551C1D /* Pin.swift in Sources */,
 				3C33E03C1A20DD8A000952DA /* UIImage+Resize.m in Sources */,
+				3CAAA20D1A31A049009E6BC1 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

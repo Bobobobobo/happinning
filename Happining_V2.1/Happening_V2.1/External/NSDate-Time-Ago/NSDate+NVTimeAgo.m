@@ -105,6 +105,7 @@
 {
     //Check by matching the date strings
     NSDateFormatter *dateComparisonFormatter = [[NSDateFormatter alloc] init];
+    dateComparisonFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateComparisonFormatter setDateFormat:@"yyyy-MM-dd"];
     
     //Return true if they are the same
@@ -216,7 +217,8 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
     //Format
     [dateFormatter setDateFormat:@"h:mm a"];
     return [NSString stringWithFormat:@"Yesterday at %@", [dateFormatter stringFromDate:self]];
@@ -228,6 +230,7 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
 
     //Format
     [dateFormatter setDateFormat:@"EEEE 'at' h:mm a"];
@@ -240,7 +243,8 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
     //Format
     [dateFormatter setDateFormat:@"MMMM d 'at' h:mm a"];
     return [dateFormatter stringFromDate:self];
@@ -252,7 +256,8 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
     //Format
     [dateFormatter setDateFormat:@"MMMM d"];
     return [dateFormatter stringFromDate:self];
@@ -264,7 +269,8 @@
 {
     //Create date formatter
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
     //Format
     [dateFormatter setDateFormat:@"LLLL d, yyyy"];
     return [dateFormatter stringFromDate:self];
