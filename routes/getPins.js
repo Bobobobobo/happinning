@@ -22,6 +22,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 			                function(callback){
 			                	if (userId === null || userId === undefined) {
 			        				record.isLike = false;
+			        				callback();
 			        			}else {
 			        				likes.findOne(
 			        						{_id: ''+record._id, 'likes.userId': userId},
