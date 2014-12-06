@@ -109,9 +109,9 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 		page = 1;
 	}
 	
-	if (latitude == null && latitude === undefined && latitude === ''||
-			longitude === null && longitude === undefined && longitude === '' || 
-			uid === null && uid === undefined && uid === '' ||
+	if (latitude == null && latitude === undefined && latitude === ''&&
+			longitude === null && longitude === undefined && longitude === '' && 
+			uid === null && uid === undefined && uid === '' &&
 			sublocality === null && sublocality === undefined && sublocality === '') {
 		res.send(messageBuilder.buildError('invalid input'));
 		return;
