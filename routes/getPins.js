@@ -5,7 +5,7 @@
 var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
-function getPins(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID) {
+function getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID) {
 	if (latitude == null || latitude === undefined || latitude === ''||
 		longitude === null || longitude === undefined || longitude === '') {
 		res.send(messageBuilder.buildError('no latitude, longitude'));
@@ -109,8 +109,8 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, place, uid
 		query.userId = uid;
 	}
 	
-	if (place !== null && place !== undefined && place !== '') {
-		
+	if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
+		query = {"location.subLocality" : sublocality };
 	}
 	
 	if (page > 1) {
@@ -129,7 +129,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, place, uid
 }
 
 module.exports = {
-	initialize: function(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID) {
-		getPins(res, latitude, longitude, userId, maxDistance, page, place, uid, mongodb, ObjectID);
+	initialize: function(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID) {
+		getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID);
 	}
 };
