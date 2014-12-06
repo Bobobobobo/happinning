@@ -6,17 +6,6 @@ var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
 function getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID) {
-	if (latitude == null || latitude === undefined || latitude === ''||
-		longitude === null || longitude === undefined || longitude === '') {
-		res.send(messageBuilder.buildError('no latitude, longitude'));
-		return;
-	}
-	if (maxDistance === null || maxDistance === undefined) {
-		maxDistance = 10000;
-	}
-	if (page === null || page === undefined) {
-		page = 1;
-	}
 	
 	var callback = function(err, records) {
 		if (err) {
@@ -106,26 +95,34 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 	}};
 	
 	if (uid !== null && uid !== undefined && uid !== '') {
-		query.userId = uid;
+		query = {userId : uid};
 	}
 	
 	if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
 		query = {"location.subLocality" : sublocality };
 	}
 	
+	if (maxDistance === null || maxDistance === undefined) {
+		maxDistance = 10000;
+	}
+	if (page === null || page === undefined) {
+		page = 1;
+	}
+	
+	if (latitude == null || latitude === undefined || latitude === ''||
+			longitude === null || longitude === undefined || longitude === '' || 
+			uid === null || uid === undefined || uid === '' ||
+			sublocality === null || sublocality === undefined || sublocality === '') {
+		res.send(messageBuilder.buildError('invalid input'));
+		return;
+	}
+	
+	
 	if (page > 1) {
 		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
 	}else {
 		mongodb.collection('pins').find(query).limit( 20 ).toArray(callback);
 	}
-
-//	mongodb.collection('pins').find().toArray(function(err, records) {
-//		if (err) {
-//			throw err;
-//		}
-////		console.log("Record get as "+records[0]._id);
-//		res.send(records);
-//	});
 }
 
 module.exports = {
