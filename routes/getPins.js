@@ -113,16 +113,16 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 	}else if (uid !== null && uid !== undefined && uid !== '') {
 		query = {userId : uid};
 		if (page > 1) {
-			mongodb.collection('pins').find(query).sort({uploadDate:1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
 		}else {
-			mongodb.collection('pins').find(query).sort({uploadDate:1}).limit( 20 ).toArray(callback);
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).limit( 20 ).toArray(callback);
 		}
 	}else if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
 		query = {"location.subLocality" : sublocality };
 		if (page > 1) {
-			mongodb.collection('pins').find(query).sort({uploadDate:1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
 		}else {
-			mongodb.collection('pins').find(query).sort({uploadDate:1}).limit( 20 ).toArray(callback);
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).limit( 20 ).toArray(callback);
 		}
 	}else {
 		res.send(messageBuilder.buildError('invalid params'));
