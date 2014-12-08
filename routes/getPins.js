@@ -5,7 +5,7 @@
 var messageBuilder = require('../happining_modules/messageBuilder');
 var async = require('async');
 
-function getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID) {
+function getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, locality, uid, mongodb, ObjectID) {
 	
 	var callback = function(err, records) {
 		if (err) {
@@ -124,6 +124,13 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 		}else {
 			mongodb.collection('pins').find(query).sort({uploadDate: -1}).limit( 20 ).toArray(callback);
 		}
+	}else if (locality !== null && locality !== undefined && locality !== '') {
+		query = {"location.locality" : locality };
+		if (page > 1) {
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+		}else {
+			mongodb.collection('pins').find(query).sort({uploadDate: -1}).limit( 20 ).toArray(callback);
+		}
 	}else {
 		res.send(messageBuilder.buildError('invalid params'));
 		return;
@@ -131,7 +138,7 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 }
 
 module.exports = {
-	initialize: function(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID) {
-		getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, uid, mongodb, ObjectID);
+	initialize: function(res, latitude, longitude, userId, maxDistance, page, sublocality, locality, uid, mongodb, ObjectID) {
+		getPins(res, latitude, longitude, userId, maxDistance, page, sublocality, locality, uid, mongodb, ObjectID);
 	}
 };

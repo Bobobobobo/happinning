@@ -55,7 +55,7 @@ app.get('/pinDetail', function(req, res){
 app.get('/users', user.list);
 app.get('/getPins',  function(req, res){
 	pins.initialize(res, req.query.latitude, req.query.longitude, req.query.userId, req.query.maxdistance, req.query.page,
-			req.query.sublocality, req.query.uid, mongodb, ObjectID);
+			req.query.sublocality, req.query.locality, req.query.uid, mongodb, ObjectID);
 });
 app.get('/getPin', function(req, res){
 	pin.initialize(res, mongodb, req.query.pinID, req.query.userId, ObjectID);
