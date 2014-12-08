@@ -90,6 +90,10 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 	    });
 	};
 
+	if (page === null || page === undefined) {
+		page = 1;
+	}
+
 	var query;
 	
 	if (latitude !== null && latitude !== undefined && latitude !== '' &&
@@ -101,20 +105,28 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 					{ $near : 
 						{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
 				}};
+		if (page > 1) {
+			mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+		}else {
+			mongodb.collection('pins').find(query).limit( 20 ).toArray(callback);
+		}
 	}else if (uid !== null && uid !== undefined && uid !== '') {
 		query = {userId : uid};
+		if (page > 1) {
+			mongodb.collection('pins').find(query).sort({uploadDate:1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+		}else {
+			mongodb.collection('pins').find(query).sort({uploadDate:1}).limit( 20 ).toArray(callback);
+		}
 	}else if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
 		query = {"location.subLocality" : sublocality };
-	}
-
-	if (page === null || page === undefined) {
-		page = 1;
-	}
-	
-	if (page > 1) {
-		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+		if (page > 1) {
+			mongodb.collection('pins').find(query).sort({uploadDate:1}).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
+		}else {
+			mongodb.collection('pins').find(query).sort({uploadDate:1}).limit( 20 ).toArray(callback);
+		}
 	}else {
-		mongodb.collection('pins').find(query).limit( 20 ).toArray(callback);
+		res.send(messageBuilder.buildError('invalid params'));
+		return;
 	}
 }
 
