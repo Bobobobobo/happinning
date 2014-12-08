@@ -90,34 +90,26 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 	    });
 	};
 
-	var query = { location :
-	{ $near : 
-		{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
-	}};
+	var query;
 	
-	if (uid !== null && uid !== undefined && uid !== '') {
+	if (latitude !== null && latitude !== undefined && latitude !== '' &&
+			longitude !== null && longitude !== undefined && longitude !== '') {
+		if (maxDistance === null || maxDistance === undefined) {
+			maxDistance = 10000;
+		}
+		query = { location :
+					{ $near : 
+						{ $geometry :{ type : "Point", coordinates : [parseFloat(longitude), parseFloat(latitude)]}, $maxDistance : parseInt(maxDistance) }
+				}};
+	}else if (uid !== null && uid !== undefined && uid !== '') {
 		query = {userId : uid};
-	}
-	
-	if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
+	}else if (sublocality !== null && sublocality !== undefined && sublocality !== '') {
 		query = {"location.subLocality" : sublocality };
 	}
-	
-	if (maxDistance === null || maxDistance === undefined) {
-		maxDistance = 10000;
-	}
+
 	if (page === null || page === undefined) {
 		page = 1;
 	}
-	
-	if (latitude == null && latitude === undefined && latitude === ''&&
-			longitude === null && longitude === undefined && longitude === '' && 
-			uid === null && uid === undefined && uid === '' &&
-			sublocality === null && sublocality === undefined && sublocality === '') {
-		res.send(messageBuilder.buildError('invalid input'));
-		return;
-	}
-	
 	
 	if (page > 1) {
 		mongodb.collection('pins').find(query).skip( (page - 1) * 20 ).limit( 20 ).toArray(callback);
