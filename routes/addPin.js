@@ -119,7 +119,6 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 								res.send(messageBuilder.buildComplete(pins));
 							});
 							
-							addUserPin(query, jsValue._id, mongodb);
 							addKeywordLocation(jsValue.location, mongodb, ObjectID);
 						}else {
 							res.send(messageBuilder.buildError('no user connect with this post'));
@@ -179,7 +178,6 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 					res.send(messageBuilder.buildComplete(pins));
 				});
 				
-				addUserPin(query, jsValue._id, mongodb);
 				addKeywordLocation(jsValue.location, mongodb, ObjectID);
 			}else {
 				res.send(messageBuilder.buildError('no user connect with this post'));
@@ -188,17 +186,6 @@ function addPin(res, jsPin, mongodb, ObjectID) {
 	}catch (e) {
 		res.send(messageBuilder.buildError(e));
 	}
-}
-
-function addUserPin(query, pinId, mongodb) {
-	mongodb.collection('userpins').update(query,
-			{$push:  {'pinIds' : pinId} },
-			{ upsert: true },
-	function(err, records) {
-		if (err) {
-			console.error('addPin.js - addUserPin'+err);
-		}
-	});
 }
 
 function addKeywordLocation(location, mongodb, ObjectID) {
