@@ -71,9 +71,10 @@ function getPins(res, latitude, longitude, userId, maxDistance, page, sublocalit
 									if (err) {
 										record.username = '';
 										record.userImage = '';	
+									}else {
+										record.username = result.username;
+										record.userImage = result.userImage;	
 									}
-									record.username = result.username;
-									record.userImage = result.userImage;
 									callback();
 								});
 			                }
