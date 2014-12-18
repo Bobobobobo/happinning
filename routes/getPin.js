@@ -82,11 +82,13 @@ function getPin(res, mongodb, pinID, userID, ObjectID) {
 					                },
 					                function(callback) { //This is the second task, and callback is its callback task
 					                	users.findOne({_id: new ObjectID(result.userId)}, function (err, resultUser) {
-											if (err) {
-												callback(err);
+					                		if (err) {
+												result.username = '';
+												result.userImage = '';
+											}else {
+												result.username = resultUser.username;
+												result.userImage = resultUser.userImage;	
 											}
-											result.username = resultUser.username;
-											result.userImage = resultUser.userImage;
 											callback();
 										}); 
 					                }
