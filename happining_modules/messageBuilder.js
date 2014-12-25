@@ -12,7 +12,7 @@ function error(message) {
 	var jsMessage = new Object();
 	jsMessage.status = 204;
 	jsMessage.message = message;
-	return JSON.stringify(jsMessage);
+	return jsMessage;
 }
 
 module.exports = {
