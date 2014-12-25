@@ -99,6 +99,9 @@ function addPinMultipart(req, res, form, fs, mongodb, ObjectID) {
 							}else if (hasVideo) {
 								jsValue.image = '';
 								jsValue.video = __urlPrefixVideo + id + '/' + sId + '_video.mp4';	
+							}else {
+								jsValue.image = '';
+								jsValue.video = '';
 							}
 							jsValue.ratio = 0.0;
 							
