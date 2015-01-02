@@ -59,7 +59,6 @@ function login(res, email, password, username, fbId, mongodb) {
 				res.send(messageBuilder.buildError(error));
 				throw err;
 			}
-			console.log("Record added as "+records[0]._id);
 			res.send(messageBuilder.buildComplete({_id: records[0]._id, username: records[0].username, userImage: records[0].userImage}));
 		});
 	});
