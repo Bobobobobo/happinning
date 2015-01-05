@@ -148,11 +148,13 @@ MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
 	mongodb = db;
 	mongodb.collection('pins').ensureIndex({location:'2dsphere'}, function(err, records) {
 		if (err) {
+			console.log(err);
 			throw err;
 		}
 	});
 	mongodb.collection('location').ensureIndex({location:'2dsphere'}, function(err, records) {
 		if (err) {
+			console.log(err);
 			throw err;
 		}
 	});
