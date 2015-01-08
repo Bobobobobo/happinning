@@ -14,6 +14,11 @@ function like(res, pinID, mongodb, like, ObjectID) {
 	jsLike._id = ObjectID.createPk();
 	jsLike.likeDate = new Date().getTime();
 	
+	if (jsLike.userId === null || jsLike.userId === undefined || jsLike.userId === '') {
+		res.send(messageBuilder.buildError('no userId'));
+		return;
+	}
+	
 	var pins = mongodb.collection('pins');
 	var colLike = mongodb.collection('likes');
 	
