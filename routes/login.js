@@ -23,7 +23,7 @@ function login(res, email, password, username, fbId, mongodb) {
 		userImage = 'http://graph.facebook.com/v2.2/'+fbId+'/picture?type=large';
 	}
 	
-	var query = {email: email};
+	var query = {email: email.toLowerCase()};
 	
 	var users = mongodb.collection('users');
 	users.findOne(query, function (err, result) {
