@@ -23,10 +23,8 @@ function login(res, email, password, username, fbId, mongodb) {
 		userImage = 'http://graph.facebook.com/v2.2/'+fbId+'/picture?type=large';
 	}
 	
-	var query = {email: email.toLowerCase()};
-	
 	var users = mongodb.collection('users');
-	users.findOne(query, function (err, result) {
+	users.findOne({email: email.toLowerCase()}, function (err, result) {
 		if (err) {
 			res.send(messageBuilder.buildError(err));
 			return;
